@@ -10,6 +10,7 @@ function App() {
     <>
     <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
      <Header/>
+      {/* <h1>home page</h1> */}
      <Routes>
       <Route path="/" element={<Home/>} />
      </Routes>
