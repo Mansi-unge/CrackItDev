@@ -1,23 +1,39 @@
-import './App.css'
-import { BrowserRouter , Routes , Route } from 'react-router-dom'
-import Header from './Components/Header'
-import Footer from './Components/Footer'
-import Home from './Pages/Home'
+import './App.css';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import Header from './Components/Header';
+import Footer from './Components/Footer';
+import Home from './Pages/Home';
+import Login from './Pages/Login';
 
-function App() {
+import { useEffect } from 'react';
+
+// Wrapper to use hooks like useLocation outside Router
+function AppWrapper() {
+  const location = useLocation();
+
+  // Define routes where Header and Footer should be hidden
+  const hideLayoutRoutes = ['/login'];
+
+  const shouldHideLayout = hideLayoutRoutes.includes(location.pathname);
 
   return (
     <>
-    <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-     <Header/>
-      {/* <h1>home page</h1> */}
-     <Routes>
-      <Route path="/" element={<Home/>} />
-     </Routes>
-     <Footer/>
-    </BrowserRouter>
+      {!shouldHideLayout && <Header />}
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+      </Routes>
+      {!shouldHideLayout && <Footer />}
     </>
-  )
+  );
 }
 
-export default App
+function App() {
+  return (
+    <BrowserRouter>
+      <AppWrapper />
+    </BrowserRouter>
+  );
+}
+
+export default App;

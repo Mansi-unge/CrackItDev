@@ -68,7 +68,8 @@ const Header = () => {
           </svg>
         </div>
 
-        <button>Login</button>
+        <Link to="/login">
+        Login</Link>
         <button className="bg-blue-600 text-white px-4 py-2 rounded-xl">
           Sign up
         </button>
