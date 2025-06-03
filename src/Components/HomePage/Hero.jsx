@@ -32,7 +32,7 @@ const badgeVariants = {
 
 const Hero = () => {
   return (
-    <section className="bg-gradient-to-br from-blue-50 via-white to-blue-100 py-16 px-6 text-center">
+    <section className="bg-gradient-to-br from-blue-100 via-white to-blue-200 py-16 px-6 text-center">
       <div className="max-w-6xl mx-auto">
         <style>{`
       @keyframes pulseGlow {
