@@ -1,11 +1,20 @@
-import React, { useState } from 'react';
-import { FaGoogle } from 'react-icons/fa';
+import React, { useState , useEffect } from 'react';
+import { useLocation } from 'react-router-dom'; 
 import Logo from '../Components/Logo';
 
 const Login = () => {
-  const [activeTab, setActiveTab] = useState('login');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+const location = useLocation();
+const initialTab = location.state?.tab || 'login';
+const [activeTab, setActiveTab] = useState(initialTab);
+
+useEffect(() => {
+  if (location.state?.tab) {
+    setActiveTab(location.state.tab);
+  }
+}, [location.state]);
+
 
   const handleSubmit = (e) => {
     e.preventDefault();

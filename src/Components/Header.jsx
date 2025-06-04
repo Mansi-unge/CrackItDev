@@ -26,7 +26,11 @@ const Header = () => {
         {/* Mobile + Tablet Menu Icon */}
         <div className="lg:hidden">
           <button onClick={() => setMenuOpen(!menuOpen)}>
-            {menuOpen ? <FaTimes className="w-6 h-6" /> : <FaBars className="w-6 h-6" />}
+            {menuOpen ? (
+              <FaTimes className="w-6 h-6" />
+            ) : (
+              <FaBars className="w-6 h-6" />
+            )}
           </button>
         </div>
       </div>
@@ -68,11 +72,15 @@ const Header = () => {
           </svg>
         </div>
 
-        <Link to="/login">
-        Login</Link>
-        <button className="bg-blue-600 text-white px-4 py-2 rounded-xl">
-          Sign up
-        </button>
+        <Link to="/login" state={{ tab: "login" }}>
+          Login
+        </Link>
+
+        <Link to="/login" state={{ tab: "signup" }}>
+          <button className="bg-blue-600 text-white px-4 py-2 rounded-xl">
+            Sign up
+          </button>
+        </Link>
       </div>
 
       {/* Mobile + Tablet Menu */}
@@ -116,11 +124,23 @@ const Header = () => {
             </svg>
           </div>
 
-          <div className="flex space-x-4">
-            <button className="flex-1 border px-4 py-2 rounded-xl">Login</button>
-            <button className="flex-1 bg-blue-600 text-white px-4 py-2 rounded-xl">
-              Sign up
-            </button>
+          <div className="flex justify-center space-x-3 pt-2">
+            <Link
+              to="/login"
+              state={{ tab: "login" }}
+              className=" w-1/3 text-center border border-indigo-600 text-indigo-600 py-2 rounded-xl hover:bg-indigo-50 transition"
+              onClick={() => setMenuOpen(false)}
+            >
+              Login
+            </Link>
+            <Link
+              to="/login"
+              state={{ tab: "signup" }}
+              className="w-1/3 text-center bg-indigo-600 text-white py-2 rounded-xl hover:bg-indigo-700 transition"
+              onClick={() => setMenuOpen(false)}
+            >
+              Sign Up
+            </Link>
           </div>
         </div>
       )}

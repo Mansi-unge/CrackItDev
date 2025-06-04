@@ -1,18 +1,22 @@
-import './App.css';
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
-import Header from './Components/Header';
-import Footer from './Components/Footer';
-import Home from './Pages/Home';
-import Login from './Pages/Login';
+import "./App.css";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import Header from "./Components/Header";
+import Footer from "./Components/Footer";
+import Home from "./Pages/Home";
+import Login from "./Pages/Login";
 
-import { useEffect } from 'react';
+import { useEffect } from "react";
+import BrowseTopic from "./Pages/BrowseTopic";
+import Challenges from "./Pages/Challenges";
+import Quiz from "./Pages/Quiz";
+import Companies from "./Pages/Companies";
 
 // Wrapper to use hooks like useLocation outside Router
 function AppWrapper() {
   const location = useLocation();
 
   // Define routes where Header and Footer should be hidden
-  const hideLayoutRoutes = ['/login'];
+  const hideLayoutRoutes = ["/login"];
 
   const shouldHideLayout = hideLayoutRoutes.includes(location.pathname);
 
@@ -22,6 +26,10 @@ function AppWrapper() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/Topics" element={<BrowseTopic />} />
+        <Route path="/challenges" element={<Challenges/>} />
+        <Route path="/Quizes" element={ <Quiz/> } />
+        <Route path="/companies" element={ <Companies/> } />
       </Routes>
       {!shouldHideLayout && <Footer />}
     </>
