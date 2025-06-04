@@ -1,6 +1,9 @@
-const mongoose = require('mongoose');
+// models/Question.js
+import mongoose from 'mongoose';
 
-const QuestionSchema = new mongoose.Schema({
+const { Schema, model } = mongoose;
+
+const QuestionSchema = new Schema({
   title: String,
   answer: String,
   type: { type: String, enum: ['theory', 'mcq'] },
@@ -14,4 +17,5 @@ const QuestionSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
 });
 
-module.exports = mongoose.model("Question", QuestionSchema);
+const Question = model('Question', QuestionSchema);
+export default Question;
