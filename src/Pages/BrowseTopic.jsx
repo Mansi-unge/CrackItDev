@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
-// Dummy questions array with tech, level, type etc.
+// Dummy questions array
 const dummyQuestions = [
   {
     id: 1,
@@ -17,8 +17,7 @@ const dummyQuestions = [
   {
     id: 2,
     title: "What is closure in JavaScript?",
-    answer:
-      "Closure allows a function to access variables from an enclosing scope.",
+    answer: "Closure allows a function to access variables from an enclosing scope.",
     fullAnswer:
       "A closure is a function having access to the parent scope, even after the parent function has closed.",
     tech: "JavaScript",
@@ -63,10 +62,8 @@ const dummyQuestions = [
     tags: ["MongoDB", "NoSQL", "Beginner"],
     company: ["Amazon"],
   },
-  // Add more...
 ];
 
-// Options for filters
 const techOptions = [
   "HTML",
   "CSS",
@@ -81,20 +78,14 @@ const techOptions = [
   "Python",
   "DevOps",
 ];
-
 const levelOptions = ["Beginner", "Intermediate", "Advanced"];
 const typeOptions = ["Theory", "MCQ", "Rapid-Fire"];
 const companyOptions = ["Google", "Amazon", "Microsoft", "Meta", "Facebook"];
 
 function FilterSection({ filters, setFilters }) {
-  // Helper to toggle filters in arrays
   const toggleFilter = (key, value) => {
     const currentSet = new Set(filters[key]);
-    if (currentSet.has(value)) {
-      currentSet.delete(value);
-    } else {
-      currentSet.add(value);
-    }
+    currentSet.has(value) ? currentSet.delete(value) : currentSet.add(value);
     setFilters({ ...filters, [key]: Array.from(currentSet) });
   };
 
@@ -102,6 +93,7 @@ function FilterSection({ filters, setFilters }) {
     <div className="w-64 p-4 border-r border-gray-300 h-screen sticky top-0 overflow-y-auto">
       <h2 className="font-bold text-xl mb-4">Filters</h2>
 
+      {/* Tech */}
       <div className="mb-6">
         <h3 className="font-semibold mb-2">Tech Stack</h3>
         <div className="flex flex-col space-y-1 max-h-48 overflow-y-auto">
@@ -119,6 +111,7 @@ function FilterSection({ filters, setFilters }) {
         </div>
       </div>
 
+      {/* Level */}
       <div className="mb-6">
         <h3 className="font-semibold mb-2">Difficulty Level</h3>
         <div className="flex flex-col space-y-1">
@@ -136,6 +129,7 @@ function FilterSection({ filters, setFilters }) {
         </div>
       </div>
 
+      {/* Type */}
       <div className="mb-6">
         <h3 className="font-semibold mb-2">Question Type</h3>
         <div className="flex flex-col space-y-1">
@@ -153,6 +147,7 @@ function FilterSection({ filters, setFilters }) {
         </div>
       </div>
 
+      {/* Company */}
       <div className="mb-6">
         <h3 className="font-semibold mb-2">Company</h3>
         <div className="flex flex-col space-y-1 max-h-40 overflow-y-auto">
@@ -170,7 +165,6 @@ function FilterSection({ filters, setFilters }) {
         </div>
       </div>
 
-      {/* Reset filters button */}
       <button
         onClick={() =>
           setFilters({ tech: [], level: [], type: [], company: [] })
@@ -183,10 +177,17 @@ function FilterSection({ filters, setFilters }) {
   );
 }
 
-function QuestionCard({ question, onToggleExpand, expanded, onBookmark, onShare }) {
+function QuestionCard({
+  question,
+  onToggleExpand,
+  expanded,
+  onBookmark,
+  onShare,
+  isBookmarked,
+}) {
   return (
     <div
-      className="bg-white border border-gray-200 rounded-lg p-6 mb-6 transition-colors hover:border-indigo-400 cursor-pointer"
+      className="bg-white border border-gray-200 rounded-lg p-6 mb-6 transition hover:border-indigo-400 cursor-pointer"
       onClick={() => onToggleExpand(question.id)}
       id={`question-${question.id}`}
       role="button"
@@ -195,17 +196,12 @@ function QuestionCard({ question, onToggleExpand, expanded, onBookmark, onShare 
         if (e.key === "Enter" || e.key === " ") onToggleExpand(question.id);
       }}
     >
-      {/* Title */}
-      <h3 className="text-lg font-bold text-center text-gray-800 mb-3 uppercase tracking-wide">
+      <h3 className="text-lg font-bold text-center text-gray-800 mb-3 uppercase">
         {question.title}
       </h3>
 
-      {/* Answer Summary */}
-      <p className="text-sm text-gray-600 text-center mb-4">
-        {question.answer}
-      </p>
+      <p className="text-sm text-gray-600 text-center mb-4">{question.answer}</p>
 
-      {/* Buttons */}
       <div className="flex justify-center gap-5 mb-4">
         <button
           onClick={(e) => {
@@ -213,11 +209,23 @@ function QuestionCard({ question, onToggleExpand, expanded, onBookmark, onShare 
             onBookmark(question.id);
           }}
           title="Bookmark"
-          className="text-gray-500 hover:text-indigo-600 transition"
+          className="text-gray-500 hover:text-yellow-500 transition"
         >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-            <path d="M5 5v14l7-7 7 7V5z" />
-          </svg>
+          {isBookmarked ? (
+            <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M5 3v18l7-5 7 5V3z" />
+            </svg>
+          ) : (
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2}
+              viewBox="0 0 24 24"
+            >
+              <path d="M5 5v14l7-7 7 7V5z" />
+            </svg>
+          )}
         </button>
 
         <button
@@ -228,7 +236,13 @@ function QuestionCard({ question, onToggleExpand, expanded, onBookmark, onShare 
           title="Share"
           className="text-gray-500 hover:text-indigo-600 transition"
         >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+          <svg
+            className="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2}
+            viewBox="0 0 24 24"
+          >
             <circle cx="18" cy="5" r="3" />
             <circle cx="6" cy="12" r="3" />
             <circle cx="18" cy="19" r="3" />
@@ -238,14 +252,12 @@ function QuestionCard({ question, onToggleExpand, expanded, onBookmark, onShare 
         </button>
       </div>
 
-      {/* Full Answer Section */}
       {expanded && (
-        <div className="mt-4 p-4 bg-indigo-50 text-indigo-900 rounded-lg text-sm leading-relaxed transition-all">
+        <div className="mt-4 p-4 bg-indigo-50 text-indigo-900 rounded-lg text-sm">
           {question.fullAnswer}
         </div>
       )}
 
-      {/* Tags */}
       <div className="mt-4 flex flex-wrap justify-center gap-2">
         {question.tags.map((tag) => (
           <span
@@ -260,10 +272,7 @@ function QuestionCard({ question, onToggleExpand, expanded, onBookmark, onShare 
   );
 }
 
-
-
 export default function BrowseTopic() {
-  // Filters state
   const [filters, setFilters] = useState({
     tech: [],
     level: [],
@@ -271,56 +280,55 @@ export default function BrowseTopic() {
     company: [],
   });
 
-  // Expanded question id for full answer
   const [expandedId, setExpandedId] = useState(null);
-
-  // Pagination state
   const [page, setPage] = useState(1);
   const pageSize = 4;
 
-  // Filter logic
-  const filteredQuestions = dummyQuestions.filter((q) => {
-    // Tech filter
-    if (filters.tech.length && !filters.tech.includes(q.tech)) return false;
-    // Level filter
-    if (filters.level.length && !filters.level.includes(q.level)) return false;
-    // Type filter
-    if (filters.type.length && !filters.type.includes(q.type)) return false;
-    // Company filter
-    if (filters.company.length && !q.company.some((c) => filters.company.includes(c)))
-      return false;
+  const [bookmarkedQuestions, setBookmarkedQuestions] = useState([]);
 
-    return true;
-  });
-
-  // If no filter selected, show random questions (slice for page size)
-  const questionsToShow =
-    filters.tech.length || filters.level.length || filters.type.length || filters.company.length
-      ? filteredQuestions.slice(0, page * pageSize)
-      : // No filter, show random questions (shuffled)
-        dummyQuestions
-          .sort(() => 0.5 - Math.random())
-          .slice(0, page * pageSize);
-
-  // Handlers
-  const toggleExpand = (id) => {
-    setExpandedId(expandedId === id ? null : id);
-  };
   const handleBookmark = (id) => {
-    alert(`Bookmark toggled for question id ${id}`);
+    setBookmarkedQuestions((prev) =>
+      prev.includes(id) ? prev.filter((q) => q !== id) : [id, ...prev]
+    );
   };
+
   const handleShare = (id) => {
     const shareURL = window.location.href + `#question-${id}`;
     navigator.clipboard.writeText(shareURL);
     alert("Link copied to clipboard!");
   };
 
+  const toggleExpand = (id) => {
+    setExpandedId(expandedId === id ? null : id);
+  };
+
+  const filteredQuestions = dummyQuestions.filter((q) => {
+    if (filters.tech.length && !filters.tech.includes(q.tech)) return false;
+    if (filters.level.length && !filters.level.includes(q.level)) return false;
+    if (filters.type.length && !filters.type.includes(q.type)) return false;
+    if (filters.company.length && !q.company.some((c) => filters.company.includes(c)))
+      return false;
+    return true;
+  });
+
+  const sortedQuestions = [
+    ...filteredQuestions.filter((q) => bookmarkedQuestions.includes(q.id)),
+    ...filteredQuestions.filter((q) => !bookmarkedQuestions.includes(q.id)),
+  ];
+
+  const questionsToShow =
+    filters.tech.length || filters.level.length || filters.type.length || filters.company.length
+      ? sortedQuestions.slice(0, page * pageSize)
+      : [
+          ...dummyQuestions.filter((q) => bookmarkedQuestions.includes(q.id)),
+          ...dummyQuestions
+            .filter((q) => !bookmarkedQuestions.includes(q.id))
+            .sort(() => 0.5 - Math.random()),
+        ].slice(0, page * pageSize);
+
   return (
     <div className="flex">
-      {/* Sidebar filters */}
       <FilterSection filters={filters} setFilters={setFilters} />
-
-      {/* Main content */}
       <main className="flex-1 p-6 max-w-4xl mx-auto">
         <h1 className="text-3xl font-bold mb-8 text-center">Browse Interview Questions</h1>
 
@@ -336,16 +344,11 @@ export default function BrowseTopic() {
             onToggleExpand={toggleExpand}
             onBookmark={handleBookmark}
             onShare={handleShare}
+            isBookmarked={bookmarkedQuestions.includes(q.id)}
           />
         ))}
 
-        {/* Show More */}
-        {questionsToShow.length < (filters.tech.length ||
-        filters.level.length ||
-        filters.type.length ||
-        filters.company.length
-          ? filteredQuestions.length
-          : dummyQuestions.length) && (
+        {questionsToShow.length < sortedQuestions.length && (
           <div className="text-center mt-8">
             <button
               onClick={() => setPage(page + 1)}
