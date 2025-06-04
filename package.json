@@ -13,6 +13,7 @@
     "@heroicons/react": "^2.2.0",
     "@tailwindcss/vite": "^4.1.8",
     "ace-builds": "^1.42.0",
+    "axios": "^1.9.0",
     "framer-motion": "^12.15.0",
     "react": "^18.2.0",
     "react-ace": "^14.0.1",

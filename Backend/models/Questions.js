@@ -6,16 +6,29 @@ const { Schema, model } = mongoose;
 const QuestionSchema = new Schema({
   title: String,
   answer: String,
-  type: { type: String, enum: ['theory', 'mcq'] },
-  tech: String, // e.g., HTML, React, Python
+  fullAnswer: String, // You may want this for explanations.
+  type: { type: String, enum: ['theory', 'mcq', 'coding'], default: 'theory' },
+  tech: String,
   level: { type: String, enum: ['beginner', 'intermediate', 'advanced'] },
   topic: String,
-  company: [String], // e.g., ["Google", "Amazon"]
-  isDailyChallenge: Boolean,
-  options: [String], // for MCQ
-  correctAnswer: String,
+  company: [String],
+  isDailyChallenge: { type: Boolean, default: false },
+
+  // New fields for coding challenge:
+  hints: [String],
+  sampleInput: String,
+  sampleOutput: String,
+  codeTemplate: String,
+  solution: String,
+  testCases: [
+    {
+      input: String,
+      output: String,
+    },
+  ],
+
   createdAt: { type: Date, default: Date.now },
 });
 
 const Question = model('Question', QuestionSchema);
-export default Question;
+export default Question
