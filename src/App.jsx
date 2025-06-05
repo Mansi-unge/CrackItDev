@@ -10,6 +10,8 @@ import BrowseTopic from "./Pages/BrowseTopic";
 import Challenges from "./Pages/Challenges";
 import Quiz from "./Pages/Quiz";
 import Companies from "./Pages/Companies";
+import ChallengeQuestions from "./Components/Chalenges/ChallengeQuestions";
+import CodeEditorPage from "./Components/Chalenges/CodeEditorPage";
 
 // Wrapper to use hooks like useLocation outside Router
 function AppWrapper() {
@@ -28,6 +30,8 @@ function AppWrapper() {
         <Route path="/login" element={<Login />} />
         <Route path="/Topics" element={<BrowseTopic />} />
         <Route path="/challenges" element={<Challenges/>} />
+        <Route path="/challenges/:tech" element={ <ChallengeQuestions/> } />
+        <Route path="/compiler/:id" element={ <CodeEditorPage/> } />
         <Route path="/Quizes" element={ <Quiz/> } />
         <Route path="/companies" element={ <Companies/> } />
       </Routes>

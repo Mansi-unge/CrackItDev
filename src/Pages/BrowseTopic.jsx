@@ -7,7 +7,7 @@ export default function BrowseTopic() {
   const [filters, setFilters] = useState({
     tech: [],
     level: [],
-    type: [],
+    type: ["Theory"],
     company: [],
   });
   const [questions, setQuestions] = useState([]);

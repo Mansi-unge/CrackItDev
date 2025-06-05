@@ -1,126 +1,59 @@
-import React, { useState } from "react";
+// pages/Challenges.jsx
+import React from "react";
+import { FaReact, FaNodeJs, FaJava, FaPython } from "react-icons/fa"; // use appropriate icons
+import { SiMongodb } from "react-icons/si";
+import { useNavigate } from "react-router-dom";
 
-const techStacks = ["React", "Node.js", "Java", "Python"];
-
-const topicsByTech = {
-  React: ["Arrays", "Graph", "Strings"],
-  "Node.js": ["Arrays", "Graph", "Strings"],
-  Java: ["Arrays", "Sorting", "Strings"],
-  Python: ["Arrays", "Sorting", "Strings"],
-};
-
-const questions = [
+const techStacks = [
   {
-    id: 1,
-    tech: "React",
-    topic: "Arrays",
-    question: "Explain how to use useState hook in React?",
+    name: "React",
+    description: "Frontend JavaScript library for building UIs.",
+    Icon: FaReact,
+    color: "#61DBFB",
   },
   {
-    id: 2,
-    tech: "React",
-    topic: "Graph",
-    question: "How would you implement a graph traversal in React?",
+    name: "Node.js",
+    description: "JavaScript runtime for backend development.",
+    Icon: FaNodeJs,
+    color: "#3C873A",
   },
   {
-    id: 3,
-    tech: "Java",
-    topic: "Sorting",
-    question: "Explain different sorting algorithms in Java.",
+    name: "Java",
+    description: "Robust backend language widely used in enterprise.",
+    Icon: FaJava,
+    color: "#007396",
   },
   {
-    id: 4,
-    tech: "Java",
-    topic: "Arrays",
-    question: "How to reverse an array in Java?",
-  },
-  {
-    id: 5,
-    tech: "Python",
-    topic: "Sorting",
-    question: "What is the built-in method for sorting lists in Python?",
-  },
-  {
-    id: 6,
-    tech: "Node.js",
-    topic: "Strings",
-    question: "How to handle string operations in Node.js?",
+    name: "Python",
+    description: "High-level programming language for all purposes.",
+    Icon: FaPython,
+    color: "#FFD43B",
   },
 ];
 
-export default function QuestionFilter() {
-  const [selectedTech, setSelectedTech] = useState("");
-  const [selectedTopic, setSelectedTopic] = useState("");
-
-  // Get topics for selected tech
-  const topics = selectedTech ? topicsByTech[selectedTech] : [];
-
-  // Filter questions by selected tech and topic
-  const filteredQuestions = questions.filter((q) => {
-    return (
-      (selectedTech ? q.tech === selectedTech : true) &&
-      (selectedTopic ? q.topic === selectedTopic : true)
-    );
-  });
+const Challenges = () => {
+  const navigate = useNavigate();
 
   return (
-    <div style={{ maxWidth: 600, margin: "auto", padding: 20, fontFamily: "Arial" }}>
-      <h2>Filter Questions by Tech & Topic</h2>
-
-      {/* Tech stack select */}
-      <label>
-        Select Tech Stack:{" "}
-        <select
-          value={selectedTech}
-          onChange={(e) => {
-            setSelectedTech(e.target.value);
-            setSelectedTopic(""); // reset topic when tech changes
-          }}
+    <div className="p-6 grid sm:grid-cols-2 md:grid-cols-3 gap-6">
+      {techStacks.map((stack) => (
+        <div
+          key={stack.name}
+          className="bg-white rounded-2xl shadow-md p-6 border hover:scale-[1.01] transition-all"
         >
-          <option value="">-- Select Tech --</option>
-          {techStacks.map((tech) => (
-            <option key={tech} value={tech}>
-              {tech}
-            </option>
-          ))}
-        </select>
-      </label>
-
-      <br />
-      <br />
-
-      {/* Topic select */}
-      <label>
-        Select Topic:{" "}
-        <select
-          value={selectedTopic}
-          onChange={(e) => setSelectedTopic(e.target.value)}
-          disabled={!selectedTech}
-        >
-          <option value="">-- Select Topic --</option>
-          {topics.map((topic) => (
-            <option key={topic} value={topic}>
-              {topic}
-            </option>
-          ))}
-        </select>
-      </label>
-
-      <br />
-      <br />
-
-      {/* Question list */}
-      <div>
-        <h3>Questions:</h3>
-        {filteredQuestions.length === 0 && <p>No questions found.</p>}
-        <ul>
-          {filteredQuestions.map((q) => (
-            <li key={q.id}>
-              <strong>{q.tech} - {q.topic}:</strong> {q.question}
-            </li>
-          ))}
-        </ul>
-      </div>
+          <stack.Icon size={40} color={stack.color} className="mb-4" />
+          <h3 className="text-xl font-semibold">{stack.name}</h3>
+          <p className="text-gray-600 mb-4">{stack.description}</p>
+          <button
+            onClick={() => navigate(`/challenges/${stack.name.toLowerCase()}`)}
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+          >
+            Take Challenge
+          </button>
+        </div>
+      ))}
     </div>
   );
-}
+};
+
+export default Challenges;

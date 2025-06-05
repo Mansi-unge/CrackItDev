@@ -19,7 +19,6 @@ const techOptions = [
 ];
 
 const levelOptions = ["Beginner", "Intermediate", "Advanced"];
-const typeOptions = ["Theory", "MCQ", "Rapid-Fire"];
 const companyOptions = ["Google", "Amazon", "Microsoft", "Meta", "Facebook"];
 
 export default function FilterSection({ filters, setFilters }) {
@@ -76,7 +75,6 @@ export default function FilterSection({ filters, setFilters }) {
       </div>
       {renderCheckboxes("tech", "Tech Stack", techOptions)}
       {renderCheckboxes("level", "Difficulty", levelOptions)}
-      {renderCheckboxes("type", "Question Type", typeOptions)}
       {renderCheckboxes("company", "Company", companyOptions)}
     </div>
   );
