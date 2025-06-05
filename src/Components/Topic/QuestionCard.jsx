@@ -1,114 +1,73 @@
 import React from "react";
+import { FaRegBookmark, FaBookmark, FaShareAlt } from "react-icons/fa";
 
-function difficultyColor(level) {
-  switch (level) {
-    case "Beginner":
-      return "border-green-400";
-    case "Intermediate":
-      return "border-yellow-400";
-    case "Advanced":
-      return "border-red-400";
-    default:
-      return "border-gray-300";
-  }
-}
-
-export default function QuestionCard({
+const QuestionCard = ({
   question,
   expanded,
   onToggleExpand,
-  bookmarked,
   onBookmark,
   onShare,
-}) {
+  isBookmarked,
+}) => {
   return (
     <div
-      className={`border-l-4 ${difficultyColor(
-        question.level
-      )} bg-white dark:bg-gray-800 rounded-md shadow-sm hover:shadow-md transform hover:scale-[1.02] transition duration-200 p-5 mb-6 cursor-pointer`}
-      onClick={() => onToggleExpand(question.id)}
       id={`question-${question.id}`}
-      aria-expanded={expanded}
-      role="button"
-      tabIndex={0}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") onToggleExpand(question.id);
-      }}
+      className="p-4 border-b border-gray-200"
     >
-      <div className="flex justify-between items-start">
-        <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
-          {question.title}
-        </h3>
-
-        <div className="flex space-x-4">
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onBookmark(question.id);
-            }}
-            title={bookmarked ? "Remove Bookmark" : "Bookmark"}
-            className={`focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded ${
-              bookmarked ? "text-indigo-900" : "text-indigo-600 hover:text-indigo-900"
-            }`}
-            aria-label="Bookmark question"
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
+        <div className="flex-1">
+          <h2
+            className="text-base sm:text-lg font-semibold cursor-pointer text-gray-800 hover:text-indigo-600 transition-colors"
+            onClick={() => onToggleExpand(question.id)}
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6 fill-current"
-              viewBox="0 0 24 24"
-              stroke="none"
-            >
-              <path d="M6 4a2 2 0 0 0-2 2v16l8-5 8 5V6a2 2 0 0 0-2-2H6z" />
-            </svg>
+            {question.title}
+          </h2>
+
+          {expanded && (
+            <p className="mt-2 text-gray-700 text-sm leading-relaxed whitespace-pre-line">
+              {question.fullAnswer}
+            </p>
+          )}
+
+          <div className="flex flex-wrap mt-2 gap-2">
+            <span className="bg-indigo-100 text-indigo-700 text-xs font-medium px-3 py-1 rounded-full">
+              {question.tech}
+            </span>
+            <span className="bg-yellow-100 text-yellow-800 text-xs font-medium px-3 py-1 rounded-full">
+              {question.level}
+            </span>
+            {question.company.map((c, i) => (
+              <span
+                key={i}
+                className="bg-green-100 text-green-700 text-xs font-medium px-3 py-1 rounded-full"
+              >
+                {c}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <div className="flex flex-row sm:flex-col gap-3 ml-0 sm:ml-6 mt-4 sm:mt-0 items-center">
+          <button
+            onClick={() => onBookmark(question.id)}
+            className="hover:scale-110 transition-transform"
+          >
+            {isBookmarked ? (
+              <FaBookmark className="text-indigo-600 text-lg" />
+            ) : (
+              <FaRegBookmark className="text-gray-400 hover:text-indigo-600 text-lg" />
+            )}
           </button>
-
           <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onShare(question.id);
-            }}
-            title="Share"
-            className="text-indigo-600 hover:text-indigo-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded"
-            aria-label="Share question"
+            onClick={() => onShare(question.id)}
+            className="hover:scale-110 transition-transform"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={2}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              viewBox="0 0 24 24"
-            >
-              <circle cx="18" cy="5" r="3" />
-              <circle cx="6" cy="12" r="3" />
-              <circle cx="18" cy="19" r="3" />
-              <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
-              <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
-            </svg>
+            <FaShareAlt className="text-gray-400 hover:text-indigo-600 text-lg" />
           </button>
         </div>
-      </div>
-
-      <p className="mt-3 text-gray-700 dark:text-gray-300">{question.answer}</p>
-
-      {expanded && (
-        <div className="mt-4 p-4 bg-indigo-50 dark:bg-indigo-900 rounded-md text-gray-800 dark:text-indigo-200 transition-all duration-300 ease-in-out">
-          <p>{question.fullAnswer}</p>
-        </div>
-      )}
-
-      <div className="mt-4 flex flex-wrap gap-2">
-        {question.tags.map((tag) => (
-          <span
-            key={tag}
-            className="inline-block bg-indigo-100 dark:bg-indigo-700 text-indigo-800 dark:text-indigo-200 text-xs font-semibold px-3 py-1 rounded-full"
-          >
-            {tag}
-          </span>
-        ))}
       </div>
     </div>
   );
-}
+};
+
+export default QuestionCard;

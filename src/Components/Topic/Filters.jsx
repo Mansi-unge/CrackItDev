@@ -1,60 +1,122 @@
-// src/components/Filters.jsx
-import { useState } from "react";
+import React, { useState } from "react";
+import {
+  FaChevronDown,
+  FaChevronUp,
+  FaSlidersH,
+  FaTimes,
+} from "react-icons/fa";
 
-const techOptions = ["JavaScript", "Python", "Java", "C++"];
-const levelOptions = ["Easy", "Medium", "Hard"];
-const typeOptions = ["Coding", "System Design"];
-const companyOptions = ["Google", "Facebook", "Amazon"];
+const techOptions = [
+  "Computer Networking", "DBMS", "DSA", "OOPs", "Operating Systems", "System Design",
+  "C", "C++", "GO", "Java", "Kotlin", "Python", "Rust", "SQL", "Typescript", "JavaScript",
+  "Angular", "Bootstrap", "CSS", "HTML", "Next.js", "React.js", "Redux", "Tailwind",
+  "Django", "Express", "Flask", "Node.js", "Spring Boot",
+  "Auth0", "Firebase", "JWT",
+  "CI/CD", "DevOps", "Docker", "Git", "Github", "Kubernetes",
+  "AWS",
+  "Cypress", "Jest", "JUnit", "Pytest",
+  "MongoDB", "PostgreSQL"
+];
 
-const FilterSection = ({ filters, setFilters }) => {
-  const toggleFilter = (category, value) => {
-    const currentValues = filters[category];
-    if (currentValues.includes(value)) {
-      setFilters({
-        ...filters,
-        [category]: currentValues.filter((v) => v !== value),x
-      });
-    } else {
-      setFilters({
-        ...filters,
-        [category]: [...currentValues, value],
-      });
-    }
+const levelOptions = ["Beginner", "Intermediate", "Advanced"];
+const typeOptions = ["Theory", "MCQ", "Rapid-Fire"];
+const companyOptions = ["Google", "Amazon", "Microsoft", "Meta", "Facebook"];
+
+export default function FilterSection({ filters, setFilters }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [expanded, setExpanded] = useState({
+    tech: true,
+    level: true,
+    type: true,
+    company: true,
+  });
+
+  const toggleFilter = (key, value) => {
+    const currentSet = new Set(filters[key]);
+    currentSet.has(value) ? currentSet.delete(value) : currentSet.add(value);
+    setFilters({ ...filters, [key]: Array.from(currentSet) });
   };
 
-  const renderCheckboxes = (category, options) =>
-    options.map((option) => (
-      <label key={option} className="mr-6 cursor-pointer select-none">
-        <input
-          type="checkbox"
-          className="mr-1 accent-blue-600"
-          checked={filters[category].includes(option)}
-          onChange={() => toggleFilter(category, option)}
-        />
-        <span className="text-gray-700">{option}</span>
-      </label>
-    ));
-
-  return (
-    <div className="mb-6 p-4 bg-white rounded-md shadow-sm border border-gray-200">
-      <div className="mb-3">
-        <strong className="block mb-1 text-gray-800">Tech:</strong>
-        <div>{renderCheckboxes("tech", techOptions)}</div>
-      </div>
-      <div className="mb-3">
-        <strong className="block mb-1 text-gray-800">Level:</strong>
-        <div>{renderCheckboxes("level", levelOptions)}</div>
-      </div>
-      <div className="mb-3">
-        <strong className="block mb-1 text-gray-800">Type:</strong>
-        <div>{renderCheckboxes("type", typeOptions)}</div>
-      </div>
-      <div>
-        <strong className="block mb-1 text-gray-800">Company:</strong>
-        <div>{renderCheckboxes("company", companyOptions)}</div>
-      </div>
+  const renderCheckboxes = (key, label, options) => (
+    <div className="mb-4">
+      <button
+        onClick={() => setExpanded((prev) => ({ ...prev, [key]: !prev[key] }))}
+        className="flex justify-between items-center w-full font-semibold text-left"
+      >
+        <span>{label}</span>
+        {expanded[key] ? <FaChevronUp /> : <FaChevronDown />}
+      </button>
+      {expanded[key] && (
+        <div className="mt-2 flex flex-col max-h-48 overflow-y-auto space-y-1">
+          {options.map((option) => (
+            <label key={option} className="inline-flex items-center space-x-2">
+              <input
+                type="checkbox"
+                checked={filters[key].includes(option)}
+                onChange={() => toggleFilter(key, option)}
+                className="form-checkbox text-indigo-600"
+              />
+              <span className="text-sm">{option}</span>
+            </label>
+          ))}
+        </div>
+      )}
     </div>
   );
-};
 
-export default FilterSection;
+  const content = (
+    <div className="p-4 space-y-4 w-full md:w-60 ">
+      <div className="flex justify-end items-center">
+        <button
+          onClick={() => setFilters({ tech: [], level: [], type: [], company: [] })}
+          className="text-red-600 text-md hover:underline"
+        >
+          Reset All
+        </button>
+      </div>
+      {renderCheckboxes("tech", "Tech Stack", techOptions)}
+      {renderCheckboxes("level", "Difficulty", levelOptions)}
+      {renderCheckboxes("type", "Question Type", typeOptions)}
+      {renderCheckboxes("company", "Company", companyOptions)}
+    </div>
+  );
+
+  return (
+    <>
+      {/* Mobile Drawer Toggle */}
+      <div className="md:hidden px-4 pt-2">
+        <button
+          onClick={() => setIsOpen(true)}
+          className="flex items-center gap-2 text-indigo-700 font-semibold"
+        >
+          <FaSlidersH />
+          Filter
+        </button>
+      </div>
+
+      {/* Drawer for Mobile */}
+      {isOpen && (
+        <div className="fixed inset-0 bg-opacity-50 z-40 flex">
+          <div className="bg-white w-3/4 max-w-xs p-4 overflow-y-auto">
+            <div className="flex justify-between items-center mb-2">
+              <h2 className="text-lg font-bold">Filters</h2>
+              <button onClick={() => setIsOpen(false)}>
+                <FaTimes className="text-gray-500 hover:text-black" />
+              </button>
+            </div>
+            {content}
+          </div>
+          <div
+            className="flex-1"
+            onClick={() => setIsOpen(false)}
+          ></div>
+        </div>
+      )}
+
+      {/* Sidebar for Desktop */}
+      <aside className="hidden md:block w-64 h-screen sticky top-0 overflow-y-auto  bg-gray-50">
+        {content}
+      </aside>
+    </>
+  );
+}

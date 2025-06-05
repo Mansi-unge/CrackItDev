@@ -7,9 +7,9 @@ const QuestionSchema = new Schema({
   title: String,
   answer: String,
   fullAnswer: String, // You may want this for explanations.
-  type: { type: String, enum: ['theory', 'mcq', 'coding'], default: 'theory' },
+  type: { type: String, enum: ['Theory', 'MCQ', 'Coding'], default: 'Theory' },
   tech: String,
-  level: { type: String, enum: ['beginner', 'intermediate', 'advanced'] },
+  level: { type: String, enum: ['Beginner', 'Intermediate', 'Advanced'] },
   topic: String,
   company: [String],
   isDailyChallenge: { type: Boolean, default: false },
