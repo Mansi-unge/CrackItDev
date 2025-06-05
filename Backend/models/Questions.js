@@ -14,6 +14,9 @@ const QuestionSchema = new Schema({
   company: [String],
   isDailyChallenge: { type: Boolean, default: false },
 
+  // ADD THIS for MCQs
+  options: [String],  
+
   // New fields for coding challenge:
   hints: [String],
   sampleInput: String,

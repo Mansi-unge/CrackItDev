@@ -1,246 +1,163 @@
-// pages/CodeEditorPage.jsx
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import AceEditor from "react-ace";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
+import FilterSection from "../Topic/Filters";
 
-// Ace Editor language modes
-import "ace-builds/src-noconflict/mode-c_cpp";
-import "ace-builds/src-noconflict/mode-java";
-import "ace-builds/src-noconflict/mode-python";
-import "ace-builds/src-noconflict/mode-javascript";
-import "ace-builds/src-noconflict/mode-ruby";
-import "ace-builds/src-noconflict/mode-golang";
-import "ace-builds/src-noconflict/mode-csharp";
-import "ace-builds/src-noconflict/mode-php";
-import "ace-builds/src-noconflict/mode-swift";
-import "ace-builds/src-noconflict/mode-typescript";
-import "ace-builds/src-noconflict/mode-rust";
-import "ace-builds/src-noconflict/mode-kotlin";
-import "ace-builds/src-noconflict/mode-scala";
-import "ace-builds/src-noconflict/mode-sql";
-import "ace-builds/src-noconflict/mode-perl";
-import "ace-builds/src-noconflict/mode-lua";
-import "ace-builds/src-noconflict/mode-sh";
-import "ace-builds/src-noconflict/mode-text";
 
-// Theme
-import "ace-builds/src-noconflict/theme-monokai";
+export default function Quiz() {
+  const [filters, setFilters] = useState({
+    tech: [],
+    level: [],
+    type: ["MCQ"],
+    company: [],
+  });
 
-const RAPIDAPI_HOST = "judge0-ce.p.rapidapi.com";
-const RAPIDAPI_KEY = "04e8c8d5d3mshd6786e95417591dp146a01jsn74b309492621";
+  const [questions, setQuestions] = useState([]);
+  const [page, setPage] = useState(1);
+  const [totalQuestions, setTotalQuestions] = useState(0);
+  const [selectedAnswers, setSelectedAnswers] = useState({});
+  const pageSize = 15;
 
-const CodeEditorPage = () => {
-  const { id } = useParams();
-  const [question, setQuestion] = useState(null);
-  const [code, setCode] = useState("");
-  const [output, setOutput] = useState("");
-  const [hintsVisible, setHintsVisible] = useState(false);
-  const [badgeEarned, setBadgeEarned] = useState(false);
-
-  const languageMap = {
-    Java: "java",
-    Python: "python",
-    C: "c_cpp",
-    "C++": "c_cpp",
-    JavaScript: "javascript",
-    TypeScript: "typescript",
-    Go: "golang",
-    Ruby: "ruby",
-    CSharp: "csharp",
-    PHP: "php",
-    Swift: "swift",
-    Rust: "rust",
-    Kotlin: "kotlin",
-    Scala: "scala",
-    SQL: "sql",
-    Perl: "perl",
-    Lua: "lua",
-    Bash: "sh",
-  };
-
-  useEffect(() => {
-    axios.get(`http://localhost:5000/api/questions/${id}`).then((res) => {
-      const q = res.data;
-      setQuestion(q);
-      setCode(q.codeTemplate || "");
-      setOutput("");
-      setBadgeEarned(false);
-    });
-  }, [id]);
-
-  // Normalize text for fair comparison (ignores trailing spaces, line endings, empty lines)
-  const normalizeText = (str) => {
-    if (!str) return "";
-    return str
-      .replace(/\r\n/g, "\n")          // Normalize newlines to \n
-      .split("\n")
-      .map(line => line.trim())         // Trim each line's start/end spaces
-      .filter(line => line.length > 0) // Remove empty lines
-      .join("\n")
-      .trim();
-  };
-
-  const runCode = async () => {
-    if (!question) return;
+  const fetchQuestions = async () => {
     try {
-      const languageIdMap = {
-        python: 71,
-        java: 62,
-        javascript: 63,
-        c_cpp: 54,
-        c: 50,
-        typescript: 74,
-        go: 60,
-        ruby: 72,
-        php: 68,
-        swift: 83,
-        rust: 73,
-        kotlin: 78,
-        scala: 81,
-        sql: 82,
-        csharp: 51,
-        perl: 85,
-        lua: 64,
-        bash: 46,
-      };
+      const query = [];
 
-      const lang = (languageMap[question.tech] || "text").toLowerCase();
+      if (filters.tech.length) query.push(`tech=${filters.tech.join(",")}`);
+      if (filters.level.length) query.push(`level=${filters.level.join(",")}`);
+      if (filters.type.length) query.push(`type=${filters.type.join(",")}`);
+      if (filters.company.length) query.push(`company=${filters.company.join(",")}`);
+      query.push(`page=${page}`);
+      query.push(`pageSize=${pageSize}`);
 
-      const language_id = languageIdMap[lang] || 71;
+      const url = `http://localhost:5000/api/questions?${query.join("&")}`;
+      const res = await axios.get(url);
 
-      // Submit code to Judge0 API
-      const submission = await axios.post(
-        "https://judge0-ce.p.rapidapi.com/submissions?base64_encoded=false&wait=false",
-        {
-          source_code: code,
-          language_id,
-          stdin: question.sampleInput || "",
-        },
-        {
-          headers: {
-            "x-rapidapi-host": RAPIDAPI_HOST,
-            "x-rapidapi-key": RAPIDAPI_KEY,
-            "content-type": "application/json",
-          },
-        }
-      );
-
-      const token = submission.data.token;
-
-      // Poll result function
-      const fetchResult = async () => {
-        const result = await axios.get(
-          `https://judge0-ce.p.rapidapi.com/submissions/${token}?base64_encoded=false`,
-          {
-            headers: {
-              "x-rapidapi-host": RAPIDAPI_HOST,
-              "x-rapidapi-key": RAPIDAPI_KEY,
-            },
-          }
+      if (res.data && res.data.questions?.length) {
+        setTotalQuestions(res.data.total);
+        setQuestions((prev) =>
+          page === 1 ? res.data.questions : [...prev, ...res.data.questions]
         );
-
-        if (result.data.status.id <= 2) {
-          // In queue or processing, retry after 1 second
-          setTimeout(fetchResult, 1000);
-        } else {
-          // Got output
-          const outputText = result.data.stdout || result.data.stderr || "No output";
-          setOutput(outputText);
-        }
-      };
-
-      fetchResult();
+      } else {
+        setQuestions([]);
+      }
     } catch (error) {
-      setOutput("Error running code: " + error.message);
+      console.error("Error fetching questions:", error);
     }
   };
 
-const handleSubmit = () => {
-  if (!question) return;
+  useEffect(() => {
+    setPage(1);
+  }, [filters]);
 
-  const normalizeText = (str) =>
-    (str || "")
-      .replace(/\r\n/g, "\n")
-      .split("\n")
-      .map((line) => line.trim())
-      .filter((line) => line.length > 0)
-      .join("\n")
-      .trim();
+  useEffect(() => {
+    fetchQuestions();
+  }, [filters, page]);
 
-  const actualOutput = normalizeText(output);
-  const expectedOutput = normalizeText(question.expectedOutput || question.sampleOutput || "");
+  const handleAnswerSelect = (questionId, answer) => {
+    setSelectedAnswers((prev) => ({
+      ...prev,
+      [questionId]: answer,
+    }));
+  };
 
-  console.log("Actual Output:", JSON.stringify(actualOutput));
-  console.log("Expected Output:", JSON.stringify(expectedOutput));
-
-  if (actualOutput === expectedOutput) {
-    setBadgeEarned(true);
-    alert("🎉 Correct Solution! Badge Earned!");
-  } else {
-    alert("❌ Incorrect Solution. Please try again.");
-  }
-};
-
-
-
-  if (!question) return <div>Loading...</div>;
+  const getAnswerStatus = (question) => {
+    const selected = selectedAnswers[question._id];
+    if (!selected) return null;
+    return selected === question.answer ? "correct" : "incorrect";
+  };
 
   return (
-    <div className="p-6 space-y-4">
-      <h2 className="text-xl font-bold">{question.title}</h2>
-      <p className="text-gray-600">Topic: {question.topic}</p>
-      <AceEditor
-        mode={languageMap[question.tech] || "text"}
-        theme="monokai"
-        value={code}
-        onChange={setCode}
-        name="code-editor"
-        editorProps={{ $blockScrolling: true }}
-        width="100%"
-        height="300px"
-        fontSize={16}
-      />
-      <div className="flex space-x-4 mt-4">
-        <button
-          className="px-4 py-2 bg-blue-600 text-white rounded"
-          onClick={runCode}
-        >
-          Run Code
-        </button>
-        <button
-          className="px-4 py-2 bg-green-600 text-white rounded"
-          onClick={handleSubmit}
-          disabled={!output}
-          title={!output ? "Run code to get output first" : ""}
-        >
-          Submit
-        </button>
-      </div>
-      {output && (
-        <div className="mt-4 text-sm bg-gray-100 p-2 rounded whitespace-pre-wrap">
-          <strong>Output:</strong>
-          <pre>{output}</pre>
-        </div>
-      )}
-      {hintsVisible && (
-        <ul className="list-disc ml-6 mt-2 text-gray-700">
-          {question.hints?.map((hint, idx) => (
-            <li key={idx}>{hint}</li>
-          ))}
-        </ul>
-      )}
-      <button
-        onClick={() => setHintsVisible(!hintsVisible)}
-        className="text-blue-500 underline"
-      >
-        {hintsVisible ? "Hide Hints" : "Show Hints"}
-      </button>
-      {badgeEarned && (
-        <div className="text-green-600 font-bold">🏅 Badge Earned!</div>
-      )}
+    <div className="md:flex">
+      <FilterSection filters={filters} setFilters={setFilters} />
+
+      <main className="flex-1 p-4 md:p-6 max-w-8xl mx-auto">
+        <h1 className="text-2xl md:text-3xl font-bold mb-6 text-center text-gray-800">
+          Quiz - MCQ Questions
+        </h1>
+
+        {questions.length === 0 ? (
+          <div className="text-center text-gray-500">No questions found.</div>
+        ) : (
+          <div className="space-y-6">
+            {questions.map((q) => {
+              const selected = selectedAnswers[q._id];
+              const status = getAnswerStatus(q);
+
+              return (
+                <div
+                  key={q._id}
+                  className="p-4 border rounded shadow-sm bg-white space-y-2"
+                >
+                  <h2 className="text-lg font-semibold text-gray-800">
+                    {q.title}
+                  </h2>
+
+                  <p className="text-sm text-gray-600">
+                    <strong>Tech:</strong> {q.tech} &nbsp;|&nbsp;
+                    <strong>Level:</strong> {q.level} &nbsp;|&nbsp;
+                    <strong>Company:</strong> {q.company?.join(", ") || "N/A"}
+                  </p>
+
+                  <div className="flex flex-col gap-2 mt-2">
+                    {q.options?.map((option, index) => {
+                      const isCorrect = option === q.answer;
+                      const isSelected = selected === option;
+                      const showAnswer =
+                        selected && (isCorrect || isSelected);
+
+                      return (
+                        <label
+                          key={index}
+                          className={`flex items-center gap-2 cursor-pointer px-2 py-1 rounded ${
+                            showAnswer
+                              ? isCorrect
+                                ? "bg-green-100"
+                                : "bg-red-100"
+                              : ""
+                          }`}
+                        >
+                          <input
+                            type="radio"
+                            name={`question-${q._id}`}
+                            value={option}
+                            checked={isSelected}
+                            onChange={() => handleAnswerSelect(q._id, option)}
+                          />
+                          <span>{option}</span>
+                        </label>
+                      );
+                    })}
+                  </div>
+
+                  {status && (
+                    <div
+                      className={`mt-2 text-sm font-medium ${
+                        status === "correct"
+                          ? "text-green-600"
+                          : "text-red-600"
+                      }`}
+                    >
+                      {status === "correct"
+                        ? "✅ Correct!"
+                        : `❌ Incorrect. Correct answer: ${q.answer}`}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        {questions.length > 0 && questions.length < totalQuestions && (
+          <div className="text-center mt-8">
+            <button
+              onClick={() => setPage((prev) => prev + 1)}
+              className="px-6 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition-colors"
+            >
+              Show More
+            </button>
+          </div>
+        )}
+      </main>
     </div>
   );
-};
-
-export default CodeEditorPage;
+}

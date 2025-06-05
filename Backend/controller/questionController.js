@@ -60,6 +60,9 @@ export const getFilteredQuestions = async (req, res) => {
       };
     }
 
+    // ✅ Fetch only questions that have options (MCQs)
+    filters.options = { $exists: true, $not: { $size: 0 } };
+
     const skip = (parseInt(page) - 1) * parseInt(pageSize);
     const questions = await Question.find(filters)
       .sort({ createdAt: -1 })
