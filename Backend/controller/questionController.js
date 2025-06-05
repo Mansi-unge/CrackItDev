@@ -29,15 +29,7 @@ import Question from "../models/Questions.js";
 
 export const getFilteredQuestions = async (req, res) => {
   try {
-    const {
-      tech,
-      level,
-      type,
-      company,
-      _id,
-      page = 1,
-      pageSize = 15,
-    } = req.query;
+    const { tech, level, type, company, _id, page = 1, pageSize = 15 } = req.query;
     const filters = {};
 
     if (_id) filters._id = _id;
@@ -55,12 +47,13 @@ export const getFilteredQuestions = async (req, res) => {
     }
 
     if (type) {
+      const typeArray = type.split(",").map((t) => t.trim());
       filters.type = {
-        $in: type.split(",").map((t) => new RegExp(`^${t.trim()}$`, "i")),
+        $in: typeArray.map((t) => new RegExp(`^${t}$`, "i")),
       };
-      const isMCQOnly = type
-        .split(",")
-        .every((t) => t.trim().toLowerCase() === "mcq");
+
+      // ✅ Apply options filter only if it's MCQ only
+      const isMCQOnly = typeArray.length === 1 && typeArray[0].toLowerCase() === "mcq";
       if (isMCQOnly) {
         filters.options = { $exists: true, $not: { $size: 0 } };
       }
@@ -72,10 +65,8 @@ export const getFilteredQuestions = async (req, res) => {
       };
     }
 
-    // ✅ Fetch only questions that have options (MCQs)
-    filters.options = { $exists: true, $not: { $size: 0 } };
-
     const skip = (parseInt(page) - 1) * parseInt(pageSize);
+
     const questions = await Question.find(filters)
       .sort({ createdAt: -1 })
       .skip(skip)
@@ -89,6 +80,9 @@ export const getFilteredQuestions = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
+
+
 export const verifyAnswer = async (req, res) => {
   const { questionId, selectedOption } = req.body;
 

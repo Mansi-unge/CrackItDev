@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import FilterSection from "../Components/Topic/Filters";
 import QuestionCard from "../Components/Topic/QuestionCard";
+import { FaSpinner } from "react-icons/fa";
 
 export default function BrowseTopic() {
   const [filters, setFilters] = useState({
@@ -15,10 +16,12 @@ export default function BrowseTopic() {
   const [page, setPage] = useState(1);
   const [totalQuestions, setTotalQuestions] = useState(0);
   const [bookmarkedQuestions, setBookmarkedQuestions] = useState([]);
+  const [loading, setLoading] = useState(false); // ✅ New loading state
   const pageSize = 15;
 
   const fetchQuestions = async () => {
     try {
+      setLoading(true); //  Start loading
       const query = [];
 
       if (filters.tech.length) query.push(`tech=${filters.tech.join(",")}`);
@@ -41,6 +44,8 @@ export default function BrowseTopic() {
       );
     } catch (error) {
       console.error("Error fetching questions:", error);
+    } finally {
+      setLoading(false); //  Stop loading
     }
   };
 
@@ -81,7 +86,13 @@ export default function BrowseTopic() {
           Browse Interview Questions
         </h1>
 
-        {sortedQuestions.length === 0 ? (
+        {/*  Show spinner when loading */}
+        {loading ? (
+          <div className="flex flex-col items-center justify-center min-h-[40vh] text-blue-600 text-lg">
+            <FaSpinner className="animate-spin text-3xl mb-2" />
+            Loading ...
+          </div>
+        ) : sortedQuestions.length === 0 ? (
           <p className="text-center text-gray-500">No questions found.</p>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -103,7 +114,8 @@ export default function BrowseTopic() {
           </div>
         )}
 
-        {sortedQuestions.length < totalQuestions && (
+        {/* Show More Button */}
+        {!loading && sortedQuestions.length < totalQuestions && (
           <div className="text-center mt-8">
             <button
               onClick={() => setPage((prev) => prev + 1)}

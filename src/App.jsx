@@ -9,9 +9,8 @@ import { useEffect } from "react";
 import BrowseTopic from "./Pages/BrowseTopic";
 import Challenges from "./Pages/Challenges";
 import Quiz from "./Pages/Quiz";
-import Companies from "./Pages/Companies";
-import ChallengeQuestions from "./Components/Chalenges/ChallengeQuestions";
-import CodeEditorPage from "./Components/Chalenges/CodeEditorPage";
+import ChallengeQuestions from "./Components/challenges/ChallengeQuestions";
+import CodeEditorPage from "./Components/challenges/CodeEditorPage";
 
 // Wrapper to use hooks like useLocation outside Router
 function AppWrapper() {
@@ -33,7 +32,6 @@ function AppWrapper() {
         <Route path="/challenges/:tech" element={ <ChallengeQuestions/> } />
         <Route path="/compiler/:id" element={ <CodeEditorPage/> } />
         <Route path="/Quizes" element={ <Quiz/> } />
-        <Route path="/companies" element={ <Companies/> } />
       </Routes>
       {!shouldHideLayout && <Footer />}
     </>

@@ -72,7 +72,7 @@ const Hero = () => {
         </p>
 
         {/* Buttons */}
-        <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-16">
+        <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-24">
           <button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-full text-base sm:text-lg font-bold shadow-lg transition duration-300 w-full sm:w-auto">
             <FaRocket className="inline mr-2" />
             Start Practicing
@@ -84,7 +84,7 @@ const Hero = () => {
         </div>
 
         {/* Feature Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-18 md:gap-10 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-18 md:gap-10 max-w-6xl mx-auto ">
           {featureCards.map((card, i) => (
             <motion.div
               key={i}

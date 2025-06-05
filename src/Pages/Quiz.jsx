@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import FilterSection from "../Components/Topic/Filters";
+import { FaSpinner } from "react-icons/fa";
 
 export default function Quiz() {
   const [filters, setFilters] = useState({
@@ -15,10 +16,12 @@ export default function Quiz() {
   const [submittedAnswers, setSubmittedAnswers] = useState({});
   const [page, setPage] = useState(1);
   const [totalQuestions, setTotalQuestions] = useState(0);
+  const [loading, setLoading] = useState(false); 
   const pageSize = 15;
 
   const fetchQuestions = async () => {
     try {
+      setLoading(true); 
       const query = [];
 
       if (filters.tech.length) query.push(`tech=${filters.tech.join(",")}`);
@@ -39,6 +42,8 @@ export default function Quiz() {
       }
     } catch (error) {
       console.error("Error fetching questions:", error);
+    } finally {
+      setLoading(false); 
     }
   };
 
@@ -51,17 +56,14 @@ export default function Quiz() {
   }, [filters, page]);
 
   const handleSelect = (qid, option) => {
-    if (submittedAnswers[qid]) return; // don't allow if already submitted
+    if (submittedAnswers[qid]) return;
     setSelectedAnswers((prev) => ({ ...prev, [qid]: option }));
   };
 
   const handleSubmitAnswer = async (qid) => {
     const question = questions.find((q) => q._id === qid);
     const selected = selectedAnswers[qid];
-
     if (!question || !selected) return;
-
-    // Optionally, you can make API call here to track user submissions
 
     setSubmittedAnswers((prev) => ({
       ...prev,
@@ -82,7 +84,13 @@ export default function Quiz() {
           Quiz - MCQ Questions
         </h1>
 
-        {questions.length === 0 ? (
+        {/* ✅ Show loader if loading */}
+        {loading ? (
+          <div className="flex flex-col items-center justify-center min-h-[40vh] text-blue-600 text-lg">
+            <FaSpinner className="animate-spin text-3xl mb-2" />
+            Loading ...
+          </div>
+        ) : questions.length === 0 ? (
           <div className="text-center text-gray-500">
             <p>No questions found. Showing a sample question for testing UI.</p>
           </div>
@@ -151,7 +159,8 @@ export default function Quiz() {
           </div>
         )}
 
-        {questions.length > 0 && questions.length < totalQuestions && (
+        {/* Show More Button */}
+        {!loading && questions.length > 0 && questions.length < totalQuestions && (
           <div className="text-center mt-8">
             <button
               onClick={() => setPage((prev) => prev + 1)}
