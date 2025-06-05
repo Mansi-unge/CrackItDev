@@ -16,6 +16,7 @@ const QuestionSchema = new Schema({
 
   // ADD THIS for MCQs
   options: [String],  
+  correctOption: String,
 
   // New fields for coding challenge:
   hints: [String],
