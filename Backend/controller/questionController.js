@@ -98,6 +98,7 @@ export const verifyAnswer = async (req, res) => {
       isCorrect,
       correctOption: question.correctOption,
       fullAnswer: question.fullAnswer || "",
+      answerExplanation: question.answerExplanation || "",
     });
   } catch (err) {
     console.error("Error verifying answer:", err);

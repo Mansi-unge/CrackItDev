@@ -12,6 +12,10 @@ const navLink = [
     name: "Quiz Mode",
     href: "/Quizes",
   },
+  {
+    name: "Dashboard",
+    href: "/Dashboard",
+  },
 ];
 
 export default navLink;

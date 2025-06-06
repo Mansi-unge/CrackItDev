@@ -1,20 +1,20 @@
 import React, { useState , useEffect } from 'react';
 import { useLocation } from 'react-router-dom'; 
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import Logo from '../Components/Logo';
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-const location = useLocation();
-const initialTab = location.state?.tab || 'login';
-const [activeTab, setActiveTab] = useState(initialTab);
+  const location = useLocation();
+  const initialTab = location.state?.tab || 'login';
+  const [activeTab, setActiveTab] = useState(initialTab);
 
-useEffect(() => {
-  if (location.state?.tab) {
-    setActiveTab(location.state.tab);
-  }
-}, [location.state]);
-
+  useEffect(() => {
+    if (location.state?.tab) {
+      setActiveTab(location.state.tab);
+    }
+  }, [location.state]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -91,11 +91,11 @@ useEffect(() => {
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-9 text-indigo-500 text-lg select-none"
+              className="absolute right-3 top-11 text-indigo-500 text-lg select-none"
               aria-label={showPassword ? 'Hide password' : 'Show password'}
               tabIndex={-1}
             >
-              {showPassword ? '🙈' : '👁️'}
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
             </button>
           </div>
 
@@ -116,11 +116,11 @@ useEffect(() => {
               <button
                 type="button"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="absolute right-3 top-9 text-indigo-500 text-lg select-none"
+                className="absolute right-3 top-11 text-indigo-500 text-lg select-none"
                 aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
                 tabIndex={-1}
               >
-                {showConfirmPassword ? '🙈' : '👁️'}
+                {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
               </button>
             </div>
           )}

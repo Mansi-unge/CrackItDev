@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import FilterSection from "../Components/Topic/Filters";
+import FilterSection from "../Components/Topic/TheoryFilters";
 import QuestionCard from "../Components/Topic/QuestionCard";
 import { FaSpinner } from "react-icons/fa";
+import TheoryFilterSection from "../Components/Topic/TheoryFilters";
 
 export default function BrowseTopic() {
   const [filters, setFilters] = useState({
@@ -80,7 +81,8 @@ export default function BrowseTopic() {
 
   return (
     <div className="md:flex">
-      <FilterSection filters={filters} setFilters={setFilters} />
+      {/* <FilterSection filters={filters} setFilters={setFilters} /> */}
+      <TheoryFilterSection filters={filters} setFilters={setFilters}/>
       <main className="flex-1 p-4 md:p-6 max-w-8xl mx-auto">
         <h1 className="text-2xl md:text-3xl font-bold mb-6 text-center text-gray-800">
           Browse Interview Questions

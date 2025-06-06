@@ -35,7 +35,6 @@ const CodeEditorPage = () => {
   const [question, setQuestion] = useState(null);
   const [code, setCode] = useState("");
   const [output, setOutput] = useState("");
-  const [hintsVisible, setHintsVisible] = useState(false);
   const [badgeEarned, setBadgeEarned] = useState(false);
 
   const languageMap = {
@@ -107,13 +106,6 @@ const CodeEditorPage = () => {
           source_code: code,
           language_id,
           stdin: question.sampleInput || "",
-        },
-        {
-          headers: {
-            "x-rapidapi-host": RAPIDAPI_HOST,
-            "x-rapidapi-key": RAPIDAPI_KEY,
-            "content-type": "application/json",
-          },
         }
       );
 
@@ -151,13 +143,15 @@ const CodeEditorPage = () => {
     }
   };
 
-  const handleSubmit = () => {
-    if (!question) return;
-    if (code.trim() === question.solution.trim()) {
+   const handleSubmit = () => {
+    const actual = normalizeText(output);
+    const expected = normalizeText(question.expectedOutput || question.sampleOutput || "");
+
+    if (actual === expected) {
       setBadgeEarned(true);
       alert("🎉 Correct Solution! Badge Earned!");
     } else {
-      alert("❌ Incorrect Solution. Please try again.");
+      alert("❌ Incorrect Solution. Try again.");
     }
   };
 

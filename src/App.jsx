@@ -11,6 +11,7 @@ import Challenges from "./Pages/Challenges";
 import Quiz from "./Pages/Quiz";
 import ChallengeQuestions from "./Components/challenges/ChallengeQuestions";
 import CodeEditorPage from "./Components/challenges/CodeEditorPage";
+import Dashboard from "./Pages/Dashboard";
 
 // Wrapper to use hooks like useLocation outside Router
 function AppWrapper() {
@@ -32,6 +33,7 @@ function AppWrapper() {
         <Route path="/challenges/:tech" element={ <ChallengeQuestions/> } />
         <Route path="/compiler/:id" element={ <CodeEditorPage/> } />
         <Route path="/Quizes" element={ <Quiz/> } />
+        <Route path="/Dashboard" element={ <Dashboard/> } />
       </Routes>
       {!shouldHideLayout && <Footer />}
     </>

@@ -21,7 +21,7 @@ const techOptions = [
 const levelOptions = ["Beginner", "Intermediate", "Advanced"];
 const companyOptions = ["Google", "Amazon", "Microsoft", "Meta", "Facebook"];
 
-export default function FilterSection({ filters, setFilters }) {
+const QuizFilterSection = ({ filters, setFilters }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [expanded, setExpanded] = useState({
     tech: true,
@@ -67,7 +67,7 @@ export default function FilterSection({ filters, setFilters }) {
     <div className="p-4 space-y-4 w-full md:w-60 ">
       <div className="flex justify-end items-center">
         <button
-          onClick={() => setFilters({ tech: [], level: [], type: [], company: [] })}
+          onClick={() => setFilters({ tech: [], level: [], type: ["MCQ"], company: [] })}
           className="text-red-600 text-md hover:underline"
         >
           Reset All
@@ -118,3 +118,5 @@ export default function FilterSection({ filters, setFilters }) {
     </>
   );
 }
+
+export default QuizFilterSection
