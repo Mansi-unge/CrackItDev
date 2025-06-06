@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
-import FilterSection from "../Components/Topic/TheoryFilters";
+import TheoryFilterSection from "../Components/Topic/TheoryFilters";
 import QuestionCard from "../Components/Topic/QuestionCard";
 import { FaSpinner } from "react-icons/fa";
-import TheoryFilterSection from "../Components/Topic/TheoryFilters";
+
+const PAGE_SIZE = 15;
 
 export default function BrowseTopic() {
   const [filters, setFilters] = useState({
@@ -17,38 +18,33 @@ export default function BrowseTopic() {
   const [page, setPage] = useState(1);
   const [totalQuestions, setTotalQuestions] = useState(0);
   const [bookmarkedQuestions, setBookmarkedQuestions] = useState([]);
-  const [loading, setLoading] = useState(false); // ✅ New loading state
-  const pageSize = 15;
+  const [loading, setLoading] = useState(false);
 
-  const fetchQuestions = async () => {
+  const buildQuery = () => {
+    const query = [];
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value.length) query.push(`${key}=${value.join(",")}`);
+    });
+    query.push(`page=${page}`, `pageSize=${PAGE_SIZE}`);
+    return query.join("&");
+  };
+
+  const fetchQuestions = useCallback(async () => {
     try {
-      setLoading(true); //  Start loading
-      const query = [];
+      setLoading(true);
+      const { data } = await axios.get(`http://localhost:5000/api/questions?${buildQuery()}`);
+      const newQuestions = data.questions;
 
-      if (filters.tech.length) query.push(`tech=${filters.tech.join(",")}`);
-      if (filters.level.length) query.push(`level=${filters.level.join(",")}`);
-      if (filters.type.length) query.push(`type=${filters.type.join(",")}`);
-      if (filters.company.length)
-        query.push(`company=${filters.company.join(",")}`);
-
-      query.push(`page=${page}`);
-      query.push(`pageSize=${pageSize}`);
-
-      const res = await axios.get(
-        `http://localhost:5000/api/questions?${query.join("&")}`
-      );
-      const newQuestions = res.data.questions;
-      setTotalQuestions(res.data.total);
-
-      setQuestions((prev) =>
+      setTotalQuestions(data.total);
+      setQuestions(prev =>
         page === 1 ? newQuestions : [...prev, ...newQuestions]
       );
     } catch (error) {
       console.error("Error fetching questions:", error);
     } finally {
-      setLoading(false); //  Stop loading
+      setLoading(false);
     }
-  };
+  }, [filters, page]);
 
   useEffect(() => {
     setPage(1);
@@ -56,7 +52,7 @@ export default function BrowseTopic() {
 
   useEffect(() => {
     fetchQuestions();
-  }, [filters, page]);
+  }, [fetchQuestions]);
 
   const handleBookmark = (id) => {
     setBookmarkedQuestions((prev) =>
@@ -65,13 +61,13 @@ export default function BrowseTopic() {
   };
 
   const handleShare = (id) => {
-    const shareURL = window.location.href + `#question-${id}`;
+    const shareURL = `${window.location.href}#question-${id}`;
     navigator.clipboard.writeText(shareURL);
     alert("Link copied to clipboard!");
   };
 
   const toggleExpand = (id) => {
-    setExpandedId(expandedId === id ? null : id);
+    setExpandedId(prev => (prev === id ? null : id));
   };
 
   const sortedQuestions = [
@@ -81,14 +77,12 @@ export default function BrowseTopic() {
 
   return (
     <div className="md:flex">
-      {/* <FilterSection filters={filters} setFilters={setFilters} /> */}
-      <TheoryFilterSection filters={filters} setFilters={setFilters}/>
+      <TheoryFilterSection filters={filters} setFilters={setFilters} />
       <main className="flex-1 p-4 md:p-6 max-w-8xl mx-auto">
         <h1 className="text-2xl md:text-3xl font-bold mb-6 text-center text-gray-800">
           Browse Interview Questions
         </h1>
 
-        {/*  Show spinner when loading */}
         {loading ? (
           <div className="flex flex-col items-center justify-center min-h-[40vh] text-blue-600 text-lg">
             <FaSpinner className="animate-spin text-3xl mb-2" />
@@ -116,7 +110,6 @@ export default function BrowseTopic() {
           </div>
         )}
 
-        {/* Show More Button */}
         {!loading && sortedQuestions.length < totalQuestions && (
           <div className="text-center mt-8">
             <button

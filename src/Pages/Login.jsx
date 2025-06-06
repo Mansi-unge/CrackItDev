@@ -1,154 +1,192 @@
-import React, { useState , useEffect } from 'react';
-import { useLocation } from 'react-router-dom'; 
-import { FaEye, FaEyeSlash } from 'react-icons/fa';
-import Logo from '../Components/Logo';
+import React, { useState } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import Tabs from '../Components/Login/Tabs';
+import LoginForm from '../Components/Login/LoginForm';
+import SignupForm from '../Components/Login/SignupForm';
+import PasswordReset from '../Components/Login/PasswordReset';
+import SideContent from '../Components/Login/SideContent';
+
+const API_BASE = 'http://localhost:5000/api/users';
 
 const Login = () => {
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const location = useLocation();
-  const initialTab = location.state?.tab || 'login';
-  const [activeTab, setActiveTab] = useState(initialTab);
+  const [activeTab, setActiveTab] = useState('login');
+  const [showReset, setShowReset] = useState(false);
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    if (location.state?.tab) {
-      setActiveTab(location.state.tab);
+  // Common fields
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState(''); // For signup
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+
+  // Reset password fields
+  const [resetEmail, setResetEmail] = useState('');
+  const [resetToken, setResetToken] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+
+  // Messages
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+
+  const resetMessages = () => {
+    setError('');
+    setSuccess('');
+  };
+
+  const resetFields = () => {
+    setUsername('');
+    setEmail('');
+    setPassword('');
+    setConfirmPassword('');
+    resetMessages();
+  };
+
+  // Request reset token
+  const handleRequestReset = async () => {
+    try {
+      if (!resetEmail) {
+        setError('Please enter your registered email');
+        return;
+      }
+      const { data } = await axios.post(`${API_BASE}/request-reset`, { email: resetEmail });
+      alert(`Reset token: ${data.resetToken}`);
+      resetMessages();
+    } catch (err) {
+      setError(err.response?.data?.message || 'Failed to request reset');
     }
-  }, [location.state]);
+  };
 
-  const handleSubmit = (e) => {
+  // Reset password
+  const handleResetPassword = async () => {
+    try {
+      if (!resetToken || !newPassword) {
+        setError('Please fill all reset fields');
+        return;
+      }
+      await axios.post(`${API_BASE}/reset-password`, { token: resetToken, newPassword });
+      alert('Password reset successful');
+      setShowReset(false);
+      setResetEmail('');
+      setResetToken('');
+      setNewPassword('');
+      resetMessages();
+    } catch (err) {
+      setError(err.response?.data?.message || 'Reset failed');
+    }
+  };
+
+  // Login or Signup submit
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // TODO: add your submit logic here
+    resetMessages();
+
+    if (!username || !password || (activeTab === 'signup' && !email)) {
+      setError('Please fill all required fields.');
+      return;
+    }
+
+    if (activeTab === 'signup' && password !== confirmPassword) {
+      setError('Passwords do not match');
+      return;
+    }
+
+    try {
+      if (activeTab === 'login') {
+        const { data } = await axios.post(`${API_BASE}/login`, { username, password });
+        setSuccess(data.message);
+        localStorage.setItem('token', data.token);
+        navigate('/');
+      } else {
+        const { data } = await axios.post(`${API_BASE}/register`, { username, email, password });
+        setSuccess(data.message);
+        setActiveTab('login');
+        resetFields();
+      }
+    } catch (err) {
+      setError(err.response?.data?.message || 'Something went wrong');
+    }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-tr from-indigo-100 to-purple-200 flex items-center justify-center p-6">
-      <div className="bg-white rounded-3xl shadow-2xl p-10 max-w-md w-full">
-        {/* Logo and Tagline */}
-        <div className="flex flex-col items-center mb-6">
-          <Logo className="mx-auto" />
-          <p className="text-indigo-700 italic font-semibold mt-4 text-center">
-            "Tech Interviews, Cracked the Right Way."
-          </p>
-        </div>
+    <div className="min-h-screen flex flex-col md:flex-row transition-all duration-700 ease-in-out bg-gray-50">
+      <SideContent isLogin={activeTab === 'login'} />
 
-        {/* Tabs */}
-        <div className="flex justify-center space-x-10 border-b border-indigo-300">
-          {['login', 'signup'].map((tab) => (
-            <button
-              key={tab}
-              onClick={() => {
-                setActiveTab(tab);
-                setShowPassword(false);
-                setShowConfirmPassword(false);
-              }}
-              className={`relative pb-3 font-semibold transition-colors ${
-                activeTab === tab
-                  ? 'text-indigo-700'
-                  : 'text-indigo-400 hover:text-indigo-600'
-              }`}
-              aria-current={activeTab === tab ? 'true' : undefined}
-            >
-              {tab.charAt(0).toUpperCase() + tab.slice(1)}
-              {/* underline */}
-              {activeTab === tab && (
-                <span className="absolute left-0 bottom-0 w-full h-1 bg-indigo-700 rounded-full transition-all"></span>
-              )}
-            </button>
-          ))}
-        </div>
+      <div
+        className={`md:w-1/2 w-full flex flex-col justify-center items-center bg-white px-10 py-16 transition-all duration-700 ease-in-out ${
+          activeTab === 'login' ? 'order-2 md:order-2' : 'order-1 md:order-1'
+        }`}
+      >
+        {!showReset && <Tabs activeTab={activeTab} setActiveTab={setActiveTab} resetFields={resetFields} />}
 
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="mt-6 space-y-5">
-          {/* Email */}
-          <div>
-            <label htmlFor="email" className="block text-indigo-600 font-medium mb-1">
-              Email Address
-            </label>
-            <input
-              id="email"
-              type="email"
-              required
-              placeholder="you@example.com"
-              className="w-full rounded-lg border border-indigo-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              autoComplete="email"
+        {!showReset && activeTab === 'login' && (
+          <>
+            <LoginForm
+              username={username}
+              setUsername={setUsername}
+              password={password}
+              setPassword={setPassword}
+              onSubmit={handleSubmit}
+              error={error}
+              success={success}
             />
-          </div>
 
-          {/* Password */}
-          <div className="relative">
-            <label htmlFor="password" className="block text-indigo-600 font-medium mb-1">
-              Password
-            </label>
-            <input
-              id="password"
-              type={showPassword ? 'text' : 'password'}
-              required
-              placeholder="********"
-              className="w-full rounded-lg border border-indigo-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              autoComplete={activeTab === 'login' ? 'current-password' : 'new-password'}
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-11 text-indigo-500 text-lg select-none"
-              aria-label={showPassword ? 'Hide password' : 'Show password'}
-              tabIndex={-1}
-            >
-              {showPassword ? <FaEyeSlash /> : <FaEye />}
-            </button>
-          </div>
-
-          {/* Confirm Password (signup only) */}
-          {activeTab === 'signup' && (
-            <div className="relative">
-              <label htmlFor="confirm-password" className="block text-indigo-600 font-medium mb-1">
-                Confirm Password
+            <div className="flex items-center justify-between text-sm text-indigo-600 mt-2 w-full max-w-md">
+              <label className="flex items-center gap-2">
+                <input type="checkbox" className="accent-indigo-600" />
+                Remember me
               </label>
-              <input
-                id="confirm-password"
-                type={showConfirmPassword ? 'text' : 'password'}
-                required
-                placeholder="********"
-                className="w-full rounded-lg border border-indigo-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                autoComplete="new-password"
-              />
               <button
                 type="button"
-                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="absolute right-3 top-11 text-indigo-500 text-lg select-none"
-                aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
-                tabIndex={-1}
+                onClick={() => {
+                  setShowReset(true);
+                  resetMessages();
+                }}
+                className="hover:underline"
               >
-                {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+                Forgot password?
               </button>
             </div>
-          )}
+          </>
+        )}
 
-          {/* Remember me & Forgot password */}
-          <div className="flex items-center justify-between text-sm text-indigo-600">
-            <label className="flex items-center gap-2 cursor-pointer select-none">
-              <input type="checkbox" className="accent-indigo-600" />
-              Remember me
-            </label>
-            <a href="#" className="hover:underline">
-              Forgot password?
-            </a>
-          </div>
+        {!showReset && activeTab === 'signup' && (
+          <SignupForm
+            username={username}
+            setUsername={setUsername}
+            email={email}
+            setEmail={setEmail}
+            password={password}
+            setPassword={setPassword}
+            confirmPassword={confirmPassword}
+            setConfirmPassword={setConfirmPassword}
+            onSubmit={handleSubmit}
+            error={error}
+            success={success}
+          />
+        )}
 
-          {/* Submit button */}
-          <button
-            type="submit"
-            className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-purple-600 hover:to-indigo-600 text-white py-3 rounded-lg font-semibold shadow-md transition"
-          >
-            {activeTab === 'login' ? 'Login' : 'Sign Up'}
-          </button>
-        </form>
+        {showReset && (
+          <PasswordReset
+            resetEmail={resetEmail}
+            setResetEmail={setResetEmail}
+            resetToken={resetToken}
+            setResetToken={setResetToken}
+            newPassword={newPassword}
+            setNewPassword={setNewPassword}
+            onRequestReset={handleRequestReset}
+            onResetPassword={handleResetPassword}
+            onCancel={() => {
+              setShowReset(false);
+              setResetEmail('');
+              setResetToken('');
+              setNewPassword('');
+              resetMessages();
+            }}
+          />
+        )}
 
-        {/* Footer */}
-        <p className="text-center text-indigo-400 mt-4 text-xs select-none">
-          © 2025 CodePrep. All rights reserved.
-        </p>
+        <p className="text-center text-indigo-400 mt-6 text-xs select-none">© 2025 CrackIt.dev. All rights reserved.</p>
       </div>
     </div>
   );

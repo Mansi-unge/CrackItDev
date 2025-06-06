@@ -45,7 +45,7 @@ const QuizQuestionCard = ({
           {submitted && (
             <button
               onClick={() => toggleExplanation(question._id)}
-              className="mt-3 px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 transition"
+              className="mt-3 px-4 py-2 bg-green-300 text-green-700 font-medium rounded hover:bg-green-700 hover:text-white transition"
             >
               {submitted.showExplanation ? "Hide" : "View"} Explanation
             </button>
