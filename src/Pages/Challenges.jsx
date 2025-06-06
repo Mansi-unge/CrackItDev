@@ -33,42 +33,36 @@ const Challenges = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="p-6 grid sm:grid-cols-2 md:grid-cols-4 gap-6">
-      {techStacks.map((stack) => (
-        <div
-          key={stack.name}
-          className="bg-white rounded-2xl border border-gray-100 shadow-md hover:shadow-xl transition-all duration-300 p-5 flex flex-col justify-between"
+    <section className="p-6 grid sm:grid-cols-2 md:grid-cols-4 gap-6">
+      {techStacks.map(({ name, description, Icon, color }) => (
+        <article
+          key={name}
+          className="bg-white rounded-2xl border border-gray-100 shadow-md hover:shadow-xl transition-shadow duration-300 p-5 flex flex-col justify-between"
         >
-          {/* Top Row: Icon + Title + Button */}
-          <div className="flex justify-between items-start mb-4">
+          <header className="flex justify-between items-start mb-4">
             <div className="flex items-center space-x-3">
               <div
                 className="w-10 h-10 flex items-center justify-center rounded-full"
-                style={{ backgroundColor: `${stack.color}20` }}
+                style={{ backgroundColor: `${color}20` }}
+                aria-hidden="true"
               >
-                <stack.Icon size={20} color={stack.color} />
+                <Icon size={20} color={color} />
               </div>
-              <h3 className="text-lg font-semibold text-gray-800">
-                {stack.name}
-              </h3>
+              <h3 className="text-lg font-semibold text-gray-800">{name}</h3>
             </div>
             <button
-              onClick={() =>
-                navigate(`/challenges/${stack.name.toLowerCase()}`)
-              }
-              className="flex items-center gap-2 bg-blue-600 text-white text-xs px-3 py-1.5 rounded-full hover:bg-blue-700 transition"
+              onClick={() => navigate(`/challenges/${name.toLowerCase()}`)}
+              className="flex items-center gap-2 bg-blue-600 text-white text-xs px-3 py-1.5 rounded-full hover:bg-blue-700 transition-colors"
+              aria-label={`Take ${name} challenge`}
             >
               Take Challenge <FaArrowRight size={10} />
             </button>
-          </div>
+          </header>
 
-          {/* Description */}
-          <p className="text-gray-600 text-sm leading-relaxed">
-            {stack.description}
-          </p>
-        </div>
+          <p className="text-gray-600 text-sm leading-relaxed">{description}</p>
+        </article>
       ))}
-    </div>
+    </section>
   );
 };
 
