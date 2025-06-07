@@ -63,10 +63,19 @@ export default function Quiz() {
     if (!selected) return;
 
     try {
-      const res = await axios.post("http://localhost:5000/api/questions/verify", {
-        questionId: qid,
-        selectedOption: selected,
-      });
+     const res = await axios.post(
+  "http://localhost:5000/api/questions/verify",
+  {
+    questionId: qid,
+    selectedOption: selected,
+  },
+  {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+  }
+);
+
 
       const question = questions.find((q) => q._id === qid);
 
