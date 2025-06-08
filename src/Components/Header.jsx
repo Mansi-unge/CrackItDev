@@ -9,7 +9,6 @@ const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [user, setUser] = useState(null);
 
-  // Check login status
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
@@ -22,7 +21,7 @@ const Header = () => {
         .then((res) => setUser(res.data))
         .catch((err) => {
           console.error("Auth Error:", err.message);
-          localStorage.removeItem("token"); // If token invalid, clear it
+          localStorage.removeItem("token");
         });
     }
   }, []);
@@ -30,7 +29,7 @@ const Header = () => {
   const handleLogout = () => {
     localStorage.removeItem("token");
     setUser(null);
-    window.location.reload(); // Optional: refresh to reset UI
+    window.location.reload();
   };
 
   return (
@@ -64,9 +63,7 @@ const Header = () => {
                   <div className="absolute -left-20 hidden group-hover:flex bg-white shadow-xl shadow-gray-400 rounded-md p-6 z-50 min-w-[260px] max-h-[600px] overflow-y-auto overflow-x-hidden flex-wrap gap-6">
                     {item.children.map((section) => (
                       <div key={section.category} className="min-w-[180px]">
-                        <h4 className="font-semibold text-gray-800">
-                          {section.category}
-                        </h4>
+                        <h4 className="font-semibold text-gray-800">{section.category}</h4>
                         <ul className="space-y-1 text-sm">
                           {section.topics.map((topic) => (
                             <li key={topic}>
@@ -134,22 +131,82 @@ const Header = () => {
             </div>
           </div>
         ) : (
-          <>
-            <Link to="/login" state={{ tab: "login" }}>Login</Link>
+          <div className="flex items-center gap-4">
+            <Link
+              to="/login"
+              state={{ tab: "login" }}
+              className="text-sm text-gray-700 hover:text-indigo-600 font-medium"
+            >
+              Login
+            </Link>
             <Link to="/login" state={{ tab: "signup" }}>
-              <button className="bg-blue-600 text-white px-4 py-2 rounded-xl">
+              <button className="bg-blue-600 text-white px-4 py-2 rounded-xl text-sm font-medium hover:bg-blue-700 transition">
                 Sign up
               </button>
             </Link>
-          </>
+          </div>
         )}
       </div>
 
-      {/* Mobile Menu (Update similarly if needed) */}
+      {/* Mobile Navigation */}
       {menuOpen && (
         <div className="lg:hidden flex flex-col gap-4 px-6 pb-4">
-          {/* Mobile nav links */}
-          {/* You can also show "Logout" here if user is logged in */}
+          <nav>
+            <ul className="space-y-3">
+              {navLink.map((item) => (
+                <li key={item.name}>
+                  <Link
+                    to={item.href}
+                    onClick={() => setMenuOpen(false)}
+                    className="block text-base text-gray-800 font-medium hover:text-indigo-600 transition"
+                  >
+                    {item.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          {/* Auth/Profile Mobile */}
+          <div className="mt-4 border-t border-gray-200 pt-4">
+            {user ? (
+              <>
+                <p className="text-gray-700 font-medium mb-2">Hello, {user.username}</p>
+                <Link
+                  to="/profile"
+                  onClick={() => setMenuOpen(false)}
+                  className="block mb-2 text-indigo-600 hover:underline"
+                >
+                  My Profile
+                </Link>
+                <button
+                  onClick={() => {
+                    handleLogout();
+                    setMenuOpen(false);
+                  }}
+                  className="text-red-600 font-medium hover:underline"
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  to="/login"
+                  state={{ tab: "login" }}
+                  onClick={() => setMenuOpen(false)}
+                  className="block text-gray-800 font-medium hover:text-indigo-600 mb-2"
+                >
+                  Login
+                </Link>
+                <Link to="/login" state={{ tab: "signup" }} onClick={() => setMenuOpen(false)}>
+                  <button className="w-full bg-blue-600 text-white px-4 py-2 rounded-xl text-sm font-semibold hover:bg-blue-700 transition">
+                    Sign up
+                  </button>
+                </Link>
+              </>
+            )}
+          </div>
         </div>
       )}
     </header>

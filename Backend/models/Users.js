@@ -10,7 +10,6 @@ const userSchema = new Schema({
     unique: true,
     trim: true,
     minlength: 3,
-
   },
 
   email: {
@@ -25,53 +24,64 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
+
   resetToken: String,
   resetTokenExpiry: Date,
 
-
-  // ✅ Badges based on performance
-  badges: {
-    codingChampion: { type: Boolean, default: false },
-    mcqMaster: { type: Boolean, default: false },
-    rapidFireStreaker: { type: Boolean, default: false },
-    goldCompleter: { type: Boolean, default: false },
-  },
-
-  // ✅ Points and Progress
+  // ✅ MCQ Points (1 point per MCQ, regardless of correctness)
   points: {
     mcq: { type: Number, default: 0 },
-    coding: { type: Number, default: 0 },
-    total: { type: Number, default: 0 },
   },
 
-  // ✅ Streak and activity tracking
+  // ✅ Rapid Fire Streak (streak breaks if a day is missed)
   streak: {
     current: { type: Number, default: 0 },
     max: { type: Number, default: 0 },
-    lastCompletedDate: { type: Date, default: null }, // to avoid double-counting
+    lastCompletedDate: { type: Date, default: null },
   },
 
-  // ✅ Question tracking
-  solvedQuestions: [String], // General question IDs
-  solvedCodingQuestions: [String],
-  solvedMcqQuestions: [String],
-  solvedRapidFireQuestions: [String],
+  // ✅ Badges for coding questions
+  badges: {
+    silver: [{ type: String }], // questionIds
+    gold: [{ type: String }],   // techStacks
+  },
 
-  // ✅ Daily challenge history
-  dailyChallengeHistory: [
+  // ✅ Solved MCQ Questions
+  solvedMcqQuestions: [
     {
-      date: Date,
-      questionId: String,
-      success: Boolean,
+      questionId: { type: String, required: true },
+      isCorrect: { type: Boolean, required: true },
+      selectedOption: { type: String, required: true },
+      answeredAt: { type: Date, default: Date.now },
     },
   ],
 
-  // ✅ Created/updated at
+  // ✅ Solved Coding Questions (includes daily challenges)
+  solvedCodingQuestions: [
+    {
+      questionId: { type: String, required: true },
+      submittedCode: { type: String },
+      isCorrect: { type: Boolean, default: false },
+      techStack: { type: String }, // for gold badge
+      isDailyChallenge: { type: Boolean, default: false },
+      answeredAt: { type: Date, default: Date.now },
+    },
+  ],
+
+  // ✅ Solved Rapid Fire Questions
+  solvedRapidFireQuestions: [
+    {
+      questionId: String,
+      success: Boolean,
+      answeredAt: { type: Date, default: Date.now },
+    },
+  ],
+
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
 });
 
-// Middleware to update `updatedAt` automatically
+// ✅ Auto-update `updatedAt` on save
 userSchema.pre("save", function (next) {
   this.updatedAt = new Date();
   next();

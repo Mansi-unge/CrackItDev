@@ -15,85 +15,138 @@ export default function Quiz() {
   const [questions, setQuestions] = useState([]);
   const [selectedAnswers, setSelectedAnswers] = useState({});
   const [submittedAnswers, setSubmittedAnswers] = useState({});
+  const [solvedMcqs, setSolvedMcqs] = useState({});
   const [page, setPage] = useState(1);
   const [totalQuestions, setTotalQuestions] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [points, setPoints] = useState(0);
+
   const pageSize = 15;
+  const token = localStorage.getItem("token");
 
-  const fetchQuestions = async () => {
-    try {
-      setLoading(true);
-      const query = [];
-
-      if (filters.tech.length) query.push(`tech=${filters.tech.join(",")}`);
-      if (filters.level.length) query.push(`level=${filters.level.join(",")}`);
-      if (filters.type.length) query.push(`type=${filters.type.join(",")}`);
-      if (filters.company.length) query.push(`company=${filters.company.join(",")}`);
-      query.push(`page=${page}`);
-      query.push(`pageSize=${pageSize}`);
-
-      const url = `http://localhost:5000/api/questions?${query.join("&")}`;
-      const res = await axios.get(url);
-
-      const fetchedQuestions = res.data?.questions || [];
-      setTotalQuestions(res.data?.total || 0);
-      setQuestions((prev) => (page === 1 ? fetchedQuestions : [...prev, ...fetchedQuestions]));
-    } catch (error) {
-      console.error("Error fetching questions:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  // 🔄 Fetch User Progress
   useEffect(() => {
-    setPage(1); // Reset to page 1 when filters change
+    const fetchProgress = async () => {
+      try {
+        const res = await axios.get("http://localhost:5000/api/progress", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        const userData = res.data;
+
+        const progress = res.data?.solvedMcqQuestions || [];
+        const formatted = {};
+        progress.forEach((q) => {
+          formatted[q.questionId] = {
+            selected: q.selectedOption,
+            isCorrect: q.isCorrect,
+            showExplanation: true ,
+          };
+        });
+
+        setSubmittedAnswers(formatted);
+        setSolvedMcqs(formatted);
+          setPoints(userData.points?.mcq || 0);
+
+      } catch (err) {
+        console.error("Failed to fetch MCQ progress", err);
+      }
+    };
+
+    fetchProgress();
+  }, [token]);
+
+  // 🔄 Fetch Questions
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      try {
+        setLoading(true);
+
+        const query = [];
+        if (filters.tech.length) query.push(`tech=${filters.tech.join(",")}`);
+        if (filters.level.length) query.push(`level=${filters.level.join(",")}`);
+        if (filters.type.length) query.push(`type=${filters.type.join(",")}`);
+        if (filters.company.length) query.push(`company=${filters.company.join(",")}`);
+        query.push(`page=${page}`);
+        query.push(`pageSize=${pageSize}`);
+
+        const url = `http://localhost:5000/api/questions?${query.join("&")}`;
+        const res = await axios.get(url);
+
+        const fetched = res.data?.questions || [];
+        setTotalQuestions(res.data?.total || 0);
+        setQuestions((prev) => (page === 1 ? fetched : [...prev, ...fetched]));
+      } catch (error) {
+        console.error("Error fetching questions:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchQuestions();
+  }, [filters, page]);
+
+  // 🔁 Reset to Page 1 when filters change
+  useEffect(() => {
+    setPage(1);
   }, [filters]);
 
-  useEffect(() => {
-    fetchQuestions();
-  }, [page, filters]);
-
+  // ✅ Handle Option Select
   const handleSelect = (qid, option) => {
-    if (submittedAnswers[qid]) return;
+    if (submittedAnswers[qid]) return; // Prevent changing already submitted
     setSelectedAnswers((prev) => ({ ...prev, [qid]: option }));
   };
 
+  // ✅ Handle Submit
   const handleSubmitAnswer = async (qid) => {
     const selected = selectedAnswers[qid];
-    if (!selected) return;
+    if (!selected || submittedAnswers[qid]) return;
 
     try {
-     const res = await axios.post(
-  "http://localhost:5000/api/questions/verify",
-  {
-    questionId: qid,
-    selectedOption: selected,
-  },
-  {
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    },
-  }
-);
-
+      // 1. Verify
+      const res = await axios.post(
+        "http://localhost:5000/api/questions/verify",
+        { questionId: qid, selectedOption: selected },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
 
       const question = questions.find((q) => q._id === qid);
+      const isCorrect = selected === question.correctOption;
 
-      setSubmittedAnswers((prev) => ({
-        ...prev,
-        [qid]: {
-          selected,
-          correct: question.correctOption,
-          isCorrect: selected === question.correctOption,
-          explanation: res.data?.answerExplanation || "No explanation provided.",
-          showExplanation: false,
-        },
-      }));
+      // 2. Save Progress
+      await axios.post(
+        "http://localhost:5000/api/progress/mcq",
+        { questionId: qid, selectedOption: selected, isCorrect },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      // 3. Update UI
+      const explanation = res.data?.answerExplanation || "No explanation provided.";
+      const answerObj = {
+        selected,
+        correct: question.correctOption,
+        isCorrect,
+        explanation,
+        showExplanation: false,
+      };
+
+      setSubmittedAnswers((prev) => ({ ...prev, [qid]: answerObj }));
+      setSolvedMcqs((prev) => ({ ...prev, [qid]: answerObj }));
+      setPoints((prev) => prev + 1);
+      if (isCorrect) {
+        toast.success("Correct Answer 🎉");
+      } else {
+        toast.error("Wrong Answer ❌");
+      }
     } catch (error) {
-      console.error("Error submitting answer:", error);
+      console.error("Error submitting answer or saving progress:", error);
+      if (error.response?.data?.message === "Already solved") {
+        alert("You've already solved this question!");
+      }
     }
   };
 
+  // 👁️ Toggle Explanation
   const toggleExplanation = (qid) => {
     setSubmittedAnswers((prev) => ({
       ...prev,
@@ -113,6 +166,10 @@ export default function Quiz() {
           Quiz - MCQ Questions
         </h1>
 
+          <div className="mb-6 text-center text-lg font-semibold text-indigo-700">
+    Your MCQ Points: {points}
+  </div>
+
         {loading ? (
           <div className="flex flex-col items-center justify-center min-h-[40vh] text-blue-600 text-lg">
             <FaSpinner className="animate-spin text-3xl mb-2" />
@@ -128,7 +185,10 @@ export default function Quiz() {
               <QuizQuestionCard
                 key={q._id}
                 question={q}
-                selected={selectedAnswers[q._id]}
+                selected={
+                  submittedAnswers[q._id]?.selected ?? selectedAnswers[q._id]
+                }
+
                 submitted={submittedAnswers[q._id]}
                 onSelect={handleSelect}
                 onSubmit={handleSubmitAnswer}
