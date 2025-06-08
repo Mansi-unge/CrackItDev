@@ -161,7 +161,7 @@ export default function Quiz() {
     <div className="md:flex">
       <QuizFilterSection filters={filters} setFilters={setFilters} />
 
-      <main className="flex-1 p-4 md:p-6 max-w-7xl mx-auto">
+      <main className="flex-1 p-4 md:p-6 max-w-7xl mx-auto ">
         <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">
           Quiz - MCQ Questions
         </h1>

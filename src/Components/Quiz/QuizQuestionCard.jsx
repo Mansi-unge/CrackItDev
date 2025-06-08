@@ -69,7 +69,7 @@ const QuizQuestionCard = ({
                 {!isCorrect && (
                   <p className="flex items-center text-md  font-medium gap-2">
                     <FaTimesCircle className="text-xl" />
-                    Your answer <span className=" text-red-600">{selected}</span> is incorrect. 
+                    Your answer <span className="font-semibold text-red-600">{selected}</span> is incorrect. 
                     Correct Answer:{" "}
                     <span className="font-semibold text-green-700">
                       {question.correctOption}
