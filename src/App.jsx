@@ -1,3 +1,4 @@
+// App.jsx
 import "./App.css";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import Header from "./Components/Header";
@@ -14,28 +15,24 @@ import Dashboard from "./Pages/Dashboard";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-// Wrapper to use hooks like useLocation outside Router
 function AppWrapper() {
   const location = useLocation();
-
-  // Define routes where Header and Footer should be hidden
   const hideLayoutRoutes = ["/login"];
-
   const shouldHideLayout = hideLayoutRoutes.includes(location.pathname);
 
   return (
     <>
-    <ToastContainer />
+      <ToastContainer />
       {!shouldHideLayout && <Header />}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/Topics" element={<BrowseTopic />} />
-        <Route path="/challenges" element={<Challenges/>} />
-        <Route path="/challenges/:tech" element={<ProtectedRoute><ChallengeQuestions/></ProtectedRoute>  } />
-        <Route path="/compiler/:id" element={ <CodeEditorPage/> } />
-        <Route path="/Quizes" element={<ProtectedRoute><Quiz /></ProtectedRoute>} />
-        <Route path="/Dashboard" element={ <ProtectedRoute><Dashboard/></ProtectedRoute> } />
+        <Route path="/topics" element={<BrowseTopic />} />
+        <Route path="/challenges" element={<Challenges />} />
+        <Route path="/challenges/:tech" element={<ProtectedRoute><ChallengeQuestions /></ProtectedRoute>} />
+        <Route path="/compiler/:id" element={<CodeEditorPage />} />
+        <Route path="/quiz" element={<ProtectedRoute><Quiz /></ProtectedRoute>} />
+        <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
       </Routes>
       {!shouldHideLayout && <Footer />}
     </>

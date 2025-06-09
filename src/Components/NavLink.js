@@ -2,7 +2,7 @@ const navLink = [
   { name: "Home", href: "/" },
   {
     name: "Browse Topics",
-    href: "/Topics",
+    href: "/topics",
   },
   {
     name: "Daily Challenges",
@@ -10,11 +10,11 @@ const navLink = [
   },
   {
     name: "Quiz Mode",
-    href: "/Quizes",
+    href: "/quiz",
   },
   {
     name: "Dashboard",
-    href: "/Dashboard",
+    href: "/dashboard",
   },
 ];
 

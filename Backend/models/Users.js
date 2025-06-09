@@ -41,10 +41,12 @@ const userSchema = new Schema({
   },
 
   // ✅ Badges for coding questions
-  badges: {
-    silver: [{ type: String }], // questionIds
-    gold: [{ type: String }],   // techStacks
-  },
+ badges: {
+  bronze: { type: Boolean, default: false }, // 🥉 new
+  silver: [{ type: String }],               // 🥈 per question
+  gold: [{ type: String }],                 // 🥇 per techStack
+},
+
 
   // ✅ Solved MCQ Questions
   solvedMcqQuestions: [
@@ -53,6 +55,7 @@ const userSchema = new Schema({
       isCorrect: { type: Boolean, required: true },
       selectedOption: { type: String, required: true },
       answeredAt: { type: Date, default: Date.now },
+      
     },
   ],
 

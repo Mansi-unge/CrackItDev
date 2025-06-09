@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { Navigate } from "react-router-dom"; // <-- import Navigate here
 import QuizFilterSection from "../Components/Quiz/QuizFilterSection";
 import { FaSpinner } from "react-icons/fa";
 import QuizQuestionCard from "../Components/Quiz/QuizQuestionCard";
+import { toast } from "react-toastify";
 
 export default function Quiz() {
   const [filters, setFilters] = useState({
@@ -22,7 +24,12 @@ export default function Quiz() {
   const [points, setPoints] = useState(0);
 
   const pageSize = 15;
+
   const token = localStorage.getItem("token");
+
+  if (!token) {
+    return <Navigate to="/login" replace />;
+  }
 
   // 🔄 Fetch User Progress
   useEffect(() => {
@@ -34,20 +41,20 @@ export default function Quiz() {
 
         const userData = res.data;
 
-        const progress = res.data?.solvedMcqQuestions || [];
+        const progress = userData?.solvedMcqQuestions || [];
         const formatted = {};
         progress.forEach((q) => {
           formatted[q.questionId] = {
             selected: q.selectedOption,
             isCorrect: q.isCorrect,
-            showExplanation: true ,
+            explanation: q.explanation || "No explanation available.",
+            showExplanation: true,
           };
         });
 
         setSubmittedAnswers(formatted);
         setSolvedMcqs(formatted);
-          setPoints(userData.points?.mcq || 0);
-
+        setPoints(userData.points?.mcq || 0);
       } catch (err) {
         console.error("Failed to fetch MCQ progress", err);
       }
@@ -105,7 +112,7 @@ export default function Quiz() {
     try {
       // 1. Verify
       const res = await axios.post(
-        "http://localhost:5000/api/questions/verify",
+        "http://localhost:5000/api/mcq/verify",
         { questionId: qid, selectedOption: selected },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -113,26 +120,30 @@ export default function Quiz() {
       const question = questions.find((q) => q._id === qid);
       const isCorrect = selected === question.correctOption;
 
+      const explanation = res.data?.answerExplanation || "No explanation provided.";
+
       // 2. Save Progress
       await axios.post(
-        "http://localhost:5000/api/progress/mcq",
-        { questionId: qid, selectedOption: selected, isCorrect },
+        "http://localhost:5000/api/mcq/save",
+        { questionId: qid, selectedOption: selected, isCorrect, explanation },
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
       // 3. Update UI
-      const explanation = res.data?.answerExplanation || "No explanation provided.";
       const answerObj = {
         selected,
         correct: question.correctOption,
         isCorrect,
         explanation,
-        showExplanation: false,
+        showExplanation: true,
       };
 
       setSubmittedAnswers((prev) => ({ ...prev, [qid]: answerObj }));
       setSolvedMcqs((prev) => ({ ...prev, [qid]: answerObj }));
-      setPoints((prev) => prev + 1);
+      if (isCorrect) {
+        setPoints((prev) => prev + 1);
+      }
+
       if (isCorrect) {
         toast.success("Correct Answer 🎉");
       } else {
@@ -166,9 +177,9 @@ export default function Quiz() {
           Quiz - MCQ Questions
         </h1>
 
-          <div className="mb-6 text-center text-lg font-semibold text-indigo-700">
-    Your MCQ Points: {points}
-  </div>
+        <div className="mb-6 text-center text-lg font-semibold text-indigo-700">
+          Your MCQ Points: {points}
+        </div>
 
         {loading ? (
           <div className="flex flex-col items-center justify-center min-h-[40vh] text-blue-600 text-lg">
@@ -188,7 +199,6 @@ export default function Quiz() {
                 selected={
                   submittedAnswers[q._id]?.selected ?? selectedAnswers[q._id]
                 }
-
                 submitted={submittedAnswers[q._id]}
                 onSelect={handleSelect}
                 onSubmit={handleSubmitAnswer}

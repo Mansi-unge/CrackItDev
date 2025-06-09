@@ -168,7 +168,7 @@ const Header = () => {
           </nav>
 
           {/* Auth/Profile Mobile */}
-          <div className="mt-4 border-t border-gray-200 pt-4">
+          <div className=" border-t border-gray-200 pt-4">
             {user ? (
               <>
                 <p className="text-gray-700 font-medium mb-2">Hello, {user.username}</p>

@@ -1,3 +1,4 @@
+// ProtectedRoute.jsx
 import { Navigate, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 
@@ -10,7 +11,7 @@ const ProtectedRoute = ({ children, message = "Login first to access this page" 
       toastId: "login-required",
       hideProgressBar: true,
     });
-    return <Navigate to="/" state={{ from: location }} replace />;
+    return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
   return children;
