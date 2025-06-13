@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import AceEditor from "react-ace";
 import axios from "axios";
+import { FaVial, FaCheck, FaUpload, FaTimes, FaCheckCircle } from "react-icons/fa";
 
 import "ace-builds/src-noconflict/mode-c_cpp";
 import "ace-builds/src-noconflict/mode-java";
@@ -19,18 +20,6 @@ const languageMap = {
   "C++": "c_cpp",
   JavaScript: "javascript",
   TypeScript: "typescript",
-  Go: "go",
-  Ruby: "ruby",
-  CSharp: "csharp",
-  PHP: "php",
-  Swift: "swift",
-  Rust: "rust",
-  Kotlin: "kotlin",
-  Scala: "scala",
-  SQL: "sql",
-  Perl: "perl",
-  Lua: "lua",
-  Bash: "sh",
 };
 
 const languageIdMap = {
@@ -40,18 +29,6 @@ const languageIdMap = {
   c_cpp: 54,
   c: 50,
   typescript: 74,
-  go: 60,
-  ruby: 72,
-  php: 68,
-  swift: 83,
-  rust: 73,
-  kotlin: 78,
-  scala: 81,
-  sql: 82,
-  csharp: 51,
-  perl: 85,
-  lua: 64,
-  sh: 46,
 };
 
 const normalizeText = (text = "") =>
@@ -62,8 +39,6 @@ const normalizeText = (text = "") =>
     .toLowerCase();
 
 const insertUserLogic = (template, logic) => {
-  // Replace the placeholder comment with user's logic.
-  // If no placeholder found, fallback to concatenation.
   if (template.includes("// Write your code here")) {
     return template.replace("// Write your code here", logic.trim());
   }
@@ -80,6 +55,7 @@ const CodeEditorPage = () => {
   const [results, setResults] = useState([]);
   const [running, setRunning] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [loadingProgress, setLoadingProgress] = useState(false);
 
   useEffect(() => {
     if (!id) return;
@@ -91,7 +67,32 @@ const CodeEditorPage = () => {
       setBadgeEarned(false);
       setResults([]);
     });
+
+    const token = localStorage.getItem("token");
+    if (token) {
+      setLoadingProgress(true);
+      axios
+        .get("http://localhost:5000/api/coding/progress", {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then((res) => {
+          console.log("User progress:", res.data);
+          const solved = res.data.solvedCodingQuestions || [];
+          const solvedQuestion = solved.find(
+            (q) => q.questionId.toString() === id
+          );
+          if (solvedQuestion && solvedQuestion.isCorrect) {
+            setBadgeEarned(true);
+            setUserLogic(solvedQuestion.submittedCode);
+          }
+        })
+        .catch((err) => {
+          console.error("Failed to fetch user progress:", err);
+        })
+        .finally(() => setLoadingProgress(false));
+    }
   }, [id]);
+
 
   const runCode = useCallback(async () => {
     if (!question) return;
@@ -174,11 +175,10 @@ const CodeEditorPage = () => {
     setOutput("Submitting and validating...");
 
     try {
-      const token = localStorage.getItem("token"); // Your auth token
+      const token = localStorage.getItem("token");
       const langKey = (languageMap[question.tech] || "python").toLowerCase();
       const language_id = languageIdMap[langKey] || 71;
 
-      // **Replace placeholder with user logic**
       const finalCode = insertUserLogic(code, userLogic);
 
       let passedCount = 0;
@@ -279,6 +279,7 @@ const CodeEditorPage = () => {
             </ul>
           </section>
         )}
+        {loadingProgress && <p>Loading user progress...</p>}
 
         {badgeEarned && (
           <p className="text-green-700 font-semibold mt-4">
@@ -290,20 +291,22 @@ const CodeEditorPage = () => {
           <button
             onClick={runCode}
             disabled={running || submitting}
-            className={`${
-              running || submitting ? "bg-blue-300 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"
-            } text-white px-5 py-2 rounded-md text-sm`}
+            className={`${running || submitting ? "bg-blue-300 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"
+              } text-white px-5 py-2 rounded-md text-sm`}
           >
             {running ? "Running..." : "Run Code"}
           </button>
           <button
             onClick={handleSubmit}
             disabled={running || submitting}
-            className={`${
-              submitting || running ? "bg-green-300 cursor-not-allowed" : "bg-green-600 hover:bg-green-700"
-            } text-white px-5 py-2 rounded-md text-sm`}
+            className={`${submitting || running ? "bg-green-300 cursor-not-allowed" : "bg-green-600 hover:bg-green-700"
+              } text-white px-5 py-2 rounded-md text-sm`}
           >
-            {submitting ? "Submitting..." : "Submit"}
+            {badgeEarned
+              ? "Already Solved"
+              : submitting
+                ? "Submitting..."
+                : "Submit"}
           </button>
         </div>
       </section>
@@ -340,22 +343,26 @@ const CodeEditorPage = () => {
         {results.length > 0 && (
           <div className="bg-gray-100 p-4 text-sm mt-2 rounded shadow-inner max-h-100 overflow-y-auto">
             <h2 className="font-semibold mb-2">Test Case Results:</h2>
-            <ul className="space-y-2">
+            <ul className="space-y-4">
               {results.map((r, idx) => (
                 <li key={idx}>
-                  <p>
-                    🧪 <span className="font-medium">Input:</span> {r.input}
+                  <p className="flex items-center gap-2">
+                    <FaVial className="text-blue-600" />
+                    <span className="font-medium">Input:</span> {r.input}
                   </p>
-                  <p>
-                    ✅ <span className="font-medium">Expected:</span> {r.expected}
+                  <p className="flex items-center gap-2">
+                    <FaCheck className="text-green-600" />
+                    <span className="font-medium">Expected:</span> {r.expected}
                   </p>
-                  <p>
-                    📤 <span className="font-medium">Your Output:</span> {r.actual}
+                  <p className="flex items-center gap-2">
+                    <FaUpload className="text-purple-600" />
+                    <span className="font-medium">Your Output:</span> {r.actual}
                   </p>
-                  <p className={r.pass ? "text-green-600 font-semibold" : "text-red-600 font-semibold"}>
-                    {r.pass ? "✔ Passed" : "❌ Failed"}
+                  <p className={`flex items-center gap-2 font-semibold ${r.pass ? "text-green-600" : "text-red-600"}`}>
+                    {r.pass ? <FaCheckCircle /> : <FaTimes />}
+                    {r.pass ? "Passed" : "Failed"}
                   </p>
-                  <hr />
+                  <hr className="my-2" />
                 </li>
               ))}
             </ul>

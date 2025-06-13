@@ -28,38 +28,26 @@ const userSchema = new Schema({
   resetToken: String,
   resetTokenExpiry: Date,
 
-  // ✅ MCQ Points (1 point per MCQ, regardless of correctness)
   points: {
     mcq: { type: Number, default: 0 },
   },
 
-  // ✅ Rapid Fire Streak (streak breaks if a day is missed)
-  streak: {
-    current: { type: Number, default: 0 },
-    max: { type: Number, default: 0 },
-    lastCompletedDate: { type: Date, default: null },
+  badges: {
+    bronze: { type: Boolean, default: false },
+    silver: { type: Boolean, default: false },
+    golden: { type: Boolean, default: false },
   },
 
-  // ✅ Badges for coding questions
- badges: {
-  bronze: { type: Boolean, default: false }, // 🥉 new
-  silver: [{ type: String }],               // 🥈 per question
-  gold: [{ type: String }],                 // 🥇 per techStack
-},
-
-
-  // ✅ Solved MCQ Questions
   solvedMcqQuestions: [
     {
       questionId: { type: String, required: true },
       isCorrect: { type: Boolean, required: true },
       selectedOption: { type: String, required: true },
+      explanation: { type: String, default: "No explanation available." },
       answeredAt: { type: Date, default: Date.now },
-      
     },
   ],
 
-  // ✅ Solved Coding Questions (includes daily challenges)
   solvedCodingQuestions: [
     {
       questionId: { type: String, required: true },
@@ -70,21 +58,10 @@ const userSchema = new Schema({
       answeredAt: { type: Date, default: Date.now },
     },
   ],
-
-  // ✅ Solved Rapid Fire Questions
-  solvedRapidFireQuestions: [
-    {
-      questionId: String,
-      success: Boolean,
-      answeredAt: { type: Date, default: Date.now },
-    },
-  ],
-
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
 });
 
-// ✅ Auto-update `updatedAt` on save
 userSchema.pre("save", function (next) {
   this.updatedAt = new Date();
   next();

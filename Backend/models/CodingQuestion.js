@@ -1,21 +1,35 @@
-import Question from "./Question.js";
+// models/CodingQuestion.js
 import mongoose from "mongoose";
 
-const CodingQuestionSchema = new mongoose.Schema({
+const { Schema, model } = mongoose;
+
+const CodingQuestionSchema = new Schema({
+  title: { type: String, required: true },
+  type: { type: String, default: "Coding" },
+  tech: { type: String, required: true },
+  level: {
+    type: String,
+    enum: ["Beginner", "Intermediate", "Advanced"],
+    required: true,
+  },
+  description: { type: String },
+  topic: { type: String, required: true },
+  company: [{ type: String }],
+  isDailyChallenge: { type: Boolean, default: false },
+
   hints: [String],
-  sampleInput: String,
-  sampleOutput: String,
-  codeTemplate: String,
-  solution: String,
+  sampleInput: { type: String },
+  sampleOutput: { type: String },
+  codeTemplate: { type: String },
+  solution: { type: String },
   testCases: [
     {
-      input: String,
-      output: String,  // Note key name changed to "output" to match frontend
+      input: { type: String, required: true },
+      output: { type: String, required: true },
     },
   ],
-  tech: String,  // Add tech stack for badge logic
+  createdAt: { type: Date, default: Date.now },
 });
 
-const CodingQuestion = Question.discriminator("Coding", CodingQuestionSchema);
-
+const CodingQuestion = model("CodingQuestion", CodingQuestionSchema);
 export default CodingQuestion;

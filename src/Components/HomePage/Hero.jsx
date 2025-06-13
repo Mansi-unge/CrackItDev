@@ -1,20 +1,20 @@
 import React from "react";
-import { FaRocket, FaLaptopCode } from "react-icons/fa";
+import { FaRocket, FaLaptopCode, FaBrain, FaBullseye, FaBolt } from "react-icons/fa";
 import { motion } from "framer-motion";
 
 const featureCards = [
   {
-    title: "🧠",
+    icon: <FaBrain size={28} />,
     label: "Topic-wise Mastery",
     desc: "From HTML to DevOps — curated questions for every tech domain.",
   },
   {
-    title: "🎯",
+    icon: <FaBullseye size={28} />,
     label: "FAANG Focused",
     desc: "Practice with questions asked at Google, Meta, Amazon & more.",
   },
   {
-    title: "⚡",
+    icon: <FaBolt size={28} />,
     label: "Rapid Fire",
     desc: "Test your speed with timed quizzes and flash rounds.",
   },
@@ -49,7 +49,7 @@ const Hero = () => {
 
         {/* Logo Text */}
         <div className="flex justify-center">
-          <h1 className="text-5xl md:text-6xl  font-semibold flex flex-wrap items-center justify-center gap-2 tracking-wide pb-4 sm:pb-10">
+          <h1 className="text-5xl md:text-6xl font-semibold flex flex-wrap items-center justify-center gap-2 tracking-wide pb-4 sm:pb-10">
             <span className="text-pink-600">{"<"}</span>
             <span className="font-extrabold text-indigo-600">crackit</span>
             <span
@@ -59,7 +59,7 @@ const Hero = () => {
               ⚡
             </span>
             <span className="text-indigo-600 font-extrabold">dev</span>
-            <span className="text-pink-600">{" />"}</span>
+            <span className="text-pink-600">{"/>"}</span>
           </h1>
         </div>
 
@@ -84,7 +84,7 @@ const Hero = () => {
         </div>
 
         {/* Feature Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-18 md:gap-10 max-w-6xl mx-auto ">
+        <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-18 md:gap-10 max-w-6xl mx-auto">
           {featureCards.map((card, i) => (
             <motion.div
               key={i}
@@ -98,15 +98,15 @@ const Hero = () => {
               <motion.div
                 variants={badgeVariants}
                 transition={{ duration: 0.3 }}
-                className="absolute -top-10 left-1/2 transform -translate-x-1/2 w-20 h-20 bg-blue-600 text-white flex items-center justify-center rounded-lg font-bold text-lg shadow-md origin-center"
+                className="absolute -top-10 left-1/2 transform -translate-x-1/2 w-20 h-20 bg-blue-600 text-white flex flex-col items-center justify-center rounded-lg font-bold text-lg shadow-md origin-center"
               >
                 <motion.div
                   variants={{ rest: { rotate: 45 }, hover: { rotate: 0 } }}
                   transition={{ duration: 0.4 }}
                   className="flex flex-col items-center justify-center text-xl leading-tight"
                 >
-                  <span>{card.title}</span>
-                  <span className="text-xs mt-1">{card.label}</span>
+                  {card.icon}
+                  <span className="text-xs mt-1 text-center px-1">{card.label}</span>
                 </motion.div>
               </motion.div>
               <p className="text-gray-600 text-sm sm:text-base mt-6">{card.desc}</p>

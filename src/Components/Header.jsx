@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { FaBars, FaTimes, FaUserCircle } from "react-icons/fa";
@@ -6,6 +6,8 @@ import Logo from "./Logo";
 import navLink from "./NavLink";
 
 const Header = () => {
+  const [profileOpen, setProfileOpen] = useState(false);
+  const profileRef = useRef();
   const [menuOpen, setMenuOpen] = useState(false);
   const [user, setUser] = useState(null);
 
@@ -26,11 +28,26 @@ const Header = () => {
     }
   }, []);
 
+  useEffect(() => {
+  const handleClickOutside = (e) => {
+    if (profileRef.current && !profileRef.current.contains(e.target)) {
+      setProfileOpen(false);
+    }
+  };
+
+  document.addEventListener("mousedown", handleClickOutside);
+  return () => {
+    document.removeEventListener("mousedown", handleClickOutside);
+  };
+}, []);
+
+
   const handleLogout = () => {
     localStorage.removeItem("token");
     setUser(null);
     window.location.reload();
   };
+
 
   return (
     <header className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm flex flex-col lg:flex-row">
@@ -110,26 +127,36 @@ const Header = () => {
 
         {/* Auth/Profile */}
         {user ? (
-          <div className="relative group">
-            <FaUserCircle className="w-8 h-8 text-indigo-600 cursor-pointer" />
-            <div className="absolute -right-2 top-full mt-2 w-48 bg-white shadow-lg rounded-md hidden group-hover:block z-50">
-              <div className="p-4 text-gray-700 border-b border-gray-200">
-                Hello, <span className="font-semibold">{user.username}</span>
-              </div>
-              <Link
-                to="/profile"
-                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-              >
-                My Profile
-              </Link>
-              <button
-                onClick={handleLogout}
-                className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
-              >
-                Logout
-              </button>
-            </div>
-          </div>
+          <div className="relative" ref={profileRef}>
+  <FaUserCircle
+    className="w-8 h-8 text-indigo-600 cursor-pointer"
+    onClick={() => setProfileOpen(!profileOpen)}
+  />
+  {profileOpen && (
+    <div className="absolute -right-2 top-full mt-2 w-48 bg-white shadow-lg rounded-md z-50">
+      <div className="p-4 text-gray-700 border-b border-gray-200">
+        Hello, <span className="font-semibold">{user.username}</span>
+      </div>
+      <Link
+        to="/profile"
+        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+        onClick={() => setProfileOpen(false)}
+      >
+        My Profile
+      </Link>
+      <button
+        onClick={() => {
+          handleLogout();
+          setProfileOpen(false);
+        }}
+        className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
+      >
+        Logout
+      </button>
+    </div>
+  )}
+</div>
+
         ) : (
           <div className="flex items-center gap-4">
             <Link
