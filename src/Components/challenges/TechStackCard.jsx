@@ -1,42 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
+import useTechStackProgress from "../../Hooks/challenges/useTechStackProgress";
 
 const TechStackCard = ({ tech, description, Icon, color }) => {
-  const [totalQuestions, setTotalQuestions] = useState(0);
-  const [solvedCount, setSolvedCount] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const countRes = await fetch(`http://localhost:5000/api/coding/count?tech=${tech}`);
-        const countData = await countRes.json();
-        setTotalQuestions(countData.count);
-
-        const token = localStorage.getItem("token");
-        if (token) {
-          const progressRes = await fetch("http://localhost:5000/api/coding/progress", {
-            headers: { Authorization: `Bearer ${token}` },
-          });
-          const progressData = await progressRes.json();
-          const userSolvedForTech = progressData.solvedCodingQuestions.filter(
-            (q) => q.techStack === tech && q.isCorrect
-          );
-          setSolvedCount(userSolvedForTech.length);
-        }
-
-        setIsLoading(false);
-      } catch (err) {
-        setError("Failed to load progress.");
-        console.error(err);
-        setIsLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [tech]);
+  const { totalQuestions, solvedCount, isLoading, error } = useTechStackProgress(tech);
 
   const hasGoldBadge = solvedCount === totalQuestions && totalQuestions > 0;
   const progressPercent = totalQuestions ? (solvedCount / totalQuestions) * 100 : 0;

@@ -1,31 +1,30 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   FaChevronDown,
   FaChevronUp,
   FaSlidersH,
   FaTimes,
 } from "react-icons/fa";
+import useChallengeFilters from "../../Hooks/challenges/useChallengeFilters";
 
 const levelOptions = ["Beginner", "Intermediate", "Advanced"];
 const companyOptions = ["Google", "Amazon", "Microsoft", "Meta", "Facebook"];
 
 const ChallengeFilterSection = ({ filters, setFilters }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [expanded, setExpanded] = useState({
-    level: true,
-    company: true,
-  });
-
-  const toggleFilter = (key, value) => {
-    const currentSet = new Set(filters[key]);
-    currentSet.has(value) ? currentSet.delete(value) : currentSet.add(value);
-    setFilters({ ...filters, [key]: Array.from(currentSet) });
-  };
+  const {
+    isOpen,
+    expanded,
+    toggleDrawer,
+    closeDrawer,
+    toggleSection,
+    toggleFilter,
+    resetFilters,
+  } = useChallengeFilters(filters, setFilters);
 
   const renderCheckboxes = (key, label, options) => (
     <div className="mb-4">
       <button
-        onClick={() => setExpanded((prev) => ({ ...prev, [key]: !prev[key] }))}
+        onClick={() => toggleSection(key)}
         className="flex justify-between items-center w-full font-semibold text-left"
       >
         <span>{label}</span>
@@ -53,9 +52,7 @@ const ChallengeFilterSection = ({ filters, setFilters }) => {
     <div className="p-4 space-y-4 w-full md:w-60">
       <div className="flex justify-end items-center">
         <button
-          onClick={() =>
-            setFilters({ tech: [filters.tech[0]], level: [], type: ["Coding"], company: [] })
-          }
+          onClick={resetFilters}
           className="text-red-600 text-md hover:underline"
         >
           Reset All
@@ -68,10 +65,10 @@ const ChallengeFilterSection = ({ filters, setFilters }) => {
 
   return (
     <>
-      {/* Mobile Drawer Toggle */}
+      {/* Mobile Toggle */}
       <div className="md:hidden px-4 pt-2">
         <button
-          onClick={() => setIsOpen(true)}
+          onClick={toggleDrawer}
           className="flex items-center gap-2 text-indigo-700 font-semibold"
         >
           <FaSlidersH />
@@ -79,23 +76,23 @@ const ChallengeFilterSection = ({ filters, setFilters }) => {
         </button>
       </div>
 
-      {/* Drawer for Mobile */}
+      {/* Mobile Drawer */}
       {isOpen && (
         <div className="fixed inset-0 bg-opacity-50 z-40 flex">
           <div className="bg-white w-3/4 max-w-xs p-4 overflow-y-auto">
             <div className="flex justify-between items-center mb-2">
               <h2 className="text-lg font-bold">Filters</h2>
-              <button onClick={() => setIsOpen(false)}>
+              <button onClick={closeDrawer}>
                 <FaTimes className="text-gray-500 hover:text-black" />
               </button>
             </div>
             {content}
           </div>
-          <div className="flex-1" onClick={() => setIsOpen(false)}></div>
+          <div className="flex-1" onClick={closeDrawer}></div>
         </div>
       )}
 
-      {/* Sidebar for Desktop */}
+      {/* Desktop Sidebar */}
       <aside className="hidden md:block w-64 h-screen sticky top-0 overflow-y-auto bg-gray-50">
         {content}
       </aside>

@@ -11,7 +11,6 @@ const userSchema = new Schema({
     trim: true,
     minlength: 3,
   },
-
   email: {
     type: String,
     required: true,
@@ -19,25 +18,20 @@ const userSchema = new Schema({
     lowercase: true,
     trim: true,
   },
-
   passwordHash: {
     type: String,
     required: true,
   },
-
   resetToken: String,
   resetTokenExpiry: Date,
-
   points: {
     mcq: { type: Number, default: 0 },
   },
-
   badges: {
     bronze: { type: Boolean, default: false },
     silver: { type: Boolean, default: false },
     golden: { type: Boolean, default: false },
   },
-
   solvedMcqQuestions: [
     {
       questionId: { type: String, required: true },
@@ -47,7 +41,6 @@ const userSchema = new Schema({
       answeredAt: { type: Date, default: Date.now },
     },
   ],
-
   solvedCodingQuestions: [
     {
       questionId: { type: String, required: true },

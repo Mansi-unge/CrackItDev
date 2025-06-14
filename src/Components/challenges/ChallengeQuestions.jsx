@@ -1,63 +1,19 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
 import { FaRocket, FaCode, FaSpinner, FaBuilding, FaMedal } from "react-icons/fa";
 import { BiCategory } from "react-icons/bi";
 import ChallengeFilterSection from "./ChallengeFilterSection";
-
-const buildQueryParams = (filters) => {
-  const params = new URLSearchParams();
-  if (filters.tech.length) params.append("tech", filters.tech.join(","));
-  if (filters.level.length) params.append("level", filters.level.join(","));
-  if (filters.type.length) params.append("type", filters.type.join(","));
-  if (filters.company.length) params.append("company", filters.company.join(","));
-  params.append("page", 1);
-  params.append("pageSize", 15);
-  return params.toString();
-};
+import useChallengeQuestions from "../../Hooks/challenges/useChallengeQuestions";
 
 const ChallengeQuestions = () => {
   const { tech } = useParams();
-  const [solvedIds, setSolvedIds] = useState(new Set());
-  const [questions, setQuestions] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [filters, setFilters] = useState({
-    tech: [tech], // prefill from URL param
-    level: [],
-    type: ["Coding"],
-    company: [],
-  });
-
-  // Fetch user's solved question IDs
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) return;
-
-    axios
-      .get("http://localhost:5000/api/coding/progress", {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      .then((res) => {
-        const solvedQuestions = res.data.solvedCodingQuestions || [];
-        // store IDs in a Set for O(1) lookup
-        setSolvedIds(new Set(solvedQuestions.map((q) => q.questionId.toString())));
-      })
-      .catch(console.error);
-  }, []);
-
-  const fetchQuestions = useCallback(() => {
-    setLoading(true);
-    const query = buildQueryParams(filters);
-    axios
-      .get(`http://localhost:5000/api/coding?${query}`)
-      .then((res) => setQuestions(res.data?.questions || []))
-      .catch(() => setQuestions([]))
-      .finally(() => setLoading(false));
-  }, [filters]);
-
-  useEffect(() => {
-    fetchQuestions();
-  }, [fetchQuestions]);
+  const {
+    filters,
+    setFilters,
+    loading,
+    questions,
+    solvedIds,
+  } = useChallengeQuestions(tech);
 
   return (
     <div className="flex">
@@ -70,7 +26,7 @@ const ChallengeQuestions = () => {
 
         {loading ? (
           <div className="flex flex-col items-center justify-center min-h-[40vh] text-blue-600 text-lg">
-            <FaSpinner className="animate-spin text-3xl mb-2" aria-label="Loading spinner" />
+            <FaSpinner className="animate-spin text-3xl mb-2" />
             Loading challenges...
           </div>
         ) : questions.length === 0 ? (
@@ -90,29 +46,28 @@ const ChallengeQuestions = () => {
                     <div
                       title="Bronze badge earned"
                       className="absolute top-0 right-2 text-yellow-500 opacity-40"
-                      aria-label="Bronze badge earned"
                     >
                       <FaMedal size={56} />
                     </div>
                   )}
 
                   <header className="flex items-center gap-2 text-blue-700 text-lg font-semibold">
-                    <FaRocket aria-hidden="true" />
+                    <FaRocket />
                     <h3>{q.title}</h3>
                   </header>
 
                   <section className="text-sm space-y-2 text-gray-700">
                     <p className="flex items-center gap-2">
-                      <BiCategory className="text-gray-500" aria-hidden="true" />
+                      <BiCategory className="text-gray-500" />
                       <strong>Topic:</strong> {q.topic}
                     </p>
                     <p className="flex items-center gap-2">
-                      <FaCode className="text-gray-500" aria-hidden="true" />
+                      <FaCode className="text-gray-500" />
                       <strong>Difficulty:</strong> {q.level}
                     </p>
                     {q.company?.length > 0 && (
                       <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide">
-                        <FaBuilding className="text-gray-500 min-w-fit" aria-hidden="true" />
+                        <FaBuilding className="text-gray-500 min-w-fit" />
                         <div className="flex gap-2 flex-wrap">
                           {q.company.map((comp, idx) => (
                             <span
