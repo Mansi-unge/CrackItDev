@@ -1,6 +1,6 @@
 import React from "react";
-import { FaReact, FaNodeJs, FaJava, FaPython, FaArrowRight } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { FaReact, FaNodeJs, FaJava, FaPython } from "react-icons/fa";
+import TechStackCard from "../Components/challenges/TechStackCard";
 
 const techStacks = [
   {
@@ -30,37 +30,16 @@ const techStacks = [
 ];
 
 const Challenges = () => {
-  const navigate = useNavigate();
-
   return (
     <section className="p-6 grid sm:grid-cols-2 md:grid-cols-4 gap-6">
       {techStacks.map(({ name, description, Icon, color }) => (
-        <article
+        <TechStackCard
           key={name}
-          className="bg-white rounded-2xl border border-gray-100 shadow-md hover:shadow-xl transition-shadow duration-300 p-5 flex flex-col justify-between"
-        >
-          <header className="flex justify-between items-start mb-4">
-            <div className="flex items-center space-x-3">
-              <div
-                className="w-10 h-10 flex items-center justify-center rounded-full"
-                style={{ backgroundColor: `${color}20` }}
-                aria-hidden="true"
-              >
-                <Icon size={20} color={color} />
-              </div>
-              <h3 className="text-lg font-semibold text-gray-800">{name}</h3>
-            </div>
-            <button
-              onClick={() => navigate(`/challenges/${name.toLowerCase()}`)}
-              className="flex items-center gap-2 bg-blue-600 text-white text-xs px-3 py-1.5 rounded-full hover:bg-blue-700 transition-colors"
-              aria-label={`Take ${name} challenge`}
-            >
-              Take Challenge <FaArrowRight size={10} />
-            </button>
-          </header>
-
-          <p className="text-gray-600 text-sm leading-relaxed">{description}</p>
-        </article>
+          tech={name}
+          description={description}
+          Icon={Icon}
+          color={color}
+        />
       ))}
     </section>
   );

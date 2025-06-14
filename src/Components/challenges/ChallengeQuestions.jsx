@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import { FaRocket, FaCode, FaSpinner, FaBuilding } from "react-icons/fa";
+import { FaRocket, FaCode, FaSpinner, FaBuilding, FaMedal } from "react-icons/fa";
 import { BiCategory } from "react-icons/bi";
 import ChallengeFilterSection from "./ChallengeFilterSection";
 
@@ -18,6 +18,7 @@ const buildQueryParams = (filters) => {
 
 const ChallengeQuestions = () => {
   const { tech } = useParams();
+  const [solvedIds, setSolvedIds] = useState(new Set());
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState({
@@ -27,11 +28,28 @@ const ChallengeQuestions = () => {
     company: [],
   });
 
+  // Fetch user's solved question IDs
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    axios
+      .get("http://localhost:5000/api/coding/progress", {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((res) => {
+        const solvedQuestions = res.data.solvedCodingQuestions || [];
+        // store IDs in a Set for O(1) lookup
+        setSolvedIds(new Set(solvedQuestions.map((q) => q.questionId.toString())));
+      })
+      .catch(console.error);
+  }, []);
+
   const fetchQuestions = useCallback(() => {
     setLoading(true);
     const query = buildQueryParams(filters);
     axios
-      .get(`http://localhost:5000/api/questions?${query}`)
+      .get(`http://localhost:5000/api/coding?${query}`)
       .then((res) => setQuestions(res.data?.questions || []))
       .catch(() => setQuestions([]))
       .finally(() => setLoading(false));
@@ -61,50 +79,63 @@ const ChallengeQuestions = () => {
           </p>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {questions.map((q) => (
-              <article
-                key={q._id}
-                className="bg-white/30 backdrop-blur-md border border-white/20 shadow-md rounded-2xl p-6 space-y-4 transition-transform duration-300 hover:scale-[1.02] hover:shadow-xl"
-              >
-                <header className="flex items-center gap-2 text-blue-700 text-lg font-semibold">
-                  <FaRocket aria-hidden="true" />
-                  <h3>{q.title}</h3>
-                </header>
-
-                <section className="text-sm space-y-2 text-gray-700">
-                  <p className="flex items-center gap-2">
-                    <BiCategory className="text-gray-500" aria-hidden="true" />
-                    <strong>Topic:</strong> {q.topic}
-                  </p>
-                  <p className="flex items-center gap-2">
-                    <FaCode className="text-gray-500" aria-hidden="true" />
-                    <strong>Difficulty:</strong> {q.level}
-                  </p>
-                  {q.company?.length > 0 && (
-                    <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide">
-                      <FaBuilding className="text-gray-500 min-w-fit" aria-hidden="true" />
-                      <div className="flex gap-2 flex-wrap">
-                        {q.company.map((comp, idx) => (
-                          <span
-                            key={idx}
-                            className="px-2 py-0.5 bg-blue-100 text-blue-700 rounded-full text-xs font-semibold whitespace-nowrap"
-                          >
-                            {comp}
-                          </span>
-                        ))}
-                      </div>
+            {questions.map((q) => {
+              const isSolved = solvedIds.has(q._id.toString());
+              return (
+                <article
+                  key={q._id}
+                  className="relative bg-white/30 backdrop-blur-md border border-white/20 shadow-md rounded-2xl p-6 space-y-4 transition-transform duration-300 hover:scale-[1.02] hover:shadow-xl"
+                >
+                  {isSolved && (
+                    <div
+                      title="Bronze badge earned"
+                      className="absolute top-0 right-2 text-yellow-500 opacity-40"
+                      aria-label="Bronze badge earned"
+                    >
+                      <FaMedal size={56} />
                     </div>
                   )}
-                </section>
 
-                <button
-                  onClick={() => (window.location.href = `/compiler/${q._id}`)}
-                  className="w-full mt-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white py-2 rounded-xl font-semibold hover:from-blue-600 hover:to-blue-700 transition-colors"
-                >
-                  Solve Challenge
-                </button>
-              </article>
-            ))}
+                  <header className="flex items-center gap-2 text-blue-700 text-lg font-semibold">
+                    <FaRocket aria-hidden="true" />
+                    <h3>{q.title}</h3>
+                  </header>
+
+                  <section className="text-sm space-y-2 text-gray-700">
+                    <p className="flex items-center gap-2">
+                      <BiCategory className="text-gray-500" aria-hidden="true" />
+                      <strong>Topic:</strong> {q.topic}
+                    </p>
+                    <p className="flex items-center gap-2">
+                      <FaCode className="text-gray-500" aria-hidden="true" />
+                      <strong>Difficulty:</strong> {q.level}
+                    </p>
+                    {q.company?.length > 0 && (
+                      <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide">
+                        <FaBuilding className="text-gray-500 min-w-fit" aria-hidden="true" />
+                        <div className="flex gap-2 flex-wrap">
+                          {q.company.map((comp, idx) => (
+                            <span
+                              key={idx}
+                              className="px-2 py-0.5 bg-blue-100 text-blue-700 rounded-full text-xs font-semibold whitespace-nowrap"
+                            >
+                              {comp}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </section>
+
+                  <button
+                    onClick={() => (window.location.href = `/compiler/${q._id}`)}
+                    className="w-full mt-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white py-2 rounded-xl font-semibold hover:from-blue-600 hover:to-blue-700 transition-colors"
+                  >
+                    Solve Challenge
+                  </button>
+                </article>
+              );
+            })}
           </div>
         )}
       </main>

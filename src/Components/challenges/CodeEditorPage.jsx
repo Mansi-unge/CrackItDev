@@ -59,7 +59,7 @@ const CodeEditorPage = () => {
 
   useEffect(() => {
     if (!id) return;
-    axios.get(`http://localhost:5000/api/questions/${id}`).then((res) => {
+    axios.get(`http://localhost:5000/api/coding/${id}`).then((res) => {
       setQuestion(res.data);
       setCode(res.data.codeTemplate || "");
       setUserLogic("// Write your logic here\n");
@@ -282,10 +282,11 @@ const CodeEditorPage = () => {
         {loadingProgress && <p>Loading user progress...</p>}
 
         {badgeEarned && (
-          <p className="text-green-700 font-semibold mt-4">
-            🥈 Silver badge awarded for solving this challenge!
+          <p className="text-yellow-700 font-semibold mt-4">
+            🥉 Bronze badge awarded for solving this challenge!
           </p>
         )}
+
 
         <div className="flex gap-4 mt-auto pt-4">
           <button
