@@ -1,40 +1,18 @@
-import React, { useState } from "react";
-import {
-  FaChevronDown,
-  FaChevronUp,
-  FaSlidersH,
-  FaTimes,
-} from "react-icons/fa";
+import React from "react";
+import { FaChevronDown, FaChevronUp, FaSlidersH, FaTimes } from "react-icons/fa";
+import { useQuizFilter } from "../../Hooks/MCQ/useQuizFilter";
+import { techOptions , levelOptions , companyOptions } from "../Common/filterOptions";
 
-const techOptions = [
-  "Computer Networking", "DBMS", "DSA", "OOPs", "Operating Systems", "System Design",
-  "C", "C++", "GO", "Java", "Kotlin", "Python", "Rust", "SQL", "Typescript", "JavaScript",
-  "Angular", "Bootstrap", "CSS", "HTML", "Next.js", "React.js", "Redux", "Tailwind",
-  "Django", "Express", "Flask", "Node.js", "Spring Boot",
-  "Auth0", "Firebase", "JWT",
-  "CI/CD", "DevOps", "Docker", "Git", "Github", "Kubernetes",
-  "AWS",
-  "Cypress", "Jest", "JUnit", "Pytest",
-  "MongoDB", "PostgreSQL"
-];
-
-const levelOptions = ["Beginner", "Intermediate", "Advanced"];
-const companyOptions = ["Google", "Amazon", "Microsoft", "Meta", "Facebook"];
 
 const QuizFilterSection = ({ filters, setFilters }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [expanded, setExpanded] = useState({
-    tech: true,
-    level: true,
-    type: true,
-    company: true,
-  });
-
-  const toggleFilter = (key, value) => {
-    const currentSet = new Set(filters[key]);
-    currentSet.has(value) ? currentSet.delete(value) : currentSet.add(value);
-    setFilters({ ...filters, [key]: Array.from(currentSet) });
-  };
+  const {
+    isOpen,
+    setIsOpen,
+    expanded,
+    setExpanded,
+    toggleFilter,
+    resetFilters,
+  } = useQuizFilter(filters, setFilters);
 
   const renderCheckboxes = (key, label, options) => (
     <div className="mb-4">
@@ -67,7 +45,7 @@ const QuizFilterSection = ({ filters, setFilters }) => {
     <div className="p-4 space-y-4 w-full md:w-60 ">
       <div className="flex justify-end items-center">
         <button
-          onClick={() => setFilters({ tech: [], level: [], type: ["MCQ"], company: [] })}
+          onClick={resetFilters}
           className="text-red-600 text-md hover:underline"
         >
           Reset All
@@ -104,19 +82,16 @@ const QuizFilterSection = ({ filters, setFilters }) => {
             </div>
             {content}
           </div>
-          <div
-            className="flex-1"
-            onClick={() => setIsOpen(false)}
-          ></div>
+          <div className="flex-1" onClick={() => setIsOpen(false)}></div>
         </div>
       )}
 
       {/* Sidebar for Desktop */}
-      <aside className="hidden md:block w-64 h-screen sticky top-0 overflow-y-auto  bg-gray-50">
+      <aside className="hidden md:block w-64 h-screen sticky top-0 overflow-y-auto bg-gray-50">
         {content}
       </aside>
     </>
   );
-}
+};
 
-export default QuizFilterSection
+export default QuizFilterSection;

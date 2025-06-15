@@ -6,9 +6,8 @@ import {
   FaTimes,
 } from "react-icons/fa";
 import useChallengeFilters from "../../Hooks/challenges/useChallengeFilters";
+import {levelOptions , companyOptions } from "../Common/filterOptions";
 
-const levelOptions = ["Beginner", "Intermediate", "Advanced"];
-const companyOptions = ["Google", "Amazon", "Microsoft", "Meta", "Facebook"];
 
 const ChallengeFilterSection = ({ filters, setFilters }) => {
   const {

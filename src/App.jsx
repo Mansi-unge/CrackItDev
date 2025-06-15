@@ -1,8 +1,8 @@
 // App.jsx
 import "./App.css";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
-import Header from "./Components/Header";
-import Footer from "./Components/Footer";
+import Header from "./Components/Common/Header";
+import Footer from "./Components/Common/Footer";
 import Home from "./Pages/Home";
 import Login from "./Pages/Login";
 import ProtectedRoute from "./Common/ProtectedRoute";

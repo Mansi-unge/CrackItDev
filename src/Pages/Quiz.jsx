@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Navigate } from "react-router-dom";
-import useMCQQuiz from "../Hooks/useMCQQuiz";
+import useMCQQuiz from "../Hooks/MCQ/useMCQQuiz";
 
 import MCQHeader from "../Components/Quiz/MCQHeader";
 import QuizFilterSection from "../Components/Quiz/QuizFilterSection";

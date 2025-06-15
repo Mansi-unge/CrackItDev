@@ -1,11 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  fetchMCQProgress,
-  fetchMCQQuestions,
-  verifyMCQAnswer,
-  saveMCQProgress,
-} from "../services/mcqService";
-
+import { fetchMCQProgress , fetchMCQQuestions , verifyMCQAnswer , saveMCQProgress } from "../../services/MCQ/mcqService";
 export default function useMCQQuiz(token, filters, pageSize = 15) {
   const [questions, setQuestions] = useState([]);
   const [selectedAnswers, setSelectedAnswers] = useState({});
