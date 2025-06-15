@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import connectDB from "./config/db.js";
-
+import theoryRoutes from './routes/theoryRoutes.js';
 import mcqRoutes from "./routes/mcqRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import codingRoutes from "./routes/codingRoutes.js"
@@ -21,6 +21,7 @@ app.use(express.json());
 app.use("/api/mcq", mcqRoutes);
 app.use("/api/coding", codingRoutes); 
 app.use("/api/users", userRoutes);
+app.use('/api/theory', theoryRoutes);
 
 // Health check route
 app.get("/", (req, res) => res.send("API is running"));
@@ -33,10 +34,9 @@ app.listen(PORT, () => {
 
 
 // import codingRoutes from './routes/codingRoutes.js';
-// import theoryRoutes from './routes/theoryRoutes.js';
 // import rapidFireRoutes from './routes/rapidFireRoutes.js';
 // import questionRoutes from './routes/questionRoutes.js';
 // app.use('/api/coding', codingRoutes);
-// app.use('/api/theory', theoryRoutes);
+
 // app.use('/api/rapid', rapidFireRoutes);
 // app.use('/api/questions', questionRoutes);

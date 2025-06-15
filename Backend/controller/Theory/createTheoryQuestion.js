@@ -1,6 +1,6 @@
-import TheoryQuestion from "../models/TheoryQuestion.js";
+import TheoryQuestion from "../../models/TheoryQuestion.js";
 
-export const createTheoryQuestion = async (req, res) => {
+ const createTheoryQuestion = async (req, res) => {
   try {
     const newQuestion = new TheoryQuestion(req.body);
     await newQuestion.save();
@@ -9,3 +9,5 @@ export const createTheoryQuestion = async (req, res) => {
     res.status(500).json({ error: "Failed to create theory question" });
   }
 };
+
+export default createTheoryQuestion

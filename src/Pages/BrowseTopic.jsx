@@ -17,7 +17,6 @@ export default function BrowseTopic() {
   const [expandedId, setExpandedId] = useState(null);
   const [page, setPage] = useState(1);
   const [totalQuestions, setTotalQuestions] = useState(0);
-  const [bookmarkedQuestions, setBookmarkedQuestions] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const buildQuery = () => {
@@ -32,7 +31,7 @@ export default function BrowseTopic() {
   const fetchQuestions = useCallback(async () => {
     try {
       setLoading(true);
-      const { data } = await axios.get(`http://localhost:5000/api/questions?${buildQuery()}`);
+      const { data } = await axios.get(`http://localhost:5000/api/theory/questions?${buildQuery()}`);
       const newQuestions = data.questions;
 
       setTotalQuestions(data.total);
@@ -54,26 +53,6 @@ export default function BrowseTopic() {
     fetchQuestions();
   }, [fetchQuestions]);
 
-  const handleBookmark = (id) => {
-    setBookmarkedQuestions((prev) =>
-      prev.includes(id) ? prev.filter((q) => q !== id) : [id, ...prev]
-    );
-  };
-
-  const handleShare = (id) => {
-    const shareURL = `${window.location.href}#question-${id}`;
-    navigator.clipboard.writeText(shareURL);
-    alert("Link copied to clipboard!");
-  };
-
-  const toggleExpand = (id) => {
-    setExpandedId(prev => (prev === id ? null : id));
-  };
-
-  const sortedQuestions = [
-    ...questions.filter((q) => bookmarkedQuestions.includes(q._id)),
-    ...questions.filter((q) => !bookmarkedQuestions.includes(q._id)),
-  ];
 
   return (
     <div className="md:flex">
@@ -88,11 +67,11 @@ export default function BrowseTopic() {
             <FaSpinner className="animate-spin text-3xl mb-2" />
             Loading ...
           </div>
-        ) : sortedQuestions.length === 0 ? (
+        ) : questions.length === 0 ? (
           <p className="text-center text-gray-500">No questions found.</p>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {sortedQuestions.map((q) => (
+            {questions.map((q) => (
               <QuestionCard
                 key={q._id}
                 question={{
@@ -100,17 +79,12 @@ export default function BrowseTopic() {
                   id: q._id,
                   tags: [q.tech, q.type, q.level],
                 }}
-                expanded={expandedId === q._id}
-                onToggleExpand={toggleExpand}
-                onBookmark={handleBookmark}
-                onShare={handleShare}
-                isBookmarked={bookmarkedQuestions.includes(q._id)}
               />
             ))}
           </div>
         )}
 
-        {!loading && sortedQuestions.length < totalQuestions && (
+        {!loading && questions.length < totalQuestions && (
           <div className="text-center mt-8">
             <button
               onClick={() => setPage((prev) => prev + 1)}
