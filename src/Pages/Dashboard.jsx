@@ -1,160 +1,157 @@
-import React, { useState } from "react";
-import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
-import Calendar from "react-calendar";
-import "react-calendar/dist/Calendar.css";
-
-const bluish = {
-  light: "#D0E7FF",
-  medium: "#3399FF",
-  dark: "#1A4DA0",
-  subtleBg: "#F5F9FF",
-  text: "#1E3A8A",
-};
-
-const statsData = [
-  { title: "Daily Challenges Completed", value: "22/30", icon: "📆" },
-  { title: "Rapid Fire Questions Solved", value: "185", icon: "⚡" },
-  { title: "Quiz Questions Attempted", value: "340", icon: "❓" },
-  { title: "Success Rate", value: "86%", icon: "📈" },
-];
-
-const quizPieData = [
-  { name: "Correct", value: 290 },
-  { name: "Incorrect", value: 50 },
-];
-
-const COLORS = [bluish.medium, "#bbb"];
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
 const Dashboard = () => {
-  const [date, setDate] = useState(new Date());
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          setError("You are not logged in");
+          setLoading(false);
+          return;
+        }
+        const res = await axios.get("http://localhost:5000/api/users/me", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setUser(res.data);
+      } catch (err) {
+        setError(err.response?.data?.message || "Failed to load profile");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProfile();
+  }, []);
+
+  if (loading)
+    return (
+      <div className="flex justify-center items-center h-screen text-blue-600 text-lg font-semibold animate-pulse">
+        Loading your dashboard...
+      </div>
+    );
+
+  if (error)
+    return (
+      <div className="flex justify-center items-center h-screen text-red-600 font-semibold text-lg">
+        {error}
+      </div>
+    );
+
+  if (!user) return null;
+
+  const {
+    username,
+    email,
+    badges = {},
+    points = {},
+    solvedMcqQuestions = [],
+    solvedCodingQuestions = [],
+  } = user;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#f8fafc] to-[#e0f2fe] text-slate-800 px-6 py-10 font-inter  mx-auto">
+    <div className="flex min-h-screen font-sans bg-gradient-to-br from-gray-50 to-gray-100">
+      {/* Sidebar */}
+      <aside className="w-64 bg-gray-900 text-white p-6 space-y-6 shadow-lg">
+        <h2 className="text-2xl font-bold tracking-tight">🏆 CrackIt</h2>
+        <nav className="space-y-3 text-sm font-medium">
+          <NavLink label="Overview" />
+          <NavLink label="Badges" />
+          <NavLink label="Points" />
+          <NavLink label="Progress" />
+        </nav>
+      </aside>
 
-
-      {/* Welcome */}
-      <header className="mb-10">
-        <h1 className="text-4xl font-bold text-gray-900 mb-1">Welcome back, Mansi 👋</h1>
-        <p className="text-gray-600 text-md">Let’s continue your journey to success!</p>
-      </header>
-
-      {/* Stats Section */}
-      <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-12">
-        {statsData.map(({ title, value, icon }) => (
-          <div
-            key={title}
-            className="bg-white border border-gray-100 rounded-xl shadow-sm p-5 hover:shadow-md transition duration-200"
-          >
-            <div className="text-4xl mb-3">{icon}</div>
-            <h3 className="text-lg font-semibold text-gray-700">{title}</h3>
-            <p className="text-2xl font-bold text-indigo-600 mt-1">{value}</p>
+      {/* Main content */}
+      <main className="flex-1 p-8">
+        {/* Topbar */}
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-800">Welcome, {username} 👋</h1>
+            <p className="text-gray-500">{email}</p>
           </div>
-        ))}
-      </section>
+          <button className="bg-blue-600 hover:bg-blue-700 transition px-4 py-2 text-white font-medium rounded-lg shadow">
+            Logout
+          </button>
+        </div>
 
-      {/* Main Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-
-        {/* Calendar */}
-        <div className="bg-white rounded-xl shadow-sm p-6">
-          <h2 className="text-xl font-semibold text-indigo-700 mb-4">Daily Challenge Tracker</h2>
-          <Calendar
-            onChange={setDate}
-            value={date}
-            tileContent={({ date }) => {
-              const day = date.getDate();
-              if ([1, 2, 5, 7, 10, 14, 15, 20].includes(day)) {
-                return <div className="text-green-500 font-bold text-center">✓</div>;
-              }
-              if ([3, 4, 6].includes(day)) {
-                return <div className="text-red-400 font-bold text-center">✗</div>;
-              }
-              return null;
-            }}
+        {/* Points Section */}
+        <SectionGrid>
+          <InfoCard
+            title="MCQ Points"
+            value={points.mcq || 0}
+            color="from-blue-500 to-blue-600"
           />
-          <p className="mt-4 text-sm text-gray-500">✓ = Completed, ✗ = Missed</p>
+          <InfoCard
+            title="Coding Points"
+            value={points.coding || 0}
+            color="from-green-500 to-green-600"
+          />
+        </SectionGrid>
+
+        {/* Badges Section */}
+        <div className="bg-white rounded-lg shadow p-6 mb-8">
+          <h2 className="text-xl font-semibold mb-4 text-gray-800">Badges</h2>
+          <div className="flex gap-6">
+            <Badge name="Bronze" earned={badges.bronze} emoji="🥉" />
+            <Badge name="Silver" earned={badges.silver} emoji="🥈" />
+            <Badge name="Golden" earned={badges.golden} emoji="🥇" />
+          </div>
         </div>
 
-        {/* Quiz Stats */}
-        <div className="bg-white rounded-xl shadow-sm p-6">
-          <h2 className="text-xl font-semibold text-indigo-700 mb-6">Quiz Performance</h2>
-          <div className="w-full h-52">
-            <ResponsiveContainer>
-              <PieChart>
-                <Pie
-                  data={quizPieData}
-                  dataKey="value"
-                  nameKey="name"
-                  cx="50%"
-                  cy="50%"
-                  outerRadius={70}
-                  label
-                >
-                  {quizPieData.map((entry, idx) => (
-                    <Cell key={`cell-${idx}`} fill={COLORS[idx % COLORS.length]} />
-                  ))}
-                </Pie>
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-          <ul className="mt-6 space-y-1 text-sm text-gray-700">
-            <li><strong>Quizzes Taken:</strong> 20</li>
-            <li><strong>Avg Time:</strong> 12 mins</li>
-            <li><strong>Tech Stack:</strong> React, JavaScript</li>
-          </ul>
-
-          <hr className="my-6" />
-
-          <h2 className="text-xl font-semibold text-indigo-700 mb-4">Rapid Fire</h2>
-          <ul className="text-sm text-gray-700 space-y-1">
-            <li><strong>Questions:</strong> 185</li>
-            <li><strong>Fastest Answer:</strong> 8s</li>
-            <li><strong>Top Topics:</strong> DSA, DBMS</li>
+        {/* Progress Section */}
+        <div className="bg-white rounded-lg shadow p-6">
+          <h2 className="text-xl font-semibold mb-4 text-gray-800">Progress</h2>
+          <ul className="space-y-3 text-gray-700 text-base">
+            <li>✅ Solved MCQs: <strong>{solvedMcqQuestions.length}</strong></li>
+            <li>💻 Solved Coding Questions: <strong>{solvedCodingQuestions.length}</strong></li>
           </ul>
         </div>
-
-        {/* Badges */}
-        <div className="bg-white rounded-xl shadow-sm p-6 flex flex-col">
-          <h2 className="text-xl font-semibold text-indigo-700 mb-6">Your Badges</h2>
-          <div className="flex flex-wrap gap-3">
-            {[
-              { name: "Daily Silver", emoji: "🥈", earned: true },
-              { name: "Weekly Silver", emoji: "🥈", earned: true },
-              { name: "Gold Completion", emoji: "🥇", earned: false },
-              { name: "Streak Master", emoji: "🔥", earned: true },
-              { name: "Quiz Wizard", emoji: "🧠", earned: false },
-            ].map(({ name, emoji, earned }) => (
-              <span
-                key={name}
-                className={`flex items-center gap-2 px-3 py-2 rounded-full text-sm font-medium ${earned ? "bg-indigo-100 text-indigo-700" : "bg-gray-200 text-gray-400"
-                  }`}
-                title={earned ? name : `${name} (Locked)`}
-              >
-                {emoji} {name}
-              </span>
-            ))}
-          </div>
-          <p className="text-center text-xs text-gray-500 mt-auto pt-6">
-            Earn more badges by staying consistent 🎯
-          </p>
-        </div>
-      </div>
-
-      {/* Activity Log */}
-      <section className="mt-12 bg-white rounded-xl shadow-sm p-6">
-        <h2 className="text-xl font-semibold text-indigo-700 mb-4">Recent Activity</h2>
-        <ul className="list-disc pl-5 space-y-2 text-sm text-gray-700">
-          <li>✅ Solved “Recursion Challenge” (Python) - Easy</li>
-          <li>❓ Attempted Quiz - JavaScript Intermediate - 7/10 Correct</li>
-          <li>⚡ Answered 15 Rapid Fire Questions - DBMS</li>
-          <li>🏆 Earned “Daily Silver Badge”</li>
-        </ul>
-      </section>
-
+      </main>
     </div>
-
   );
-}
+};
 
-export default Dashboard
+// Navigation Link Component
+const NavLink = ({ label }) => (
+  <a
+    href="#"
+    className="block px-2 py-1 rounded hover:bg-gray-800 hover:text-blue-400 transition"
+  >
+    {label}
+  </a>
+);
+
+// Card Component
+const InfoCard = ({ title, value, color }) => (
+  <div
+    className={`bg-gradient-to-r ${color} text-white p-6 rounded-lg shadow-lg transform hover:scale-105 transition`}
+  >
+    <h2 className="text-xl font-semibold">{title}</h2>
+    <p className="text-4xl font-bold mt-2">{value}</p>
+  </div>
+);
+
+// Badge Component
+const Badge = ({ name, earned, emoji }) => {
+  const activeStyle = "text-green-600 animate-pulse";
+  const lockedStyle = "text-gray-400 grayscale";
+  return (
+    <div className={`flex flex-col items-center ${earned ? activeStyle : lockedStyle}`}>
+      <span className="text-4xl">{emoji}</span>
+      <span className="mt-2 font-semibold">{earned ? `Earned ${name}` : `${name} Locked`}</span>
+    </div>
+  );
+};
+
+// Section Grid Wrapper
+const SectionGrid = ({ children }) => (
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">{children}</div>
+);
+
+export default Dashboard;
