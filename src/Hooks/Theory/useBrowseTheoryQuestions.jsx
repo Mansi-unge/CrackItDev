@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import axios from "axios";
+import { fetchTheoryQuestions } from "../../services/Theory/theoryService";
 
 const PAGE_SIZE = 15;
 
@@ -24,10 +24,10 @@ export default function useBrowseTheoryQuestions() {
     return query.join("&");
   };
 
-  const fetchQuestions = useCallback(async () => {
+  const loadQuestions = useCallback(async () => {
     try {
       setLoading(true);
-      const { data } = await axios.get(`http://localhost:5000/api/theory/questions?${buildQuery()}`);
+      const data = await fetchTheoryQuestions(buildQuery());
       const newQuestions = data.questions;
 
       setTotalQuestions(data.total);
@@ -46,8 +46,8 @@ export default function useBrowseTheoryQuestions() {
   }, [filters]);
 
   useEffect(() => {
-    fetchQuestions();
-  }, [fetchQuestions]);
+    loadQuestions();
+  }, [loadQuestions]);
 
   return {
     filters,

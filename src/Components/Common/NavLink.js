@@ -1,15 +1,15 @@
 const navLink = [
   { name: "Home", href: "/" },
   {
-    name: "Browse Topics",
+    name: "TheoryHub",
     href: "/topics",
   },
   {
-    name: "Daily Challenges",
+    name: "CodeLab",
     href: "/challenges",
   },
   {
-    name: "Quiz Mode",
+    name: "QuickQuiz",
     href: "/quiz",
   },
   {
