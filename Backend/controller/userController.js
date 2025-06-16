@@ -39,6 +39,73 @@ export const login = async (req, res) => {
 };
 
 
+export const getLeaderboardRank = async (req, res) => {
+  try {
+    if (!req.user || !req.user.id) {
+      return res.status(401).json({ message: "Unauthorized: User info missing" });
+    }
+
+    // Fetch all users
+    const users = await User.find();
+
+    // Calculate total score for each user
+    const usersWithScores = users.map((user) => {
+      const mcqPoints = user.points?.mcq || 0;
+      const codingPoints = user.points?.coding || 0;
+      const bronzeBonus = user.badges?.bronze ? 10 : 0;
+      const silverBonus = user.badges?.silver ? 20 : 0;
+      const goldenBonus = user.badges?.golden ? 30 : 0;
+
+      const totalScore = mcqPoints + codingPoints + bronzeBonus + silverBonus + goldenBonus;
+
+      return {
+        id: user._id.toString(),
+        username: user.username,
+        email: user.email,
+        totalScore,
+      };
+    });
+
+    // Sort by totalScore in descending order (more score = higher rank)
+    usersWithScores.sort((a, b) => b.totalScore - a.totalScore);
+
+    // Total users in leaderboard
+    const totalUsers = usersWithScores.length;
+
+    // Current user's ID
+    const currentUserId = req.user.id;
+
+    // Find current user's index
+    const currentUserIndex = usersWithScores.findIndex(u => u.id === currentUserId.toString());
+
+    // Calculate rank and percentile
+    const rank = currentUserIndex + 1;
+    const percentile = totalUsers === 1 ? 100 : ((totalUsers - rank) / totalUsers) * 100;
+
+    const currentUserData = usersWithScores[currentUserIndex];
+    const topUsers = usersWithScores.slice(0, 10); // Top 10
+
+    res.json({
+      topUsers,
+      currentUser: {
+        id: currentUserData.id,
+        username: currentUserData.username,
+        totalScore: currentUserData.totalScore,
+        rank,
+        percentile: percentile.toFixed(2),
+      },
+    });
+
+  } catch (err) {
+    console.error("Leaderboard error:", err);
+    res.status(500).json({
+      message: "Failed to fetch leaderboard data",
+      error: err.message,
+    });
+  }
+};
+
+
 
 
 export const requestPasswordReset = async (req, res) => {

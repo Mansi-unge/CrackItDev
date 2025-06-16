@@ -1,157 +1,168 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { FaMedal, FaUserShield, FaStar } from "react-icons/fa";
+import { FiEdit, FiKey } from "react-icons/fi";
+import dayjs from "dayjs";
 
 const Dashboard = () => {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [rankData, setRankData] = useState(null);
+  const [mcqProgress, setMcqProgress] = useState(null);
+  const [codingProgress, setCodingProgress] = useState(null);
+  const [recentActivity, setRecentActivity] = useState([]);
+
+  const token = localStorage.getItem("token");
+
+  const mcqTotal = mcqProgress?.solvedMcqQuestions?.length || 0;
+  const mcqCorrect = mcqProgress?.solvedMcqQuestions?.filter(q => q.isCorrect).length || 0;
+  const mcqAccuracy = mcqTotal ? ((mcqCorrect / mcqTotal) * 100).toFixed(1) : "N/A";
+
+  const codingTotal = codingProgress?.solvedCodingQuestions?.length || 0;
+  const codingCorrect = codingProgress?.solvedCodingQuestions?.filter(q => q.isCorrect).length || 0;
+  const codingAccuracy = codingTotal ? ((codingCorrect / codingTotal) * 100).toFixed(1) : "N/A";
 
   useEffect(() => {
-    const fetchProfile = async () => {
+    const fetchUserData = async () => {
       try {
-        const token = localStorage.getItem("token");
-        if (!token) {
-          setError("You are not logged in");
-          setLoading(false);
-          return;
-        }
-        const res = await axios.get("http://localhost:5000/api/users/me", {
+        const profileRes = await axios.get("http://localhost:5000/api/users/me", {
           headers: { Authorization: `Bearer ${token}` },
         });
-        setUser(res.data);
+
+        const userId = profileRes.data._id;
+
+        const [rankRes, mcqRes, codingRes, activityRes] = await Promise.all([
+          axios.get("http://localhost:5000/api/users/rank", {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+          axios.get("http://localhost:5000/api/mcq/progress", {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+          axios.get("http://localhost:5000/api/coding/progress", {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+          axios.get(`http://localhost:5000/api/users/user/${userId}/recent-activity`, {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+        ]);
+
+        setUser(profileRes.data);
+        setRankData(rankRes.data.currentUser);
+        setMcqProgress(mcqRes.data);
+        setCodingProgress(codingRes.data);
+        setRecentActivity(activityRes.data.recentActivity);
       } catch (err) {
-        setError(err.response?.data?.message || "Failed to load profile");
-      } finally {
-        setLoading(false);
+        console.error("Error fetching user data", err);
       }
     };
 
-    fetchProfile();
-  }, []);
+    fetchUserData();
+  }, [token]);
 
-  if (loading)
-    return (
-      <div className="flex justify-center items-center h-screen text-blue-600 text-lg font-semibold animate-pulse">
-        Loading your dashboard...
-      </div>
-    );
+  if (!user || !rankData) return <div className="text-center py-10">Loading...</div>;
 
-  if (error)
-    return (
-      <div className="flex justify-center items-center h-screen text-red-600 font-semibold text-lg">
-        {error}
-      </div>
-    );
-
-  if (!user) return null;
-
-  const {
-    username,
-    email,
-    badges = {},
-    points = {},
-    solvedMcqQuestions = [],
-    solvedCodingQuestions = [],
-  } = user;
+  const { username, email, points, badges, createdAt } = user;
 
   return (
-    <div className="flex min-h-screen font-sans bg-gradient-to-br from-gray-50 to-gray-100">
-      {/* Sidebar */}
-      <aside className="w-64 bg-gray-900 text-white p-6 space-y-6 shadow-lg">
-        <h2 className="text-2xl font-bold tracking-tight">🏆 CrackIt</h2>
-        <nav className="space-y-3 text-sm font-medium">
-          <NavLink label="Overview" />
-          <NavLink label="Badges" />
-          <NavLink label="Points" />
-          <NavLink label="Progress" />
-        </nav>
-      </aside>
+    <div className="max-w-4xl mx-auto p-6 space-y-6">
+      <h2 className="text-3xl font-bold mb-4">👤 Profile Overview</h2>
 
-      {/* Main content */}
-      <main className="flex-1 p-8">
-        {/* Topbar */}
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-800">Welcome, {username} 👋</h1>
-            <p className="text-gray-500">{email}</p>
+      <div className="bg-white shadow-lg rounded-lg p-6 space-y-5 border border-gray-200">
+        {/* Profile Info */}
+        <div className="space-y-1">
+          <p><span className="font-semibold">Username:</span> {username}</p>
+          <p><span className="font-semibold">Email:</span> {email}</p>
+          <p>
+            <span className="font-semibold">Member Since:</span>{" "}
+            {dayjs(createdAt).format("MMM D, YYYY")}
+          </p>
+        </div>
+
+        {/* Points & Rank */}
+        <div className="grid grid-cols-2 sm:grid-cols-2 gap-4 pt-2">
+          <div className="bg-blue-50 p-4 rounded-md border">
+            <p className="text-sm text-gray-500">📘 MCQ Points</p>
+            <p className="text-lg font-bold">{points?.mcq || 0}</p>
           </div>
-          <button className="bg-blue-600 hover:bg-blue-700 transition px-4 py-2 text-white font-medium rounded-lg shadow">
-            Logout
+          <div className="bg-green-50 p-4 rounded-md border">
+            <p className="text-sm text-gray-500">🚀 Total Points</p>
+            <p className="text-lg font-bold">{rankData.totalScore}</p>
+          </div>
+          <div className="bg-yellow-50 p-4 rounded-md border">
+            <p className="text-sm text-gray-500">🏅 Rank</p>
+            <p className="text-lg font-bold">{rankData.rank}</p>
+          </div>
+        </div>
+
+        {/* Accuracy Section */}
+        <div className="grid grid-cols-2 sm:grid-cols-2 gap-4 pt-4">
+          <div className="bg-indigo-50 p-4 rounded-md border">
+            <p className="text-sm text-gray-500">🎯 MCQ Accuracy</p>
+            <p className="text-lg font-bold">{mcqAccuracy}%</p>
+            <p className="text-xs text-gray-400">{mcqCorrect} / {mcqTotal} correct</p>
+          </div>
+          <div className="bg-pink-50 p-4 rounded-md border">
+            <p className="text-sm text-gray-500">💻 Coding Accuracy</p>
+            <p className="text-lg font-bold">{codingAccuracy}%</p>
+            <p className="text-xs text-gray-400">{codingCorrect} / {codingTotal} correct</p>
+          </div>
+        </div>
+
+        {/* Recent Activity */}
+        <div className="bg-white shadow-lg rounded-lg p-6 border border-gray-200">
+          <h3 className="text-2xl font-semibold mb-4">🕒 Recent Activity</h3>
+          {recentActivity.length === 0 ? (
+            <p className="text-gray-500">No recent activity found.</p>
+          ) : (
+            <ul className="space-y-3 max-h-64 overflow-y-auto">
+              {recentActivity.map((act, index) => (
+                <li key={index} className="p-3 border rounded-md hover:bg-gray-50">
+                  {act.type === "mcq" ? (
+                    <div>
+                      <p><strong>MCQ Solved</strong> — Question ID: {act.questionId}</p>
+                      <p>
+                        Result:{" "}
+                        <span className={act.isCorrect ? "text-green-600" : "text-red-600"}>
+                          {act.isCorrect ? "Correct" : "Incorrect"}
+                        </span>
+                      </p>
+                      <p>Selected Option: {act.selectedOption}</p>
+                      <p className="text-sm text-gray-400">
+                        Answered At: {dayjs(act.answeredAt).format("MMM D, YYYY HH:mm")}
+                      </p>
+                    </div>
+                  ) : (
+                    <div>
+                      <p><strong>Coding Question Submitted</strong> — Question ID: {act.questionId}</p>
+                      <p>
+                        Result:{" "}
+                        <span className={act.isCorrect ? "text-green-600" : "text-red-600"}>
+                          {act.isCorrect ? "Passed" : "Failed"}
+                        </span>
+                      </p>
+                      <p>Language: {act.techStack}</p>
+                      <p className="text-sm text-gray-400">
+                        Submitted At: {dayjs(act.answeredAt).format("MMM D, YYYY HH:mm")}
+                      </p>
+                    </div>
+                  )}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+
+        {/* Actions */}
+        <div className="flex gap-4 pt-4">
+          <button className="flex items-center gap-2 px-4 py-2 border rounded-md text-sm hover:bg-gray-100">
+            <FiEdit /> Edit Profile
+          </button>
+          <button className="flex items-center gap-2 px-4 py-2 border border-red-500 text-red-600 rounded-md text-sm hover:bg-red-50">
+            <FiKey /> Change Password
           </button>
         </div>
-
-        {/* Points Section */}
-        <SectionGrid>
-          <InfoCard
-            title="MCQ Points"
-            value={points.mcq || 0}
-            color="from-blue-500 to-blue-600"
-          />
-          <InfoCard
-            title="Coding Points"
-            value={points.coding || 0}
-            color="from-green-500 to-green-600"
-          />
-        </SectionGrid>
-
-        {/* Badges Section */}
-        <div className="bg-white rounded-lg shadow p-6 mb-8">
-          <h2 className="text-xl font-semibold mb-4 text-gray-800">Badges</h2>
-          <div className="flex gap-6">
-            <Badge name="Bronze" earned={badges.bronze} emoji="🥉" />
-            <Badge name="Silver" earned={badges.silver} emoji="🥈" />
-            <Badge name="Golden" earned={badges.golden} emoji="🥇" />
-          </div>
-        </div>
-
-        {/* Progress Section */}
-        <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-xl font-semibold mb-4 text-gray-800">Progress</h2>
-          <ul className="space-y-3 text-gray-700 text-base">
-            <li>✅ Solved MCQs: <strong>{solvedMcqQuestions.length}</strong></li>
-            <li>💻 Solved Coding Questions: <strong>{solvedCodingQuestions.length}</strong></li>
-          </ul>
-        </div>
-      </main>
+      </div>
     </div>
   );
 };
-
-// Navigation Link Component
-const NavLink = ({ label }) => (
-  <a
-    href="#"
-    className="block px-2 py-1 rounded hover:bg-gray-800 hover:text-blue-400 transition"
-  >
-    {label}
-  </a>
-);
-
-// Card Component
-const InfoCard = ({ title, value, color }) => (
-  <div
-    className={`bg-gradient-to-r ${color} text-white p-6 rounded-lg shadow-lg transform hover:scale-105 transition`}
-  >
-    <h2 className="text-xl font-semibold">{title}</h2>
-    <p className="text-4xl font-bold mt-2">{value}</p>
-  </div>
-);
-
-// Badge Component
-const Badge = ({ name, earned, emoji }) => {
-  const activeStyle = "text-green-600 animate-pulse";
-  const lockedStyle = "text-gray-400 grayscale";
-  return (
-    <div className={`flex flex-col items-center ${earned ? activeStyle : lockedStyle}`}>
-      <span className="text-4xl">{emoji}</span>
-      <span className="mt-2 font-semibold">{earned ? `Earned ${name}` : `${name} Locked`}</span>
-    </div>
-  );
-};
-
-// Section Grid Wrapper
-const SectionGrid = ({ children }) => (
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">{children}</div>
-);
 
 export default Dashboard;

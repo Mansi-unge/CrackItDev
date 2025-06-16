@@ -26,6 +26,7 @@ const userSchema = new Schema({
   resetTokenExpiry: Date,
   points: {
     mcq: { type: Number, default: 0 },
+      coding: { type: Number, default: 0 },
   },
   badges: {
     bronze: { type: Boolean, default: false },
