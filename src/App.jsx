@@ -17,7 +17,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 function AppWrapper() {
   const location = useLocation();
-  const hideLayoutRoutes = ["/login"];
+  const hideLayoutRoutes = ["/login" , "/dashboard"];
   const shouldHideLayout = hideLayoutRoutes.includes(location.pathname);
 
   return (
