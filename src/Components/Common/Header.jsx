@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect, useRef} from "react";
+import { Link , useLocation } from "react-router-dom";
 import axios from "axios";
 import { FaBars, FaTimes, FaUserCircle } from "react-icons/fa";
 import Logo from "./Logo";
@@ -10,6 +10,8 @@ const Header = () => {
   const profileRef = useRef();
   const [menuOpen, setMenuOpen] = useState(false);
   const [user, setUser] = useState(null);
+  const location = useLocation();
+
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -29,17 +31,17 @@ const Header = () => {
   }, []);
 
   useEffect(() => {
-  const handleClickOutside = (e) => {
-    if (profileRef.current && !profileRef.current.contains(e.target)) {
-      setProfileOpen(false);
-    }
-  };
+    const handleClickOutside = (e) => {
+      if (profileRef.current && !profileRef.current.contains(e.target)) {
+        setProfileOpen(false);
+      }
+    };
 
-  document.addEventListener("mousedown", handleClickOutside);
-  return () => {
-    document.removeEventListener("mousedown", handleClickOutside);
-  };
-}, []);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
 
   const handleLogout = () => {
@@ -72,10 +74,14 @@ const Header = () => {
               <li key={item.name} className="relative group">
                 <Link
                   to={item.href}
-                  className="font-medium text-black opacity-70 hover:opacity-100 hover:text-indigo-600 hover:font-bold hover:scale-105 transition"
+                  className={`font-medium transition ${location.pathname === item.href
+                      ? "text-indigo-600 font-bold scale-105"
+                      : "text-black opacity-70 hover:opacity-100 hover:text-indigo-600 hover:font-bold hover:scale-105"
+                    }`}
                 >
                   {item.name}
                 </Link>
+
                 {item.children && (
                   <div className="absolute -left-20 hidden group-hover:flex bg-white shadow-xl shadow-gray-400 rounded-md p-6 z-50 min-w-[260px] max-h-[600px] overflow-y-auto overflow-x-hidden flex-wrap gap-6">
                     {item.children.map((section) => (
@@ -128,34 +134,34 @@ const Header = () => {
         {/* Auth/Profile */}
         {user ? (
           <div className="relative" ref={profileRef}>
-  <FaUserCircle
-    className="w-8 h-8 text-indigo-600 cursor-pointer"
-    onClick={() => setProfileOpen(!profileOpen)}
-  />
-  {profileOpen && (
-    <div className="absolute -right-2 top-full mt-2 w-48 bg-white shadow-lg rounded-md z-50">
-      <div className="p-4 text-gray-700 border-b border-gray-200">
-        Hello, <span className="font-semibold">{user.username}</span>
-      </div>
-      <Link
-        to="/profile"
-        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-        onClick={() => setProfileOpen(false)}
-      >
-        My Profile
-      </Link>
-      <button
-        onClick={() => {
-          handleLogout();
-          setProfileOpen(false);
-        }}
-        className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
-      >
-        Logout
-      </button>
-    </div>
-  )}
-</div>
+            <FaUserCircle
+              className="w-8 h-8 text-indigo-600 cursor-pointer"
+              onClick={() => setProfileOpen(!profileOpen)}
+            />
+            {profileOpen && (
+              <div className="absolute -right-2 top-full mt-2 w-48 bg-white shadow-lg rounded-md z-50">
+                <div className="p-4 text-gray-700 border-b border-gray-200">
+                  Hello, <span className="font-semibold">{user.username}</span>
+                </div>
+                <Link
+                  to="/profile"
+                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  onClick={() => setProfileOpen(false)}
+                >
+                  My Profile
+                </Link>
+                <button
+                  onClick={() => {
+                    handleLogout();
+                    setProfileOpen(false);
+                  }}
+                  className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
+                >
+                  Logout
+                </button>
+              </div>
+            )}
+          </div>
 
         ) : (
           <div className="flex items-center gap-4">

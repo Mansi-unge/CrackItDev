@@ -5,10 +5,7 @@ import {
   MdQuiz,
   MdTrackChanges,
   MdAccessTime,
-  MdEdit,
-  MdVpnKey,
   MdSecurity,
-  MdHelpOutline,
 } from "react-icons/md";
 import { GiLaurelsTrophy } from "react-icons/gi";
 import { AiFillStar, AiOutlineCheckCircle } from "react-icons/ai";
@@ -34,6 +31,8 @@ import {
   Legend,
 } from "recharts";
 import { Tooltip } from "react-tooltip";
+import Sidebar from "../Components/Dashboard/Sidebar";
+import ProfileOverview from "../Components/Dashboard/ProfileOverview";
 
 const COLORS = ["#4ade80", "#f87171"]; // Green and Red for Correct/Incorrect
 
@@ -65,7 +64,7 @@ const Dashboard = () => {
 
   // Simple daily activity count for last 7 days
   const daysCount = {};
-  for (let i = 6; i >= 0; i--) {
+  for (let i = 12; i >= 0; i--) {
     const day = dayjs().subtract(i, "day").format("MMM D");
     daysCount[day] = 0;
   }
@@ -78,194 +77,70 @@ const Dashboard = () => {
   return (
     <div className="flex min-h-screen bg-gray-100">
       {/* Sidebar */}
-      <nav className="w-64 bg-white shadow-md p-6 flex flex-col">
-        <h1 className="text-2xl font-bold mb-8 text-blue-700">Dashboard</h1>
-        <ul className="space-y-4 text-gray-700">
-          <li className="flex items-center gap-2 cursor-pointer hover:text-blue-600">
-            <MdPerson /> Profile Overview
-          </li>
-          <li className="flex items-center gap-2 cursor-pointer hover:text-blue-600">
-            <GiLaurelsTrophy /> Badges
-          </li>
-          <li className="flex items-center gap-2 cursor-pointer hover:text-blue-600">
-            <MdAccessTime /> Recent Activity
-          </li>
-          <li className="flex items-center gap-2 cursor-pointer hover:text-blue-600">
-            <MdEdit /> Edit Profile
-          </li>
-          <li className="flex items-center gap-2 cursor-pointer hover:text-blue-600">
-            <MdVpnKey /> Change Password
-          </li>
-        </ul>
-      </nav>
+      <Sidebar />
 
-      {/* Main Content */}
-      <main className="flex-1 p-8 overflow-y-auto space-y-8">
-        {/* Profile Overview Card */}
-        <section className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-3xl font-semibold flex items-center gap-3 mb-4 text-blue-600">
-            <MdPerson /> Profile Overview
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            {/* Profile Info */}
-            <div className="space-y-2 text-gray-700">
-              <p>
-                <span className="font-semibold">Username:</span> {username}
-              </p>
-              <p>
-                <span className="font-semibold">Email:</span> {email}
-              </p>
-              <p>
-                <span className="font-semibold">Member Since:</span>{" "}
-                {dayjs(createdAt).format("MMM D, YYYY")}
-              </p>
-            </div>
+      {/* Main Content - 2 columns with 70/30 split */}
+      <main className="flex-1 p-8 overflow-y-auto flex gap-8">
+        {/* Left Side - 70% width */}
+        <section className="w-[70%] space-y-8">
+          {/* Profile Overview Card */}
+         <ProfileOverview
+            user={user}
+            rankData={rankData}
+            mcqProgress={mcqProgress}
+            codingProgress={codingProgress}
+          />
 
-            {/* Points & Rank */}
-            <div className="grid grid-cols-3 gap-4">
-              <div
-                className="bg-blue-50 p-4 rounded-md border flex flex-col items-center gap-1 hover:shadow-lg transition"
-                data-tooltip-id="mcqPointsTooltip"
-                data-tooltip-content="Points earned from MCQ challenges"
-              >
-                <MdQuiz className="text-xl text-blue-600" />
-                <p className="text-sm text-gray-500">MCQ Points</p>
-                <p className="text-lg font-bold">{points?.mcq || 0}</p>
-                <Tooltip id="mcqPointsTooltip" />
-              </div>
-              <div
-                className="bg-green-50 p-4 rounded-md border flex flex-col items-center gap-1 hover:shadow-lg transition"
-                data-tooltip-id="totalPointsTooltip"
-                data-tooltip-content="Total points combining MCQ and Coding"
-              >
-                <FaRocket className="text-xl text-green-600" />
-                <p className="text-sm text-gray-500">Total Points</p>
-                <p className="text-lg font-bold">{rankData.totalScore}</p>
-                <Tooltip id="totalPointsTooltip" />
-              </div>
-              <div
-                className="bg-yellow-50 p-4 rounded-md border flex flex-col items-center gap-1 hover:shadow-lg transition"
-                data-tooltip-id="rankTooltip"
-                data-tooltip-content="Your global rank among users"
-              >
-                <FaMedal className="text-xl text-yellow-600" />
-                <p className="text-sm text-gray-500">Rank</p>
-                <p className="text-lg font-bold">{rankData.rank}</p>
-                <Tooltip id="rankTooltip" />
-              </div>
-            </div>
-          </div>
 
-          {/* Accuracy Section with Pie Charts */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
-            <div className="bg-indigo-50 p-6 rounded-md border shadow flex flex-col items-center">
-              <MdTrackChanges className="text-3xl text-indigo-600 mb-2" />
-              <p className="text-lg font-semibold mb-1">MCQ Accuracy</p>
-              <ResponsiveContainer width="100%" height={180}>
-                <PieChart>
-                  <Pie
-                    data={mcqPieData}
-                    dataKey="value"
-                    nameKey="name"
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={50}
-                    outerRadius={70}
-                    fill="#8884d8"
-                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                  >
-                    {mcqPieData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index]} />
-                    ))}
-                  </Pie>
-                  <RechartsTooltip />
-                </PieChart>
-              </ResponsiveContainer>
-              <p className="text-xl font-bold">{mcqAccuracy}%</p>
-              <p className="text-sm text-gray-600">
-                {mcqCorrect} / {mcqTotal} correct
-              </p>
+          {/* Badges */}
+          <section className="bg-white rounded-lg shadow p-6">
+            <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2 text-yellow-600">
+              <GiLaurelsTrophy />
+              Earned Badges
+            </h2>
+            <div className="flex gap-6 flex-wrap">
+              {badges?.bronze && (
+                <div
+                  className="flex items-center gap-2 px-5 py-3 bg-yellow-300 rounded shadow-md cursor-default hover:scale-105 transition"
+                  data-tooltip-id="bronzeTooltip"
+                  data-tooltip-content="Bronze badge: Starting your journey!"
+                >
+                  <GiLaurelsTrophy className="text-yellow-800 text-2xl" />
+                  <span className="font-semibold text-yellow-900 text-lg">Bronze</span>
+                  <Tooltip id="bronzeTooltip" />
+                </div>
+              )}
+              {badges?.silver && (
+                <div
+                  className="flex items-center gap-2 px-5 py-3 bg-gray-400 rounded shadow-md cursor-default hover:scale-105 transition"
+                  data-tooltip-id="silverTooltip"
+                  data-tooltip-content="Silver badge: Solid progress made!"
+                >
+                  <MdSecurity className="text-gray-900 text-2xl" />
+                  <span className="font-semibold text-gray-900 text-lg">Silver</span>
+                  <Tooltip id="silverTooltip" />
+                </div>
+              )}
+              {badges?.golden && (
+                <div
+                  className="flex items-center gap-2 px-5 py-3 bg-yellow-500 rounded shadow-md cursor-default hover:scale-105 transition"
+                  data-tooltip-id="goldenTooltip"
+                  data-tooltip-content="Golden badge: You are a top achiever!"
+                >
+                  <AiFillStar className="text-yellow-900 text-2xl" />
+                  <span className="font-semibold text-yellow-100 text-lg">Golden</span>
+                  <Tooltip id="goldenTooltip" />
+                </div>
+              )}
+              {!badges?.bronze && !badges?.silver && !badges?.golden && (
+                <p className="text-sm text-gray-500">No badges earned yet. Start solving challenges!</p>
+              )}
             </div>
-
-            <div className="bg-pink-50 p-6 rounded-md border shadow flex flex-col items-center">
-              <AiOutlineCheckCircle className="text-3xl text-pink-600 mb-2" />
-              <p className="text-lg font-semibold mb-1">Coding Accuracy</p>
-              <ResponsiveContainer width="100%" height={180}>
-                <PieChart>
-                  <Pie
-                    data={codingPieData}
-                    dataKey="value"
-                    nameKey="name"
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={50}
-                    outerRadius={70}
-                    fill="#82ca9d"
-                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                  >
-                    {codingPieData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index]} />
-                    ))}
-                  </Pie>
-                  <RechartsTooltip />
-                </PieChart>
-              </ResponsiveContainer>
-              <p className="text-xl font-bold">{codingAccuracy}%</p>
-              <p className="text-sm text-gray-600">
-                {codingCorrect} / {codingTotal} correct
-              </p>
-            </div>
-          </div>
+          </section>
         </section>
 
-        {/* Badges */}
-        <section className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2 text-yellow-600">
-            <GiLaurelsTrophy />
-            Earned Badges
-          </h2>
-          <div className="flex gap-6 flex-wrap">
-            {badges?.bronze && (
-              <div
-                className="flex items-center gap-2 px-5 py-3 bg-yellow-300 rounded shadow-md cursor-default hover:scale-105 transition"
-                data-tooltip-id="bronzeTooltip"
-                data-tooltip-content="Bronze badge: Starting your journey!"
-              >
-                <GiLaurelsTrophy className="text-yellow-800 text-2xl" />
-                <span className="font-semibold text-yellow-900 text-lg">Bronze</span>
-                <Tooltip id="bronzeTooltip" />
-              </div>
-            )}
-            {badges?.silver && (
-              <div
-                className="flex items-center gap-2 px-5 py-3 bg-gray-400 rounded shadow-md cursor-default hover:scale-105 transition"
-                data-tooltip-id="silverTooltip"
-                data-tooltip-content="Silver badge: Solid progress made!"
-              >
-                <MdSecurity className="text-gray-900 text-2xl" />
-                <span className="font-semibold text-gray-900 text-lg">Silver</span>
-                <Tooltip id="silverTooltip" />
-              </div>
-            )}
-            {badges?.golden && (
-              <div
-                className="flex items-center gap-2 px-5 py-3 bg-yellow-500 rounded shadow-md cursor-default hover:scale-105 transition"
-                data-tooltip-id="goldenTooltip"
-                data-tooltip-content="Golden badge: You are a top achiever!"
-              >
-                <AiFillStar className="text-yellow-900 text-2xl" />
-                <span className="font-semibold text-yellow-100 text-lg">Golden</span>
-                <Tooltip id="goldenTooltip" />
-              </div>
-            )}
-            {!badges?.bronze && !badges?.silver && !badges?.golden && (
-              <p className="text-sm text-gray-500">No badges earned yet. Start solving challenges!</p>
-            )}
-          </div>
-        </section>
-
-        {/* Recent Activity with Bar Chart */}
-        <section className="bg-white rounded-lg shadow p-6">
+        {/* Right Side - 30% width */}
+        <section className="w-[30%] bg-white rounded-lg shadow p-6 flex flex-col">
           <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2 text-gray-700">
             <MdAccessTime />
             Recent Activity
@@ -288,7 +163,7 @@ const Dashboard = () => {
                 </ResponsiveContainer>
               </div>
 
-              <ul className="space-y-3 max-h-96 overflow-y-auto">
+              <ul className="space-y-3 overflow-y-auto flex-1">
                 {recentActivity.map((act, index) => (
                   <li
                     key={index}
@@ -314,16 +189,15 @@ const Dashboard = () => {
                             )}
                           </span>
                         </p>
-                        <p>Selected Option: {act.selectedOption}</p>
-                        <p className="text-sm text-gray-400">
-                          Answered At: {dayjs(act.answeredAt).format("MMM D, YYYY HH:mm")}
+                        <p className="text-xs text-gray-500">
+                          {dayjs(act.answeredAt).format("MMM D, YYYY h:mm A")}
                         </p>
                       </div>
                     ) : (
                       <div>
                         <p className="flex items-center gap-2 font-semibold">
-                          <FaCode className="text-purple-600" />
-                          Coding Question Submitted — Question ID: {act.questionId}
+                          <FaCode className="text-pink-600" />
+                          Coding Challenge — Question ID: {act.questionId}
                         </p>
                         <p>
                           Result:{" "}
@@ -339,9 +213,8 @@ const Dashboard = () => {
                             )}
                           </span>
                         </p>
-                        <p>Language: {act.techStack}</p>
-                        <p className="text-sm text-gray-400">
-                          Submitted At: {dayjs(act.answeredAt).format("MMM D, YYYY HH:mm")}
+                        <p className="text-xs text-gray-500">
+                          {dayjs(act.answeredAt).format("MMM D, YYYY h:mm A")}
                         </p>
                       </div>
                     )}
