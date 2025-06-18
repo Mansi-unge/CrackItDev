@@ -20,7 +20,7 @@ const Sidebar = () => {
                 className={({ isActive }) =>
                   isActive
                     ? "bg-blue-500 text-white rounded-bl-full rounded-tl-full ps-4 pe-6 py-4 flex justify-center items-center"
-                    : "py-3 flex justify-center items-center hover:bg-gray-200 rounded-full transition"
+                    : " flex justify-center items-center hover:bg-gray-200  rounded-bl-full rounded-tl-full ps-4 pe-6 py-4 transition"
                 }
                 data-tooltip-id={`nav-${item.name.toLowerCase()}-tooltip`}
               >
