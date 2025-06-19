@@ -96,6 +96,7 @@ export const submitSolutionToBackend = async (token, question, finalCode) => {
       submittedCode: finalCode,
       isCorrect: true,
       techStack: question.tech,
+      topic: question.topic,
       isDailyChallenge: false,
     },
     {

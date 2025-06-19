@@ -1,7 +1,9 @@
 import User from "../../models/Users.js";
+import MCQQuestion from "../../models/MCQQuestion.js";
+
 
 const saveMcqProgress = async (req, res) => {
-  const { questionId, selectedOption, isCorrect, explanation } = req.body;
+  const { questionId, selectedOption, isCorrect, explanation, topic } = req.body;
   const userId = req.user.id;
 
   try {
@@ -9,11 +11,17 @@ const saveMcqProgress = async (req, res) => {
     const alreadySolved = user.solvedMcqQuestions.find(q => q.questionId === questionId);
     if (alreadySolved) return res.status(400).json({ message: "Already solved" });
 
+    // ✅ Fetch the MCQ question to get the tech stack
+    const mcqQuestion = await MCQQuestion.findById(questionId);
+    if (!mcqQuestion) return res.status(404).json({ message: "Question not found" });
+
     user.solvedMcqQuestions.push({
       questionId,
       selectedOption,
       isCorrect,
-      explanation: explanation || "No explanation available.",
+      explanation: explanation || mcqQuestion.answerExplanation || "No explanation available.",
+      techstack: mcqQuestion.tech,   // ✅ Pull from DB instead of trusting client
+      topic: topic || mcqQuestion.topic,
     });
 
     if (isCorrect) {

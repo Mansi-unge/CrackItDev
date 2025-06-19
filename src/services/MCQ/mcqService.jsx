@@ -31,10 +31,19 @@ export const verifyMCQAnswer = async (questionId, selectedOption, token) => {
   return res.data?.answerExplanation || "No explanation provided.";
 };
 
-export const saveMCQProgress = async (questionId, selectedOption, isCorrect, explanation, token) => {
+export const saveMCQProgress = async (
+  questionId,
+  selectedOption,
+  isCorrect,
+  explanation,
+  token,
+  techstack,
+  topic
+) => {
   await axios.post(
     `${BASE_URL}/save-progress`,
-    { questionId, selectedOption, isCorrect, explanation },
+    { questionId, selectedOption, isCorrect, explanation, techstack, topic },
     { headers: { Authorization: `Bearer ${token}` } }
   );
 };
+

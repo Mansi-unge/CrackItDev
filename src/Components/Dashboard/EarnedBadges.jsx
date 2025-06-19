@@ -32,21 +32,19 @@ const EarnedBadges = ({ badges }) => {
     const { bg, border, icon, text, tooltip } = badgeStyles[type];
     return (
       <div
-        className={`flex items-center gap-2 ${bg} border ${border} rounded-xl px-4 py-2 cursor-default hover:shadow-md transition-shadow`}
+        className={`flex items-center gap-2 ${bg} border ${border} rounded-xl px-4 py-2 cursor-default hover:shadow-xl transition-shadow`}
         data-tooltip-id={`${type}Tooltip`}
         data-tooltip-content={tooltip}
       >
         <Icon className={`${icon} text-xl`} />
         <span className={`font-medium ${text} text-base capitalize`}>{type}</span>
-        <Tooltip id={`${type}Tooltip`} place="top" effect="solid" />
       </div>
     );
   };
 
   return (
-    <section className="w-full md:w-1/3 bg-white rounded-2xl shadow-md border border-gray-200 p-6">
-      <h2 className="flex items-center gap-3 text-gray-800 font-bold text-2xl mb-6">
-        <GiLaurelsTrophy className="text-indigo-600 text-3xl" />
+    <section className="w-full md:w-1/3 bg-white rounded-2xl hover:shadow-xl  border-2 border-blue-300 p-4">
+      <h2 className="flex items-center gap-3 text-blue-700 font-bold text-xl mb-6">
         <span>Earned Badges</span>
       </h2>
 

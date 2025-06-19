@@ -2,7 +2,7 @@ import User from "../../models/Users.js";
 import CodingQuestion from "../../models/CodingQuestion.js";
 
 const saveCodingProgress = async (req, res) => {
-  const { questionId, submittedCode, isCorrect, techStack, isDailyChallenge } = req.body;
+  const { questionId, submittedCode, isCorrect, techStack,  topic,    isDailyChallenge } = req.body;
   const userId = req.user.id;
 
   try {
@@ -10,9 +10,9 @@ const saveCodingProgress = async (req, res) => {
     const alreadySolved = user.solvedCodingQuestions.find(q => q.questionId === questionId);
     if (alreadySolved) return res.status(400).json({ message: "Already solved" });
 
-    user.solvedCodingQuestions.push({ questionId, submittedCode, isCorrect, techStack, isDailyChallenge });
+    user.solvedCodingQuestions.push({ questionId, submittedCode, isCorrect, techStack,   topic,   isDailyChallenge , });
 
-    if (isCorrect) {
+    if (isCorrect) {  
       user.points.coding = (user.points.coding || 0) + 5;
     }
 

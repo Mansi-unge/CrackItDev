@@ -10,13 +10,23 @@ const ProfileOverview = ({ user, rankData }) => {
 
 
   return (
-    <section className="space-y-3 px-1 animate-fade-in">
+    <section className="space-y-3 animate-fade-in">
       <div className="flex flex-col lg:flex-row justify-between">
-        <div className="space-y-2 text-gray-700 px-6 py-2">
-          <p><span className="font-semibold">Username:</span> {username}</p>
-          <p><span className="font-semibold">Email:</span> {email}</p>
-          <p><span className="font-semibold">Joined:</span> {dayjs(createdAt).format("MMM D, YYYY")}</p>
-        </div>
+       <div className="px-6 py-2 space-y-1 text-gray-700">
+  <div className="flex items-center gap-4">
+    <span className="text-gray-500 font-medium w-24"> Username:</span>
+    <span className="text-gray-800">{username}</span>
+  </div>
+  <div className="flex items-center gap-4">
+    <span className="text-gray-500 font-medium w-24"> Email:</span>
+    <span className="text-gray-800">{email}</span>
+  </div>
+  <div className="flex items-center gap-4">
+    <span className="text-gray-500 font-medium w-24">Joined:</span>
+    <span className="text-gray-800">{dayjs(createdAt).format("MMM D, YYYY")}</span>
+  </div>
+</div>
+
 
         <div className="flex flex-wrap gap-6">
           {[
@@ -24,7 +34,7 @@ const ProfileOverview = ({ user, rankData }) => {
               label: "MCQ Points",
               value: points?.mcq || 0,
               bg: "bg-blue-100/60",
-              border: "border-blue-200",
+              border: "border-2 border-blue-300",
               tooltip: "Points from MCQ challenges",
               id: "mcqPointsTooltip",
             },
@@ -32,7 +42,7 @@ const ProfileOverview = ({ user, rankData }) => {
               label: "Total Points",
               value: rankData.totalScore,
               bg: "bg-green-100/60",
-              border: "border-green-200",
+              border: "border-2 border-green-300",
               tooltip: "Combined MCQ + Coding points",
               id: "totalPointsTooltip",
             },
@@ -40,7 +50,7 @@ const ProfileOverview = ({ user, rankData }) => {
               label: "Global Rank",
               value: rankData.rank,
               bg: "bg-yellow-100/60",
-              border: "border-yellow-200",
+              border: "border-2 border-yellow-300",
               tooltip: "Your current rank among all users",
               id: "rankTooltip",
             },

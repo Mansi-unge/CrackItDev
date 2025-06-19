@@ -54,7 +54,7 @@ const ActivitySummary = ({ recentActivity }) => {
   }));
 
   return (
-    <section className="w-full max-w-4xl mx-auto bg-white/60 backdrop-blur-xl border border-blue-100 rounded-3xl shadow-lg p-4 transition hover:shadow-2xl">
+    <section className="w-full max-w-4xl mx-auto bg-white backdrop-blur-xl border-2 border-blue-300 rounded-3xl p-4 transition hover:shadow-xl">
       {/* Inject style to hide grey hover background */}
       <style>
         {`
@@ -87,7 +87,7 @@ const ActivitySummary = ({ recentActivity }) => {
               axisLine={false}
               tickLine={false}
             />
-            <RechartsTooltip content={<CustomTooltip />} />
+            <RechartsTooltip content={<CustomTooltip />} cursor={{ fill: "transparent" }} />
             <Legend verticalAlign="top" height={36} />
 
             <Bar
@@ -113,9 +113,9 @@ const ActivitySummary = ({ recentActivity }) => {
                 <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.9} />
                 <stop offset="95%" stopColor="#60a5fa" stopOpacity={0.6} />
               </linearGradient>
-              <linearGradient id="colorCoding" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#10b981" stopOpacity={0.9} />
-                <stop offset="95%" stopColor="#34d399" stopOpacity={0.6} />
+              <linearGradient id="colorCoding" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.9} />
+<stop offset="95%" stopColor="#c084fc" stopOpacity={0.6} />
+
               </linearGradient>
             </defs>
           </BarChart>

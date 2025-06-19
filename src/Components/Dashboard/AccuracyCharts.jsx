@@ -24,7 +24,7 @@ const AccuracyCharts = ({ mcqData, codingData }) => {
   return (
     <div className="grid sm:grid-cols-2 gap-6">
       {/* MCQ Accuracy */}
-      <div className="bg-white border border-blue-100 rounded-3xl shadow-md hover:shadow-xl p-4">
+      <div className="bg-white border-2 border-blue-300 rounded-3xl  hover:shadow-xl p-4">
         <div className="relative h-40">
           <ResponsiveContainer>
             <PieChart>
@@ -36,7 +36,6 @@ const AccuracyCharts = ({ mcqData, codingData }) => {
                 cy="50%"
                 innerRadius={50}
                 outerRadius={75}
-                labelLine={false}
               >
                 {mcqPieData.map((entry, index) => (
                   <Cell key={`mcq-${index}`} fill={COLORS[index]} />
@@ -55,7 +54,7 @@ const AccuracyCharts = ({ mcqData, codingData }) => {
       </div>
 
       {/* Coding Accuracy */}
-      <div className="bg-white border border-purple-100 rounded-3xl shadow-md hover:shadow-xl p-4">
+      <div className="bg-white border-2 border-purple-300 rounded-3xl  hover:shadow-xl p-4">
         <div className="relative h-40">
           <ResponsiveContainer>
             <PieChart>

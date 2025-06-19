@@ -67,7 +67,7 @@ export default function useMCQQuiz(token, filters, pageSize = 15) {
       const isCorrect = selected === question.correctOption;
       const explanation = await verifyMCQAnswer(qid, selected, token);
 
-      await saveMCQProgress(qid, selected, isCorrect, explanation, token);
+  await saveMCQProgress(qid, selected, isCorrect, explanation, token, question.techstack, question.topic);
 
       const answerObj = {
         selected,

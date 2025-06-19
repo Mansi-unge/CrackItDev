@@ -33,21 +33,24 @@ const userSchema = new Schema({
     silver: { type: Boolean, default: false },
     golden: { type: Boolean, default: false },
   },
-  solvedMcqQuestions: [
-    {
-      questionId: { type: String, required: true },
-      isCorrect: { type: Boolean, required: true },
-      selectedOption: { type: String, required: true },
-      explanation: { type: String, default: "No explanation available." },
-      answeredAt: { type: Date, default: Date.now },
-    },
-  ],
+ solvedMcqQuestions: [
+  {
+    questionId: { type: String, required: true },
+    isCorrect: { type: Boolean, required: true },
+    selectedOption: { type: String, required: true },
+    explanation: { type: String, default: "No explanation available." },
+    techstack: { type: String },
+    topic: { type: String },    
+    answeredAt: { type: Date, default: Date.now },
+  },
+],
   solvedCodingQuestions: [
     {
       questionId: { type: String, required: true },
       submittedCode: { type: String },
       isCorrect: { type: Boolean, default: false },
       techStack: { type: String }, // for gold badge
+    topic: { type: String },    
       isDailyChallenge: { type: Boolean, default: false },
       answeredAt: { type: Date, default: Date.now },
     },
