@@ -52,11 +52,7 @@ export const getLeaderboardRank = async (req, res) => {
     const usersWithScores = users.map((user) => {
       const mcqPoints = user.points?.mcq || 0;
       const codingPoints = user.points?.coding || 0;
-      const bronzeBonus = user.badges?.bronze ? 10 : 0;
-      const silverBonus = user.badges?.silver ? 20 : 0;
-      const goldenBonus = user.badges?.golden ? 30 : 0;
-
-      const totalScore = mcqPoints + codingPoints + bronzeBonus + silverBonus + goldenBonus;
+      const totalScore = mcqPoints + codingPoints;
 
       return {
         id: user._id.toString(),

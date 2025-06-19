@@ -16,9 +16,9 @@ const Dashboard = () => {
     <div className="flex min-h-screen bg-gray-100">
       <Sidebar />
 
-      <main className="flex-1 p-4 overflow-y-auto flex gap-4">
+      <main className="flex-1 p-4 overflow-y-auto flex gap-6">
         {/* Left Section */}
-        <section className="w-[70%] space-y-5">
+        <section className="w-[70%] space-y-4">
           <ProfileOverview
             user={user}
             rankData={rankData}
@@ -39,7 +39,7 @@ const Dashboard = () => {
 
 
           <div className="flex gap-6">
-            <EarnedBadges badges={user.badges} />
+            <EarnedBadges badges={user.badges} /> 
             <ActivitySummary recentActivity={recentActivity} />
           </div>
         </section>

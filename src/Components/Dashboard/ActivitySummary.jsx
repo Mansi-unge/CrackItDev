@@ -64,7 +64,7 @@ const ActivitySummary = ({ recentActivity }) => {
         `}
       </style>
 
-      <h2 className="text-xl font-bold mb-2 flex items-center gap-2 text-blue-700">
+      <h2 className="text-lg font-bold mb-2 flex items-center gap-2 text-blue-700">
         Weekly Activity Overview
       </h2>
 

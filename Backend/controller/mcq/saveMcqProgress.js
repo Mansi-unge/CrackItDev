@@ -20,7 +20,7 @@ const saveMcqProgress = async (req, res) => {
       selectedOption,
       isCorrect,
       explanation: explanation || mcqQuestion.answerExplanation || "No explanation available.",
-      techstack: mcqQuestion.tech,   // ✅ Pull from DB instead of trusting client
+      techstack: mcqQuestion.tech,   
       topic: topic || mcqQuestion.topic,
     });
 

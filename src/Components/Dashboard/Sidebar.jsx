@@ -12,7 +12,7 @@ const Sidebar = () => {
     toast.success("Logged out successfully");
   };
   return (
-    <nav className="w-20 bg-white shadow-md py-4 ps-6 pe-4 flex flex-col items-center gap-8 sticky top-0 h-screen">
+    <nav className="w-20 bg-white shadow-md  py-4 ps-6 pe-4 flex flex-col items-center gap-8 sticky top-0 h-screen">
       <h1 className="text-xl font-bold text-blue-700">
         <img src="/fevicon.png" alt="Logo" />
       </h1>
@@ -44,7 +44,7 @@ const Sidebar = () => {
           className="text-gray-600 hover:text-red-600 p-3 rounded-full transition flex justify-center items-center"
           data-tooltip-id="nav-logout-tooltip"
         >
-          <FiLogOut size={24} />
+          <FiLogOut size={28} />
         </button>
       </div>
     </nav>
