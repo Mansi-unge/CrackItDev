@@ -20,5 +20,9 @@ export const fetchSolvedQuestionIds = async (token) => {
   const res = await axios.get("http://localhost:5000/api/coding/progress", {
     headers: { Authorization: `Bearer ${token}` },
   });
-  return res.data.solvedCodingQuestions.map((q) => q.questionId.toString());
+
+  return {
+    solvedIds: res.data.solvedCodingQuestions.map((q) => q.questionId.toString()),
+    badges: res.data.badges,
+  };
 };

@@ -12,7 +12,7 @@ const ChallengeQuestions = () => {
     setFilters,
     loading,
     questions,
-    solvedIds,
+    solvedIds,badges,
   } = useChallengeQuestions(tech);
 
   return (
@@ -23,6 +23,21 @@ const ChallengeQuestions = () => {
         <h2 className="text-4xl font-extrabold text-center mb-10 text-blue-700">
           {tech} Challenges
         </h2>
+
+        <div className="flex justify-center gap-6 mb-6 text-blue-700 font-semibold text-sm">
+  <span className="flex items-center gap-1">
+    <FaMedal className="text-yellow-500" /> Bronze: {badges?.bronze || 0}
+  </span>
+  ||
+  <span className="flex items-center gap-1">
+    <FaMedal className="text-gray-400" /> Silver: {badges?.silver || 0}
+  </span>
+  ||
+  <span className="flex items-center gap-1">
+    <FaMedal className="text-yellow-700" /> Golden: {badges?.golden || 0}
+  </span>
+</div>
+
 
         {loading ? (
           <div className="flex flex-col items-center justify-center min-h-[40vh] text-blue-600 text-lg">

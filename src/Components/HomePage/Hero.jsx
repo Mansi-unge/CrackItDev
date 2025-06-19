@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { FaRocket, FaLaptopCode, FaBrain, FaBullseye, FaBolt } from "react-icons/fa";
 import { motion } from "framer-motion";
 
@@ -73,10 +74,10 @@ const Hero = () => {
 
         {/* Buttons */}
         <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-24">
-          <button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-full text-base sm:text-lg font-bold shadow-lg transition duration-300 w-full sm:w-auto">
+          <Link to="/topics" className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-full text-base sm:text-lg font-bold shadow-lg transition duration-300 w-full sm:w-auto">
             <FaRocket className="inline mr-2" />
             Start Practicing
-          </button>
+          </Link>
           <button className="bg-white border border-gray-300 hover:border-gray-500 text-gray-700 px-8 py-3 rounded-full text-base sm:text-lg font-semibold shadow-sm transition duration-300 w-full sm:w-auto">
             <FaLaptopCode className="inline mr-2" />
             Browse Topics

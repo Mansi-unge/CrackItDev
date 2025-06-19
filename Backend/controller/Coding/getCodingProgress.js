@@ -7,6 +7,7 @@ const getCodingProgress = async (req, res) => {
     res.json({
       solvedCodingQuestions: user.solvedCodingQuestions || [],
       points: user.points?.coding || 0,
+      badges: user.badges || { bronze: 0, silver: 0, golden: 0 },
     });
   } catch (err) {
     res.status(500).json({ error: err.message });

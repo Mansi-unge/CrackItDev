@@ -108,28 +108,6 @@ const Header = () => {
           </ul>
         </nav>
 
-        {/* Search */}
-        <div className="relative w-full max-w-60">
-          <input
-            type="search"
-            placeholder="Search your topic..."
-            className="border-2 border-gray-300 rounded-3xl py-2 px-12 w-full shadow-sm focus:outline-none"
-          />
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5 pointer-events-none"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2}
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 1110.5 3a7.5 7.5 0 016.15 13.65z"
-            />
-          </svg>
-        </div>
 
         {/* Auth/Profile */}
         {user ? (
@@ -144,11 +122,11 @@ const Header = () => {
                   Hello, <span className="font-semibold">{user.username}</span>
                 </div>
                 <Link
-                  to="/profile"
+                  to="/dashboard"
                   className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                   onClick={() => setProfileOpen(false)}
                 >
-                  My Profile
+                 Dashboard
                 </Link>
                 <button
                   onClick={() => {

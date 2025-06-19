@@ -7,34 +7,30 @@ const ImportanceData = [
     title: "Daily Challenge",
     info: "New coding challenges every day to keep your skills sharp",
     bgColor: "bg-blue-100",
-    link: "/daily-challenges",
   },
   {
     icon: <FaFire className="text-red-500 text-2xl" />,
     title: "Most Asked Questions",
     info: "Curated collection of frequently asked interview questions",
     bgColor: "bg-red-100",
-    link: "/most-asked",
   },
   {
     icon: <FaBuilding className="text-green-600 text-2xl" />,
     title: "Company-Wise Prep",
     info: "Targeted preparation for top tech companies",
     bgColor: "bg-green-100",
-    link: "/company-wise",
   },
   {
     icon: <FaQuestion className="text-purple-600 text-2xl" />,
     title: "Quiz Mode",
     info: "Test your knowledge with interactive quizzes",
-    bgColor: "bg-purple-100",
-    link: "/quiz-mode",
+    bgColor: "bg-purple-100"
   },
 ];
 
 const Importance = () => {
   return (
-    <section className="bg-gradient-to-br from-blue-100 via-white to-blue-200 py-14">
+    <section className="bg-gradient-to-br from-blue-100 via-white to-blue-200 py-10 ">
       <div className="text-center mb-10 px-4">
         <h1 className="text-3xl font-bold text-gray-800">Why {"<CrackIt.dev />"} Stands Out</h1>
         <p className="text-gray-600 mt-2">
@@ -49,7 +45,7 @@ const Importance = () => {
             role="region"
             tabIndex={0}
             aria-label={item.title}
-            className="bg-white shadow-md rounded-2xl px-4 py-2 flex flex-col hover:shadow-xl transition hover:scale-105 duration-300"
+            className="bg-white shadow-md rounded-2xl p-4  flex flex-col hover:shadow-xl transition hover:scale-105 duration-300"
           >
             <span
               className={`mb-1 w-14 h-14 flex items-center justify-center rounded-full ${item.bgColor} `}
@@ -58,12 +54,6 @@ const Importance = () => {
             </span>
             <h2 className="text-lg font-semibold">{item.title}</h2>
             <p className="text-gray-600 text-sm">{item.info}</p>
-            <a
-              href={item.link}
-              className="mt-2 inline-block text-blue-600 hover:underline text-sm font-medium"
-            >
-              Learn More →
-            </a>
           </div>
         ))}
       </div>
