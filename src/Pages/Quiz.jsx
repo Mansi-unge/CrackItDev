@@ -1,19 +1,22 @@
 import React, { useState } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 import useMCQQuiz from "../Hooks/MCQ/useMCQQuiz";
-
 import MCQHeader from "../Components/Quiz/MCQHeader";
 import QuizFilterSection from "../Components/Quiz/QuizFilterSection";
 import QuestionList from "../Components/Quiz/QuestionList";
 import QuizPageLayout from "../Components/Quiz/QuizPageLayout";
 
+
 export default function Quiz() {
+  const { tech } = useParams();
+  
   const [filters, setFilters] = useState({
-    tech: [],
+    tech: tech ? [tech] : [],  
     level: [],
     type: ["MCQ"],
     company: [],
   });
+
 
   const token = localStorage.getItem("token");
   if (!token) return <Navigate to="/login" replace />;

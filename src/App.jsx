@@ -14,6 +14,7 @@ import CodeEditorPage from "./Components/challenges/CodeEditorPage";
 import Dashboard from "./Pages/Dashboard";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import ScrollToTop from "./Components/Common/ScrollToTop";
 
 function AppWrapper() {
   const location = useLocation();
@@ -23,6 +24,7 @@ function AppWrapper() {
   return (
     <>
       <ToastContainer />
+      <ScrollToTop/>
       {!shouldHideLayout && <Header />}
       <Routes>
         <Route path="/" element={<Home />} />
@@ -32,6 +34,15 @@ function AppWrapper() {
         <Route path="/challenges/:tech" element={<ProtectedRoute><ChallengeQuestions /></ProtectedRoute>} />
         <Route path="/compiler/:id" element={<CodeEditorPage />} />
         <Route path="/quiz" element={<ProtectedRoute><Quiz /></ProtectedRoute>} />
+        <Route
+  path="/quiz/:tech"
+  element={
+    <ProtectedRoute>
+      <Quiz />
+    </ProtectedRoute>
+  }
+/>
+
         <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
       </Routes>
       {!shouldHideLayout && <Footer />}

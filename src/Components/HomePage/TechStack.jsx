@@ -43,12 +43,32 @@ const TechStack = () => {
               </div>
               <h2 className="text-xl font-semibold mb-2">{item.name}</h2>
               <p className="text-gray-600 mb-4 text-sm">{item.info}</p>
-              <Link
-                to={item.href}
-                className="text-blue-600 hover:text-blue-800 flex items-center text-sm font-semibold"
-              >
-                View Topics <FaArrowRightLong className="ml-1" />
-              </Link>
+              <div className="flex justify-between items-center gap-1.5 mt-auto py-3">
+                <Link
+                  to={`/topics?tech=${item.name}&type=Theory`}
+                  className="flex-1 flex justify-center items-center px-2 text-sm font-semibold text-blue-700 bg-blue-100 py-1 rounded-xl hover:bg-blue-200 transition"
+                >
+                  Interview Ques
+                </Link>
+
+
+                <Link
+                  to={`/challenges/${item.name}`}  
+                  className="flex-1 flex justify-center items-center text-sm font-semibold text-green-700 bg-green-100 py-1 rounded-xl hover:bg-green-200 transition"
+                >
+                  Code 
+                </Link>
+
+
+               <Link
+  to={`/quiz/${item.name}`} 
+  className="flex-1 flex justify-center items-center text-sm font-semibold text-purple-700 bg-purple-100 py-1 rounded-xl hover:bg-purple-200 transition"
+>
+  Quiz
+</Link>
+              </div>
+
+
             </div>
           );
         })}

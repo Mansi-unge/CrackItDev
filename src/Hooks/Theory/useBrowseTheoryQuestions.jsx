@@ -1,9 +1,10 @@
+// useBrowseTheoryQuestions.js
 import { useState, useEffect, useCallback } from "react";
 import { fetchTheoryQuestions } from "../../services/Theory/theoryService";
 
 const PAGE_SIZE = 15;
 
-export default function useBrowseTheoryQuestions() {
+export default function useBrowseTheoryQuestions({ manual = false } = {}) {
   const [filters, setFilters] = useState({
     tech: [],
     level: [],
@@ -14,6 +15,7 @@ export default function useBrowseTheoryQuestions() {
   const [page, setPage] = useState(1);
   const [totalQuestions, setTotalQuestions] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [shouldFetch, setShouldFetch] = useState(!manual); // NEW
 
   const buildQuery = () => {
     const query = [];
@@ -31,7 +33,7 @@ export default function useBrowseTheoryQuestions() {
       const newQuestions = data.questions;
 
       setTotalQuestions(data.total);
-      setQuestions(prev =>
+      setQuestions((prev) =>
         page === 1 ? newQuestions : [...prev, ...newQuestions]
       );
     } catch (error) {
@@ -42,12 +44,15 @@ export default function useBrowseTheoryQuestions() {
   }, [filters, page]);
 
   useEffect(() => {
-    setPage(1);
-  }, [filters]);
+    if (!shouldFetch) return;
+    loadQuestions();
+  }, [loadQuestions, shouldFetch]);
 
   useEffect(() => {
-    loadQuestions();
-  }, [loadQuestions]);
+    if (shouldFetch) {
+      setPage(1);
+    }
+  }, [filters]);
 
   return {
     filters,
@@ -57,5 +62,6 @@ export default function useBrowseTheoryQuestions() {
     page,
     setPage,
     totalQuestions,
+    triggerFetch: () => setShouldFetch(true), // NEW
   };
 }

@@ -1,10 +1,14 @@
-import React from "react";
+// BrowseTopic.jsx
+import React, { useEffect } from "react";
+import { FaSpinner } from "react-icons/fa";
+import { useSearchParams } from "react-router-dom";
 import useBrowseTheoryQuestions from "../Hooks/Theory/useBrowseTheoryQuestions";
 import TheoryFilterSection from "../Components/Topic/TheoryFilters";
 import QuestionCard from "../Components/Topic/QuestionCard";
-import { FaSpinner } from "react-icons/fa";
 
 export default function BrowseTopic() {
+  const [searchParams] = useSearchParams();
+
   const {
     filters,
     setFilters,
@@ -13,7 +17,22 @@ export default function BrowseTopic() {
     page,
     setPage,
     totalQuestions,
-  } = useBrowseTheoryQuestions();
+    triggerFetch,
+  } = useBrowseTheoryQuestions({ manual: true }); // manual fetch
+
+  useEffect(() => {
+    const techParam = searchParams.get("tech");
+    const typeParam = searchParams.get("type");
+
+    setFilters({
+      tech: techParam ? [techParam] : [],
+      type: typeParam ? [typeParam] : ["Theory"],
+      level: [],
+      company: [],
+    });
+
+    triggerFetch(); // after setting filters
+  }, [searchParams]);
 
   return (
     <div className="md:flex">

@@ -16,6 +16,7 @@ import {
   SiDjango,
   SiKubernetes,
   SiRust,
+  SiJavascript,
 } from "react-icons/si";
 
 const fullTechData = [
@@ -109,6 +110,16 @@ const fullTechData = [
     info: "Typed superset of JavaScript for scalable apps.",
     href: "/TypeScript",
   },
+  {
+  icon: SiJavascript,
+  name: "JavaScript",
+  color: "text-yellow-400",
+  type1: "Basic",
+  type2: "Medium",
+  type3: "Advanced",
+  info: "Versatile scripting language for frontend and backend development.",
+  href: "/JavaScript",
+},
   {
     icon: SiRust ,
     name: "Rust",

@@ -1,5 +1,9 @@
 import { useEffect, useState, useCallback } from "react";
-import { fetchCodingQuestions, fetchSolvedQuestionIds, buildChallengeQuery } from "../../services/challenges/challengeQuestionsService";
+import {
+  fetchCodingQuestions,
+  fetchSolvedQuestionIds,
+  buildChallengeQuery,
+} from "../../services/challenges/challengeQuestionsService";
 
 const useChallengeQuestions = (initialTech) => {
   const [solvedIds, setSolvedIds] = useState(new Set());
@@ -7,11 +11,19 @@ const useChallengeQuestions = (initialTech) => {
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState({
-    tech: [initialTech],
+    tech: initialTech ? [initialTech] : [],
     level: [],
     type: ["Coding"],
     company: [],
   });
+
+  // 🔁 Sync tech filter when `initialTech` changes from route param
+  useEffect(() => {
+    setFilters((prev) => ({
+      ...prev,
+      tech: initialTech ? [initialTech] : [],
+    }));
+  }, [initialTech]);
 
   const loadQuestions = useCallback(() => {
     setLoading(true);
@@ -33,7 +45,6 @@ const useChallengeQuestions = (initialTech) => {
         .catch(console.error);
     }
   }, []);
-
 
   useEffect(() => {
     loadQuestions();
