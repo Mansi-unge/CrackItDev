@@ -6,6 +6,7 @@ import theoryRoutes from './routes/theoryRoutes.js';
 import mcqRoutes from "./routes/mcqRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import codingRoutes from "./routes/codingRoutes.js"
+import newsletterRoutes from "./routes/newsletter.js"
 
 dotenv.config();
 const app = express();
@@ -18,6 +19,7 @@ app.use(cors());
 app.use(express.json());
 
 // Routes
+app.use('/api/newsletter', newsletterRoutes);
 app.use("/api/mcq", mcqRoutes);
 app.use("/api/coding", codingRoutes); 
 app.use("/api/users", userRoutes);

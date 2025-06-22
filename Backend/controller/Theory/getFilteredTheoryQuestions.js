@@ -5,7 +5,12 @@ import TheoryQuestion from "../../models/TheoryQuestion.js";
     const { tech, level, type, company, page = 1, pageSize = 15 } = req.query;
 
     const filter = {};
-    if (tech) filter.tech = { $in: tech.split(",") };
+    if (tech) {
+  filter.tech = {
+    $in: tech.split(",").map(t => new RegExp(`^${t.trim()}$`, "i")),
+  };
+}
+
     if (level) filter.level = { $in: level.split(",") };
     if (type) filter.type = { $in: type.split(",") };
     if (company) filter.company = { $in: company.split(",") };

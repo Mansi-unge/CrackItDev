@@ -15,6 +15,8 @@ import Dashboard from "./Pages/Dashboard";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ScrollToTop from "./Components/Common/ScrollToTop";
+import SearchResults from "./Pages/SearchResults";
+
 
 function AppWrapper() {
   const location = useLocation();
@@ -29,6 +31,7 @@ function AppWrapper() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/search/:tech" element={<SearchResults/>} />
         <Route path="/topics" element={<BrowseTopic />} />
         <Route path="/challenges" element={<Challenges />} />
         <Route path="/challenges/:tech" element={<ProtectedRoute><ChallengeQuestions /></ProtectedRoute>} />

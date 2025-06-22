@@ -68,20 +68,16 @@ const Hero = () => {
         <p className="text-lg sm:text-xl md:text-2xl text-blue-700 font-semibold mb-3">
           Tech Interviews, Cracked the Right Way.
         </p>
-        <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-3xl mx-auto mb-8 sm:mb-12">
+        <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-3xl mx-auto mb-8 sm:mb-6">
           Practice topic-wise questions, ace rapid-fire rounds, and tailor your prep for FAANG, startups, and everything in between.
         </p>
 
         {/* Buttons */}
-        <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-24">
+        <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-18">
           <Link to="/topics" className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-full text-base sm:text-lg font-bold shadow-lg transition duration-300 w-full sm:w-auto">
             <FaRocket className="inline mr-2" />
             Start Practicing
           </Link>
-          <button className="bg-white border border-gray-300 hover:border-gray-500 text-gray-700 px-8 py-3 rounded-full text-base sm:text-lg font-semibold shadow-sm transition duration-300 w-full sm:w-auto">
-            <FaLaptopCode className="inline mr-2" />
-            Browse Topics
-          </button>
         </div>
 
         {/* Feature Cards */}

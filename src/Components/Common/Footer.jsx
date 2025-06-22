@@ -1,8 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
+import axios from 'axios';
 import Logo from './Logo';
 import { FaFacebook, FaTwitter, FaLinkedin, FaInstagram } from 'react-icons/fa';
 
 const Footer = () => {
+
+  const [email, setEmail] = useState('');
+  const [status, setStatus] = useState('');
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await axios.post('http://localhost:5000/api/newsletter/subscribe', { email });
+      setStatus(res.data.message);
+      setEmail('');
+    }catch (err) {
+  console.error("❌ API Error:", err); // 👈 log the error
+  setStatus('Something went wrong. Try again later.');
+}
+
+  };
   return (
     <footer className="bg-gray-900 text-white px-6 py-12 md:px-10">
       <div className="flex flex-col lg:flex-row flex-wrap gap-10 justify-between">
@@ -23,10 +40,9 @@ const Footer = () => {
           <h2 className="text-xl font-semibold mb-4">Quick Links</h2>
           <ul className="space-y-2 text-gray-300 text-sm">
             <li><a href="/">Home</a></li>
-            <li><a href="/topics">Topics</a></li>
-            <li><a href="/interview-prep">Interview Prep</a></li>
-            <li><a href="/faang">FAANG Guide</a></li>
-            <li><a href="/contact">Contact</a></li>
+            <li><a href="/topics">TheoryHub</a></li>
+            <li><a href="/challenges">CodeLab</a></li>
+            <li><a href="/quiz">QuickQuiz</a></li>
           </ul>
         </div>
 
@@ -63,10 +79,13 @@ const Footer = () => {
         <div className="flex-1 min-w-[300px]">
           <h2 className="text-xl font-semibold mb-4">Get Interview Tips</h2>
           <p className="text-sm text-gray-400 mb-2">Get tips, updates, and more in your inbox.</p>
-          <form className="flex flex-col sm:flex-row gap-2 mb-4">
+          <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2 mb-2">
             <input
               type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="Your email"
+              required
               className="bg-white w-full px-3 py-2 text-sm text-black rounded-md outline-none"
             />
             <button
@@ -75,8 +94,9 @@ const Footer = () => {
             >
               Send
             </button>
+            {status && <p className="text-xs text-gray-300 mt-2">{status}</p>}
           </form>
-          <div className="flex gap-4 text-xl text-gray-400">
+          <div className="flex gap-4 text-xl text-gray-400 mt-4">
             <a href="#"><FaFacebook className="hover:text-white" /></a>
             <a href="#"><FaTwitter className="hover:text-white" /></a>
             <a href="#"><FaLinkedin className="hover:text-white" /></a>
