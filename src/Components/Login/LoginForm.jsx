@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
-const LoginForm = ({ username, setUsername, password, setPassword, onSubmit, error, success, toggleShowPassword }) => {
+const LoginForm = ({ username, setUsername, password, setPassword, onSubmit, toggleShowPassword }) => {
   const [showPassword, setShowPassword] = useState(false);
 
   const handleTogglePassword = () => {
@@ -11,8 +11,6 @@ const LoginForm = ({ username, setUsername, password, setPassword, onSubmit, err
 
   return (
     <form onSubmit={onSubmit} className="w-full max-w-md space-y-6">
-      {error && <p className="mb-4 text-red-600 font-semibold">{error}</p>}
-      {success && <p className="mb-4 text-green-600 font-semibold">{success}</p>}
 
       <div>
         <label className="block text-indigo-600 font-medium mb-1">Username</label>

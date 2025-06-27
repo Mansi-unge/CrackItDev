@@ -1,4 +1,7 @@
+// api/codingService.js
 import axios from "axios";
+
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 export const buildChallengeQuery = (filters) => {
   const params = new URLSearchParams();
@@ -12,12 +15,12 @@ export const buildChallengeQuery = (filters) => {
 };
 
 export const fetchCodingQuestions = async (queryString) => {
-  const res = await axios.get(`http://localhost:5000/api/coding?${queryString}`);
+  const res = await axios.get(`${API_BASE}/coding?${queryString}`);
   return res.data;
 };
 
 export const fetchSolvedQuestionIds = async (token) => {
-  const res = await axios.get("http://localhost:5000/api/coding/progress", {
+  const res = await axios.get(`${API_BASE}/coding/progress`, {
     headers: { Authorization: `Bearer ${token}` },
   });
 

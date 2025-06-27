@@ -14,11 +14,11 @@ const featureCards = [
     label: "FAANG Focused",
     desc: "Practice with questions asked at Google, Meta, Amazon & more.",
   },
-  {
-    icon: <FaBolt size={28} />,
-    label: "Rapid Fire",
-    desc: "Test your speed with timed quizzes and flash rounds.",
-  },
+  // {
+  //   icon: <FaBolt size={28} />,
+  //   label: "Rapid Fire",
+  //   desc: "Test your speed with timed quizzes and flash rounds.",
+  // },
 ];
 
 const cardVariants = {
@@ -81,7 +81,7 @@ const Hero = () => {
         </div>
 
         {/* Feature Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-18 md:gap-10 max-w-6xl mx-auto">
+        <div className="flex justify-center gap-18 md:gap-10 max-w-4xl mx-auto">
           {featureCards.map((card, i) => (
             <motion.div
               key={i}

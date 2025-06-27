@@ -1,5 +1,12 @@
 import { useEffect, useState } from "react";
-import { fetchMCQProgress , fetchMCQQuestions , verifyMCQAnswer , saveMCQProgress } from "../../services/MCQ/mcqService";
+import { toast } from "react-toastify";
+import {
+  fetchMCQProgress,
+  fetchMCQQuestions,
+  verifyMCQAnswer,
+  saveMCQProgress,
+} from "../../services/MCQ/mcqService";
+
 export default function useMCQQuiz(token, filters, pageSize = 15) {
   const [questions, setQuestions] = useState([]);
   const [selectedAnswers, setSelectedAnswers] = useState({});
@@ -37,17 +44,23 @@ export default function useMCQQuiz(token, filters, pageSize = 15) {
       setPoints(points);
     } catch (err) {
       console.error("Progress fetch failed:", err);
+      toast.error("Failed to load MCQ progress.");
     }
   };
 
   const fetchQuestions = async () => {
     setLoading(true);
     try {
-      const { questions: fetched, total } = await fetchMCQQuestions(filters, page, pageSize);
+      const { questions: fetched, total } = await fetchMCQQuestions(
+        filters,
+        page,
+        pageSize
+      );
       setTotalQuestions(total);
       setQuestions((prev) => (page === 1 ? fetched : [...prev, ...fetched]));
     } catch (err) {
       console.error("Question fetch failed:", err);
+      toast.error("Failed to load MCQ questions.");
     } finally {
       setLoading(false);
     }
@@ -65,9 +78,18 @@ export default function useMCQQuiz(token, filters, pageSize = 15) {
     try {
       const question = questions.find((q) => q._id === qid);
       const isCorrect = selected === question.correctOption;
+
       const explanation = await verifyMCQAnswer(qid, selected, token);
 
-  await saveMCQProgress(qid, selected, isCorrect, explanation, token, question.techstack, question.topic);
+      await saveMCQProgress(
+        qid,
+        selected,
+        isCorrect,
+        explanation,
+        token,
+        question.techstack,
+        question.topic
+      );
 
       const answerObj = {
         selected,
@@ -78,9 +100,15 @@ export default function useMCQQuiz(token, filters, pageSize = 15) {
       };
 
       setSubmittedAnswers((prev) => ({ ...prev, [qid]: answerObj }));
-      if (isCorrect) setPoints((prev) => prev + 1);
+      if (isCorrect) {
+        setPoints((prev) => prev + 1);
+        toast.success(" Correct answer!");
+      } else {
+        toast.info(" Incorrect answer. See explanation.");
+      }
     } catch (err) {
       console.error("Answer submit failed:", err);
+      toast.error("Failed to submit answer.");
     }
   };
 

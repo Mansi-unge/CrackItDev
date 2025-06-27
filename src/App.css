@@ -1,1 +1,30 @@
 @import "tailwindcss";
+
+.binary-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.05) 0px,
+    rgba(255, 255, 255, 0.05) 1px,
+    transparent 1px,
+    transparent 20px
+  );
+  background-size: 100% 20px;
+  pointer-events: none;
+  z-index: 0;
+  animation: binary-float 4s linear infinite;
+  mask-image: linear-gradient(to bottom, transparent 10%, black 50%, transparent 90%);
+}
+
+@keyframes binary-float {
+  from {
+    background-position-y: 0px;
+  }
+  to {
+    background-position-y: 100px;
+  }
+}

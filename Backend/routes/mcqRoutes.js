@@ -7,11 +7,12 @@ import getFilteredMcqQuestions from "../controller/mcq/getFilteredMcqQuestions.j
 import verifyMcqAnswer from "../controller/mcq/verifyMcqAnswer.js";
 import saveMcqProgress from "../controller/mcq/saveMcqProgress.js";
 import getMcqProgress from "../controller/mcq/getMcqProgress.js";
-
+import bulkCreateMcqQuestions from "../controller/mcq/bulkCreateMcqQuestions.js";
 import authMiddleware from "../Middleware/authMiddleware.js";
 
 
 router.post("/create", createMcqQuestion);
+router.post("/bulk-create", bulkCreateMcqQuestions);
 router.get("/id/:id", getMcqById);
 router.get("/filter", getFilteredMcqQuestions);
 router.post("/verify", verifyMcqAnswer);

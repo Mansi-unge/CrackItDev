@@ -16,10 +16,10 @@ import TheoryQuestion from "../../models/TheoryQuestion.js";
     if (company) filter.company = { $in: company.split(",") };
 
     const skip = (Number(page) - 1) * Number(pageSize);
-    const questions = await TheoryQuestion.find(filter)
-      .sort({ createdAt: -1 }) // newest first
-      .skip(skip)
-      .limit(Number(pageSize));
+      const questions = await TheoryQuestion.aggregate([
+            { $match: filter },
+            { $sample: { size: parseInt(pageSize) } },
+          ]);
 
     const total = await TheoryQuestion.countDocuments(filter);
 

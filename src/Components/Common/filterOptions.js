@@ -1,7 +1,7 @@
 export const techOptions = [
-  "C", "C++", "Java", "Kotlin", "Python",  "SQL", "Typescript", "JavaScript",
-  "Angular", "Bootstrap", "CSS", "HTML", "Next.js", "React.js", "Redux", "Tailwind",
-  "Django", "Express", "Flask", "Node.js", "Spring Boot","MongoDB"
+  "C programming", "Cpp", "Java",  "Python", "HTML", 
+   "CSS","Bootstrap", "Tailwind", "JavaScript","Typescript", "React.js", "Redux",  "Angular",  "Next.js",
+   "Express", "Node.js", "Flask","Django", "Spring Boot","MongoDB" ,"SQL"
 ];
 
 export const levelOptions = ["Beginner", "Intermediate", "Advanced"];

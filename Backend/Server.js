@@ -7,6 +7,7 @@ import mcqRoutes from "./routes/mcqRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import codingRoutes from "./routes/codingRoutes.js"
 import newsletterRoutes from "./routes/newsletter.js"
+import dsaRoutes from "./routes/dsaRoutes.js"
 
 dotenv.config();
 const app = express();
@@ -24,6 +25,7 @@ app.use("/api/mcq", mcqRoutes);
 app.use("/api/coding", codingRoutes); 
 app.use("/api/users", userRoutes);
 app.use('/api/theory', theoryRoutes);
+app.use("/api/dsa", dsaRoutes);
 
 // Health check route
 app.get("/", (req, res) => res.send("API is running"));
@@ -32,13 +34,3 @@ const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
 });
-
-
-
-// import codingRoutes from './routes/codingRoutes.js';
-// import rapidFireRoutes from './routes/rapidFireRoutes.js';
-// import questionRoutes from './routes/questionRoutes.js';
-// app.use('/api/coding', codingRoutes);
-
-// app.use('/api/rapid', rapidFireRoutes);
-// app.use('/api/questions', questionRoutes);

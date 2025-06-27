@@ -1,5 +1,12 @@
-import { useState, useEffect } from "react";
-import { fetchUserProfile , fetchUserRank , fetchMcqProgress , fetchCodingProgress , fetchRecentActivity } from "../../services/Dashboard/userDashboardService";
+import { useState, useEffect, useRef } from "react";
+import {
+  fetchUserProfile,
+  fetchUserRank,
+  fetchMcqProgress,
+  fetchCodingProgress,
+  fetchRecentActivity,
+} from "../../services/Dashboard/userDashboardService";
+import { toast } from "react-toastify";
 
 export const useDashboardData = () => {
   const [user, setUser] = useState(null);
@@ -8,12 +15,20 @@ export const useDashboardData = () => {
   const [codingProgress, setCodingProgress] = useState(null);
   const [recentActivity, setRecentActivity] = useState([]);
 
+  const hasFetched = useRef(false); // ✅ Prevent duplicate calls in dev (React.StrictMode)
   const token = localStorage.getItem("token");
 
   useEffect(() => {
-    const fetchData = async () => {
-      if (!token) return;
+    if (!token) {
+      toast.warning("Please login to access your dashboard");
+      return;
+    }
 
+    // ⛔ Prevent duplicate execution due to React.StrictMode in dev
+    if (hasFetched.current) return;
+    hasFetched.current = true;
+
+    const fetchData = async () => {
       try {
         const profileRes = await fetchUserProfile(token);
         const userId = profileRes.data._id;
@@ -32,6 +47,7 @@ export const useDashboardData = () => {
         setRecentActivity(activityRes.data.recentActivity);
       } catch (error) {
         console.error("Failed to fetch dashboard data:", error);
+        toast.error("Something went wrong while loading your dashboard");
       }
     };
 

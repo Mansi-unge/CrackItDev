@@ -1,7 +1,9 @@
+// api/judge0Service.js
 import axios from "axios";
 
 const RAPIDAPI_HOST = "judge0-ce.p.rapidapi.com";
-const RAPIDAPI_KEY = "38fd419146msh7d5f69ac084ffeap12bd89jsn998613925d47";
+const RAPIDAPI_KEY = import.meta.env.VITE_RAPIDAPI_KEY;
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 const languageMap = {
   Java: "java",
@@ -32,12 +34,12 @@ export const insertUserLogic = (template, logic) => {
 };
 
 export const fetchQuestionById = async (id) => {
-  const res = await axios.get(`http://localhost:5000/api/coding/${id}`);
+  const res = await axios.get(`${API_BASE}/coding/${id}`);
   return res.data;
 };
 
 export const fetchUserProgress = async (token) => {
-  const res = await axios.get("http://localhost:5000/api/coding/progress", {
+  const res = await axios.get(`${API_BASE}/coding/progress`, {
     headers: { Authorization: `Bearer ${token}` },
   });
   return res.data;
@@ -90,7 +92,7 @@ export const submitTestCaseOnJudge0 = async (tech, sourceCode, stdin) => {
 
 export const submitSolutionToBackend = async (token, question, finalCode) => {
   await axios.post(
-    "http://localhost:5000/api/coding/save",
+    `${API_BASE}/coding/save`,
     {
       questionId: question._id,
       submittedCode: finalCode,

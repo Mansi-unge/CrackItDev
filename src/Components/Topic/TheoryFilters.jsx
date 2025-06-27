@@ -23,32 +23,34 @@ export default function TheoryFilterSection({ filters, setFilters }) {
     resetFilters,
   } = useTheoryFilters(filters, setFilters);
 
-  const renderCheckboxes = (key, label, options) => (
-    <div className="mb-4">
-      <button
-        onClick={() => toggleSection(key)}
-        className="flex justify-between items-center w-full font-semibold text-left"
-      >
-        <span>{label}</span>
-        {expanded[key] ? <FaChevronUp /> : <FaChevronDown />}
-      </button>
-      {expanded[key] && (
-        <div className="mt-2 flex flex-col max-h-48 overflow-y-auto space-y-1">
-          {options.map((option) => (
-            <label key={option} className="inline-flex items-center space-x-2">
-              <input
-                type="checkbox"
-                checked={filters[key].includes(option)}
-                onChange={() => toggleFilter(key, option)}
-                className="form-checkbox text-indigo-600"
-              />
-              <span className="text-sm">{option}</span>
-            </label>
-          ))}
-        </div>
-      )}
-    </div>
-  );
+ const renderOptions = (key, label, options) => (
+     <div className="mb-4">
+       <button
+         onClick={() => setExpanded((prev) => ({ ...prev, [key]: !prev[key] }))}
+         className="flex justify-between items-center w-full font-semibold text-left"
+       >
+         <span>{label}</span>
+         {expanded[key] ? <FaChevronUp /> : <FaChevronDown />}
+       </button>
+       {expanded[key] && (
+         <div className="mt-2 flex flex-col space-y-1">
+           {options.map((option) => {
+             const isSelected = filters[key].includes(option);
+             return (
+               <span
+                 key={option}
+                 onClick={() => toggleFilter(key, option)}
+                 className={`cursor-pointer inline-flex items-center space-x-2 text-md transition-colors ${isSelected ? "text-indigo-600 font-semibold" : "text-gray-800"
+                   } hover:text-indigo-500`}
+               >
+                 <span>{option}</span>
+               </span>
+             );
+           })}
+         </div>
+       )}
+     </div>
+   );
 
   const content = (
     <div className="p-4 space-y-4 w-full md:w-60">
@@ -60,9 +62,9 @@ export default function TheoryFilterSection({ filters, setFilters }) {
           Reset All
         </button>
       </div>
-      {renderCheckboxes("tech", "Tech Stack", techOptions)}
-      {renderCheckboxes("level", "Difficulty", levelOptions)}
-      {renderCheckboxes("company", "Company", companyOptions)}
+         {renderOptions("tech", "Tech Stack", techOptions)}
+            {renderOptions("level", "Difficulty", levelOptions)}
+            {renderOptions("company", "Company", companyOptions)}
     </div>
   );
 

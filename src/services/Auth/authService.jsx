@@ -1,5 +1,7 @@
 import axios from 'axios';
-const API_BASE = 'http://localhost:5000/api/users';
+
+// Use the base URL from .env
+const API_BASE = `${import.meta.env.VITE_API_BASE_URL}/users`;
 
 export const loginUser = async ({ username, password }) => {
   const { data } = await axios.post(`${API_BASE}/login`, { username, password });

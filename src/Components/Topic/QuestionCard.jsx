@@ -1,26 +1,43 @@
-import React from "react";
+import React, { useState } from "react";
 import { FaRegBookmark, FaBookmark, FaShareAlt } from "react-icons/fa";
 
-const QuestionCard = ({
-  question
-}) => {
-  const { id, title, fullAnswer, tech, level, company = [] } = question;
+const QuestionCard = ({ question }) => {
+  const { _id, title, tech, level, company = [], answer, fullAnswer } = question;
+  const [showFull, setShowFull] = useState(false);
 
   return (
-    <div id={`question-${id}`} className="py-4 px-6 border-b-2 border-gray-400">
+    <div id={`question-${_id}`} className="py-4 px-6 border-b-2 border-gray-400">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
         <div className="flex-1">
-          <h2
-            className="text-base sm:text-lg font-semibold cursor-pointer text-gray-800 hover:text-indigo-600 transition-colors"
-          >
+          <h2 className="text-base sm:text-lg font-semibold cursor-pointer text-gray-800 hover:text-indigo-600 transition-colors">
             {title}
           </h2>
 
-            <p className="mt-2 text-gray-700 text-sm leading-relaxed whitespace-pre-line">
-              {fullAnswer}
-            </p>
+          {/* Answer - Always Visible */}
+          <p className="mt-2 text-gray-700 text-sm leading-relaxed whitespace-pre-line">
+            {answer}
+          </p>
 
-          <div className="flex flex-wrap mt-2 gap-2">
+          {/* Toggle Full Explanation */}
+          {fullAnswer && (
+            <>
+              <button
+                onClick={() => setShowFull(!showFull)}
+                className="mt-2 text-indigo-600 text-sm underline focus:outline-none"
+              >
+                {showFull ? "Hide Full Explanation" : "Show Full Explanation"}
+              </button>
+
+              {showFull && (
+                <p className="mt-2 text-gray-800 text-sm leading-relaxed whitespace-pre-line bg-gray-100 p-3 rounded-md">
+                  {fullAnswer}
+                </p>
+              )}
+            </>
+          )}
+
+          {/* Tags */}
+          <div className="flex flex-wrap mt-3 gap-2">
             <span className="bg-indigo-100 text-indigo-700 text-xs font-medium px-3 py-1 rounded-full">
               {tech}
             </span>
