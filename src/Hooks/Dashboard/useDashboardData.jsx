@@ -5,6 +5,7 @@ import {
   fetchMcqProgress,
   fetchCodingProgress,
   fetchRecentActivity,
+  fetchDsaProgress,
 } from "../../services/Dashboard/userDashboardService";
 import { toast } from "react-toastify";
 
@@ -13,9 +14,10 @@ export const useDashboardData = () => {
   const [rankData, setRankData] = useState(null);
   const [mcqProgress, setMcqProgress] = useState(null);
   const [codingProgress, setCodingProgress] = useState(null);
+   const [dsaProgress, setDsaProgress] = useState(null);
   const [recentActivity, setRecentActivity] = useState([]);
 
-  const hasFetched = useRef(false); // ✅ Prevent duplicate calls in dev (React.StrictMode)
+  const hasFetched = useRef(false); 
   const token = localStorage.getItem("token");
 
   useEffect(() => {
@@ -33,10 +35,11 @@ export const useDashboardData = () => {
         const profileRes = await fetchUserProfile(token);
         const userId = profileRes.data._id;
 
-        const [rankRes, mcqRes, codingRes, activityRes] = await Promise.all([
+        const [rankRes, mcqRes, codingRes , dsaRes, activityRes] = await Promise.all([
           fetchUserRank(token),
           fetchMcqProgress(token),
           fetchCodingProgress(token),
+          fetchDsaProgress(token),
           fetchRecentActivity(token, userId),
         ]);
 
@@ -44,6 +47,7 @@ export const useDashboardData = () => {
         setRankData(rankRes.data.currentUser);
         setMcqProgress(mcqRes.data);
         setCodingProgress(codingRes.data);
+        setDsaProgress(dsaRes.data);
         setRecentActivity(activityRes.data.recentActivity);
       } catch (error) {
         console.error("Failed to fetch dashboard data:", error);
@@ -54,5 +58,5 @@ export const useDashboardData = () => {
     fetchData();
   }, [token]);
 
-  return { user, rankData, mcqProgress, codingProgress, recentActivity };
+  return { user, rankData, mcqProgress, codingProgress, dsaProgress, recentActivity };
 };

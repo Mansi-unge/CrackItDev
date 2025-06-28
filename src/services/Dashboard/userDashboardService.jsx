@@ -26,3 +26,9 @@ export const fetchRecentActivity = (token, userId) =>
   axios.get(`${API_BASE}/users/user/${userId}/recent-activity`, {
     headers: { Authorization: `Bearer ${token}` },
   });
+
+
+export const fetchDsaProgress = (token) =>
+  axios.get(`${API_BASE}/dsa/user/dsa/progress`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });

@@ -11,7 +11,9 @@ export const getLeaderboardRank = async (req, res) => {
     const usersWithScores = users.map((user) => {
       const mcqPoints = user.points?.mcq || 0;
       const codingPoints = user.points?.coding || 0;
-      const totalScore = mcqPoints + codingPoints;
+      const dsaPoints = user.points?.dsa || 0;
+
+      const totalScore = mcqPoints + codingPoints + dsaPoints;
 
       return {
         id: user._id.toString(),

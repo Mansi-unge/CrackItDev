@@ -69,7 +69,7 @@ const EarnedBadges = ({ badges }) => {
   };
 
   return (
-    <section className="w-full md:w-1/3 shadow-md bg-white rounded-2xl hover:shadow-xl border-2 border-blue-300 p-4">
+    <section className="w-full md:w-1/3 bg-white rounded-2xl hover:shadow-xl border-2 border-blue-300 p-4">
       <div className="flex items-center justify-between mb-2">
         <h2 className="text-blue-700 font-bold text-lg">Earned Badges</h2>
         <span className="text-xs text-gray-600">

@@ -15,12 +15,13 @@ const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
     const mcq = payload.find(p => p.dataKey === "mcqCount")?.value || 0;
     const coding = payload.find(p => p.dataKey === "codingCount")?.value || 0;
-
+   const dsa = payload.find(p => p.dataKey === "dsaCount")?.value || 0;
     return (
       <div className="bg-white border border-blue-300 rounded-lg shadow-md p-2 text-sm text-gray-800">
         <p className="font-semibold">{label}</p>
         <p>MCQ - {mcq}</p>
         <p>Coding - {coding}</p>
+        <p>DSA - {dsa}</p>
       </div>
     );
   }
@@ -32,7 +33,7 @@ const ActivitySummary = ({ recentActivity }) => {
   const daysCount = {};
   for (let i = 6; i >= 0; i--) {
     const day = dayjs().subtract(i, "day").format("MMM D");
-    daysCount[day] = { mcqCount: 0, codingCount: 0 };
+    daysCount[day] = { mcqCount: 0, codingCount: 0, dsaCount: 0 };
   }
 
   // ✅ Count MCQ & Coding per day
@@ -44,6 +45,7 @@ const ActivitySummary = ({ recentActivity }) => {
       } else if (act.type === "coding") {
         daysCount[day].codingCount++;
       }
+      else if (act.type === "dsa") daysCount[day].dsaCount++;
     }
   });
 
@@ -106,6 +108,7 @@ const ActivitySummary = ({ recentActivity }) => {
               barSize={14}
               isAnimationActive={false}
             />
+             <Bar dataKey="dsaCount" name="DSA Challenges" fill="url(#colorDsa)" radius={[5, 5, 0, 0]} barSize={14} />
 
             {/* Gradients */}
             <defs>
@@ -116,6 +119,10 @@ const ActivitySummary = ({ recentActivity }) => {
               <linearGradient id="colorCoding" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.9} />
 <stop offset="95%" stopColor="#c084fc" stopOpacity={0.6} />
 
+              </linearGradient>
+               <linearGradient id="colorDsa" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#10b981" stopOpacity={0.9} />
+                <stop offset="95%" stopColor="#6ee7b7" stopOpacity={0.6} />
               </linearGradient>
             </defs>
           </BarChart>

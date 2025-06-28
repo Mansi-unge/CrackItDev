@@ -1,17 +1,17 @@
 import User from "../../models/Users.js";
 
 function getRecentActivity(user) {
-  const mcqActivities = user.solvedMcqQuestions.map(q => ({
+  const mcqActivities = user.solvedMcqQuestions.map((q) => ({
     type: "mcq",
     questionId: q.questionId,
     isCorrect: q.isCorrect,
     selectedOption: q.selectedOption,
-    topic: q.topic || "General", // Fallback if null
+    topic: q.topic || "General",
     techstack: q.techstack || "Unknown",
     answeredAt: q.answeredAt,
   }));
 
-  const codingActivities = user.solvedCodingQuestions.map(q => ({
+  const codingActivities = user.solvedCodingQuestions.map((q) => ({
     type: "coding",
     questionId: q.questionId,
     isCorrect: q.isCorrect,
@@ -20,11 +20,22 @@ function getRecentActivity(user) {
     answeredAt: q.answeredAt,
   }));
 
-  const allActivities = [...mcqActivities, ...codingActivities];
-  allActivities.sort((a, b) => b.answeredAt - a.answeredAt);
+  const dsaActivities = user.solvedDsaQuestions.map((q) => ({
+    type: "dsa",
+    questionId: q.questionId,
+    isCorrect: q.isCorrect,
+    techStack: q.techStack || "Unknown",
+    topic: q.topic || "General",
+    difficulty: q.difficulty,
+    answeredAt: q.answeredAt,
+  }));
 
-  return allActivities.slice(0, 6);
+  const allActivities = [...mcqActivities, ...codingActivities, ...dsaActivities];
+  allActivities.sort((a, b) => new Date(b.answeredAt) - new Date(a.answeredAt));
+
+  return allActivities.slice(0, 6); // latest 6
 }
+
 
 
 export const getUserRecentActivity = async (req, res) => {

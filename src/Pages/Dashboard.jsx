@@ -1,36 +1,39 @@
 import React from "react";
 import { useDashboardData } from "../Hooks/Dashboard/useDashboardData";
 import Sidebar from "../Components/Dashboard/Sidebar";
-import ProfileOverview from "../Components/Dashboard/ProfileOverview";
 import RecentActivitySection from "../Components/Dashboard/RecentActivitySection";
 import EarnedBadges from "../Components/Dashboard/EarnedBadges";
 import ActivitySummary from "../Components/Dashboard/ActivitySummary";
 import AccuracyCharts from "../Components/Dashboard/AccuracyCharts";
 import { FaSpinner } from "react-icons/fa";
-
+import UserPointsCard from "../Components/Dashboard/UserPointsCard";
+import UserInfoCard from "../Components/Dashboard/UserInfoCard";
 const Dashboard = () => {
-  const { user, rankData, mcqProgress, codingProgress, recentActivity } = useDashboardData();
+  const { user, rankData, mcqProgress, codingProgress, dsaProgress, recentActivity } = useDashboardData();
 
   const isLoading =
-    !user || !rankData || mcqProgress === null || codingProgress === null || !recentActivity;
+    !user || !rankData || mcqProgress === null || codingProgress === null || dsaProgress === null || !recentActivity;
 
   return (
-    <div className="flex min-h-screen bg-gray-100">
+    <div className="flex overflow-hidden h-screen bg-gray-100">
       {/* Sidebar always renders */}
       <Sidebar />
 
-      <main className="flex-1 p-4 overflow-y-auto flex gap-6">
-        {/*  Show loading state for main dashboard only */}
+      <main className="flex-1  p-4 overflow-y-auto flex gap-4">
         {isLoading ? (
           <div className="flex-1 flex flex-col items-center justify-center text-blue-600 text-lg font-medium">
 
-             <FaSpinner className="animate-spin text-6xl mb-2" />
+            <FaSpinner className="animate-spin text-6xl mb-2" />
           </div>
         ) : (
           <>
             {/* Left Section */}
             <section className="w-[70%] space-y-4">
-              <ProfileOverview user={user} rankData={rankData} />
+              <div className="flex flex-col lg:flex-row justify-between">
+
+                <UserPointsCard points={user.points} rankData={rankData} />
+              </div>
+
 
               <AccuracyCharts
                 mcqData={{
@@ -43,6 +46,10 @@ const Dashboard = () => {
                     codingProgress?.solvedCodingQuestions?.filter((q) => q.isCorrect).length || 0,
                   total: codingProgress?.solvedCodingQuestions?.length || 0,
                 }}
+                dsaData={{
+                  correct: dsaProgress?.solvedQuestions?.filter(q => q.isCorrect)?.length || 0,
+                  total: dsaProgress?.solvedQuestions?.length || 0,
+                }}
               />
 
               <div className="flex gap-6">
@@ -51,8 +58,11 @@ const Dashboard = () => {
               </div>
             </section>
 
-            {/* Right Section */}
-            <RecentActivitySection recentActivity={recentActivity} />
+            <section className="w-[30%] space-y-4">
+              <UserInfoCard user={user} />
+              <RecentActivitySection recentActivity={recentActivity} />
+            </section>
+
           </>
         )}
       </main>
