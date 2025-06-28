@@ -6,6 +6,7 @@ import {
   fetchCodingProgress,
   fetchRecentActivity,
   fetchDsaProgress,
+  fetchUserActivityHeatmap,
 } from "../../services/Dashboard/userDashboardService";
 import { toast } from "react-toastify";
 
@@ -14,10 +15,11 @@ export const useDashboardData = () => {
   const [rankData, setRankData] = useState(null);
   const [mcqProgress, setMcqProgress] = useState(null);
   const [codingProgress, setCodingProgress] = useState(null);
-   const [dsaProgress, setDsaProgress] = useState(null);
+  const [dsaProgress, setDsaProgress] = useState(null);
   const [recentActivity, setRecentActivity] = useState([]);
+  const [activityHeatmap, setActivityHeatmap] = useState([]);
 
-  const hasFetched = useRef(false); 
+  const hasFetched = useRef(false);
   const token = localStorage.getItem("token");
 
   useEffect(() => {
@@ -26,7 +28,6 @@ export const useDashboardData = () => {
       return;
     }
 
-    // ⛔ Prevent duplicate execution due to React.StrictMode in dev
     if (hasFetched.current) return;
     hasFetched.current = true;
 
@@ -35,13 +36,15 @@ export const useDashboardData = () => {
         const profileRes = await fetchUserProfile(token);
         const userId = profileRes.data._id;
 
-        const [rankRes, mcqRes, codingRes , dsaRes, activityRes] = await Promise.all([
-          fetchUserRank(token),
-          fetchMcqProgress(token),
-          fetchCodingProgress(token),
-          fetchDsaProgress(token),
-          fetchRecentActivity(token, userId),
-        ]);
+        const [rankRes, mcqRes, codingRes, dsaRes, activityRes, heatmapRes] =
+          await Promise.all([
+            fetchUserRank(token),
+            fetchMcqProgress(token),
+            fetchCodingProgress(token),
+            fetchDsaProgress(token),
+            fetchRecentActivity(token, userId),
+            fetchUserActivityHeatmap(token, new Date().getFullYear()),
+          ]);
 
         setUser(profileRes.data);
         setRankData(rankRes.data.currentUser);
@@ -49,6 +52,7 @@ export const useDashboardData = () => {
         setCodingProgress(codingRes.data);
         setDsaProgress(dsaRes.data);
         setRecentActivity(activityRes.data.recentActivity);
+        setActivityHeatmap(heatmapRes.data);
       } catch (error) {
         console.error("Failed to fetch dashboard data:", error);
         toast.error("Something went wrong while loading your dashboard");
@@ -58,5 +62,13 @@ export const useDashboardData = () => {
     fetchData();
   }, [token]);
 
-  return { user, rankData, mcqProgress, codingProgress, dsaProgress, recentActivity };
+  return {
+    user,
+    rankData,
+    mcqProgress,
+    codingProgress,
+    dsaProgress,
+    recentActivity,
+    activityHeatmap,
+  };
 };

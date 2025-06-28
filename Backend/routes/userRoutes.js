@@ -8,7 +8,7 @@ import { requestPasswordReset } from "../controller/User/requestPasswordReset.js
 import { resetPassword } from "../controller/User/resetPassword.js";
 import { getLeaderboardRank } from "../controller/User/getLeaderboardRank.js";
 import { getUserRecentActivity } from "../controller/User/getUserRecentActivity.js";
-
+import getUserActivityByYear from "../controller/User/getUserActivityByYear.js";
 const router = express.Router();
 
 router.post("/register", register);
@@ -18,5 +18,7 @@ router.post("/request-reset", requestPasswordReset);
 router.post("/reset-password", resetPassword);
 router.get("/rank", authMiddleware, getLeaderboardRank);
 router.get("/user/:id/recent-activity", getUserRecentActivity);
+router.get("/activity", authMiddleware, getUserActivityByYear);
+
 
 export default router;

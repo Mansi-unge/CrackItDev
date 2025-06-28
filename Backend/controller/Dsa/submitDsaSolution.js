@@ -1,5 +1,6 @@
 import User from "../../models/Users.js";
 import DsaQuestion from "../../models/DsaQuestion.js";
+import UserActivity from "../../models/UserActivity.js";
 
 const submitDsaSolution = async (req, res) => {
   try {
@@ -11,7 +12,6 @@ const submitDsaSolution = async (req, res) => {
       return res.status(404).json({ success: false, message: "DSA Question not found" });
     }
 
-    // ✅ Assign points dynamically based on difficulty
     let awardedPoints = 0;
     switch (question.difficulty) {
       case "Easy":
@@ -37,7 +37,6 @@ const submitDsaSolution = async (req, res) => {
       awardedPoints,
     };
 
-    // Add the entry and update points
     const user = await User.findByIdAndUpdate(
       userId,
       {
@@ -46,6 +45,16 @@ const submitDsaSolution = async (req, res) => {
       },
       { new: true }
     ).select("points");
+
+    // ✅ Log user activity (after saving progress)
+    const today = new Date();
+    today.setUTCHours(0, 0, 0, 0);
+
+    await UserActivity.findOneAndUpdate(
+      { userId, date: today, activityType: "DSA" },
+      { $inc: { count: 1 } },
+      { upsert: true, new: true }
+    );
 
     res.status(200).json({
       success: true,

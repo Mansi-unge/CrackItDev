@@ -2,7 +2,7 @@
 import React from "react";
 import useDsaSolve from "../../Hooks/Dsa/useDsaSolve";
 import AceEditor from "react-ace";
-import { FaVial, FaCheck, FaUpload, FaTimes} from "react-icons/fa";
+import { FaVial, FaCheck, FaUpload, FaTimes, FaCheckCircle} from "react-icons/fa";
 import { GiTwoCoins } from "react-icons/gi";
 import "ace-builds/src-noconflict/mode-c_cpp";
 import "ace-builds/src-noconflict/mode-java";

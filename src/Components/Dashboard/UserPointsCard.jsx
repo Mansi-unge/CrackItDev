@@ -48,11 +48,11 @@ const UserPointsCard = ({ points, rankData }) => {
   ];
 
   return (
-    <div className="flex flex-wrap gap-7">
+    <div className="flex flex-wrap gap-4">
       {cardData.map(({ label, value, bg, border, tooltip, id }, i) => (
         <div
           key={i}
-          className={`min-w-[140px] ${bg} ${border} flex flex-col items-center justify-center border rounded-2xl text-center hover:shadow-lg hover:scale-[1.03] transition-all cursor-default px-10 py-5`}
+          className={`min-w-[140px] ${bg} ${border} flex flex-col items-center justify-center border rounded-2xl text-center hover:shadow-lg hover:scale-[1.03] transition-all cursor-default px-12 py-5`}
           data-tooltip-id={id}
           data-tooltip-content={tooltip}
         >

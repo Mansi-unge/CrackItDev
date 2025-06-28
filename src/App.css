@@ -28,3 +28,18 @@
     background-position-y: 100px;
   }
 }
+.color-empty {
+  fill: #797878;
+}
+.color-github-1 {
+  fill: #9be9a8;
+}
+.color-github-2 {
+  fill: #40c463;
+}
+.color-github-3 {
+  fill: #30a14e;
+}
+.color-github-4 {
+  fill: #216e39;
+}

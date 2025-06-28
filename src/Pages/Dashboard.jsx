@@ -8,8 +8,9 @@ import AccuracyCharts from "../Components/Dashboard/AccuracyCharts";
 import { FaSpinner } from "react-icons/fa";
 import UserPointsCard from "../Components/Dashboard/UserPointsCard";
 import UserInfoCard from "../Components/Dashboard/UserInfoCard";
+import UserActivityHeatmap from "../Components/Dashboard/UserActivityHeatmap";
 const Dashboard = () => {
-  const { user, rankData, mcqProgress, codingProgress, dsaProgress, recentActivity } = useDashboardData();
+  const { user, rankData, mcqProgress, codingProgress, dsaProgress, recentActivity , activityHeatmap } = useDashboardData();
 
   const isLoading =
     !user || !rankData || mcqProgress === null || codingProgress === null || dsaProgress === null || !recentActivity;
@@ -53,16 +54,17 @@ const Dashboard = () => {
               />
 
               <div className="flex gap-6">
-                <EarnedBadges badges={user.badges} />
+              <EarnedBadges badges={user.badges} />
                 <ActivitySummary recentActivity={recentActivity} />
               </div>
             </section>
 
-            <section className="w-[30%] space-y-4">
+            <section className="w-[30%] space-y-3">
               <UserInfoCard user={user} />
+              
+                <UserActivityHeatmap activityData={activityHeatmap}  />
               <RecentActivitySection recentActivity={recentActivity} />
             </section>
-
           </>
         )}
       </main>

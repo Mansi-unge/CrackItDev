@@ -32,3 +32,10 @@ export const fetchDsaProgress = (token) =>
   axios.get(`${API_BASE}/dsa/user/dsa/progress`, {
     headers: { Authorization: `Bearer ${token}` },
   });
+
+
+export const fetchUserActivityHeatmap = (token, year) =>
+  axios.get(`${API_BASE}/users/activity?year=${year}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+

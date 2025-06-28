@@ -33,7 +33,7 @@ function getRecentActivity(user) {
   const allActivities = [...mcqActivities, ...codingActivities, ...dsaActivities];
   allActivities.sort((a, b) => new Date(b.answeredAt) - new Date(a.answeredAt));
 
-  return allActivities.slice(0, 6); // latest 6
+  return allActivities.slice(0, 4); // latest 6
 }
 
 
