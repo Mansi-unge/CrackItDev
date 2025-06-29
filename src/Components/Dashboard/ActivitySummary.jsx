@@ -60,7 +60,7 @@ const ActivitySummary = ({ recentActivity }) => {
   }));
 
   return (
-    <section className="w-full max-w-4xl mx-auto bg-white border-2 border-blue-300 rounded-3xl p-4 transition hover:shadow-xl overflow-hidden">
+    <section className="w-full max-w-4xl  mx-auto bg-white border-2 border-blue-300 rounded-3xl p-4 transition hover:shadow-xl overflow-hidden">
       <style>
         {`
           .recharts-active-bar-background {
@@ -89,13 +89,13 @@ const ActivitySummary = ({ recentActivity }) => {
                 tickLine={false}
               />
               {!isMobile && (
-  <YAxis
-    allowDecimals={false}
-    tick={{ fontSize: 12, fill: "#4b5563" }}
-    axisLine={false}
-    tickLine={false}
-  />
-)}
+                <YAxis
+                  allowDecimals={false}
+                  tick={{ fontSize: 12, fill: "#4b5563" }}
+                  axisLine={false}
+                  tickLine={false}
+                />
+              )}
 
               <RechartsTooltip content={<CustomTooltip />} cursor={{ fill: "transparent" }} />
               {!isMobile && <Legend verticalAlign="top" height={36} />}
@@ -142,6 +142,9 @@ const ActivitySummary = ({ recentActivity }) => {
               </defs>
             </BarChart>
           </ResponsiveContainer>
+
+
+        </div>
           {isMobile && (
   <div className="flex justify-center gap-4 text-sm font-medium">
     <div className="flex items-center gap-1">
@@ -158,8 +161,6 @@ const ActivitySummary = ({ recentActivity }) => {
     </div>
   </div>
 )}
-
-        </div>
       </div>
     </section>
   );
