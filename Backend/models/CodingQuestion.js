@@ -24,8 +24,8 @@ const CodingQuestionSchema = new Schema({
   solution: { type: String },
   testCases: [
     {
-      input: { type: String, required: true },
-      output: { type: String, required: true },
+      input: { type: String },
+      output: { type: String},
     },
   ],
   createdAt: { type: Date, default: Date.now },

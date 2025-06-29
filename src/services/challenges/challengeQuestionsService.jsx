@@ -5,14 +5,14 @@ const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 export const buildChallengeQuery = (filters) => {
   const params = new URLSearchParams();
-  if (filters.tech.length) params.append("tech", filters.tech.join(","));
-  if (filters.level.length) params.append("level", filters.level.join(","));
-  if (filters.type.length) params.append("type", filters.type.join(","));
-  if (filters.company.length) params.append("company", filters.company.join(","));
-  params.append("page", 1);
-  params.append("pageSize", 15);
+
+  if (filters.tech?.length) params.append("tech", filters.tech.join(","));
+  if (filters.level?.length) params.append("level", filters.level.join(","));
+  if (filters.company?.length) params.append("company", filters.company.join(","));
+
   return params.toString();
 };
+
 
 export const fetchCodingQuestions = async (queryString) => {
   const res = await axios.get(`${API_BASE}/coding?${queryString}`);

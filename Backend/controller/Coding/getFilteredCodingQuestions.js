@@ -2,7 +2,7 @@ import CodingQuestion from "../../models/CodingQuestion.js";
 
 const getFilteredCodingQuestions = async (req, res) => {
   try {
-    const { tech, level, company, _id, page = 1, pageSize = 15 } = req.query;
+    const { tech, level, company, _id } = req.query;
     const filters = {};
 
     if (_id) filters._id = _id;
@@ -19,9 +19,12 @@ const getFilteredCodingQuestions = async (req, res) => {
       filters.company = { $in: company.split(",").map((c) => new RegExp(`^${c.trim()}$`, "i")) };
     }
 
-    const skip = (parseInt(page) - 1) * parseInt(pageSize);
-    const questions = await CodingQuestion.find(filters).sort({ createdAt: -1 }).skip(skip).limit(parseInt(pageSize));
-    const total = await CodingQuestion.countDocuments(filters);
+    const questions = await CodingQuestion.aggregate([
+      { $match: filters },
+      { $sample: { size: 1000 } }, // adjust `size` to limit how many random results you want
+    ]);
+
+    const total = questions.length;
 
     res.json({ questions, total });
   } catch (error) {
@@ -29,5 +32,4 @@ const getFilteredCodingQuestions = async (req, res) => {
   }
 };
 
-export default getFilteredCodingQuestions
-
+export default getFilteredCodingQuestions;

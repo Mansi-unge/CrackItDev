@@ -1,20 +1,9 @@
 import React from "react";
-import { FaReact, FaNodeJs, FaJava, FaPython } from "react-icons/fa";
+import { FaReact, FaNodeJs, FaJava, FaPython, FaJsSquare } from "react-icons/fa";
+import { SiC, SiCplusplus } from "react-icons/si";
 import TechStackCard from "../Components/challenges/TechStackCard";
 
 const techStacks = [
-  {
-    name: "React",
-    description: "Build lightning-fast UIs with component-driven architecture used by top startups and enterprises.",
-    Icon: FaReact,
-    color: "#61DBFB",
-  },
-  {
-    name: "Node.js",
-    description: "Power your backend with event-driven JavaScript. Perfect for APIs, real-time apps, and microservices.",
-    Icon: FaNodeJs,
-    color: "#3C873A",
-  },
   {
     name: "Java",
     description: "Write once, run anywhere. Trusted for building scalable, secure, and robust enterprise applications.",
@@ -27,21 +16,71 @@ const techStacks = [
     Icon: FaPython,
     color: "#FFD43B",
   },
+  {
+  name: "C programming",
+  description: "The foundation of modern programming — C is fast, close to hardware, and ideal for system-level development.",
+  Icon: SiC,
+  color: "#A8B9CC",
+},
+{
+  name: "Cpp",
+  description: "Powerful and performance-focused, C++ adds OOP to C — perfect for game engines, real-time systems, and high-performance apps.",
+  Icon: SiCplusplus,
+  color: "#00599C",
+},
+{
+  name: "JavaScript",
+  description: "The language of the web — build interactive, dynamic experiences across browsers, servers, and frameworks.",
+  Icon: FaJsSquare,
+  color: "#F7DF1E",
+}
+
 ];
 
 const Challenges = () => {
+  const currentTech = localStorage.getItem("currentTech"); // e.g., "Java"
+
+  const inProgressStack = techStacks.find(
+    (stack) => stack.name.toLowerCase() === currentTech?.toLowerCase()
+  );
+
+  const otherStacks = techStacks.filter(
+    (stack) => stack.name.toLowerCase() !== currentTech?.toLowerCase()
+  );
+
   return (
-    <section className="p-6 grid sm:grid-cols-2 md:grid-cols-4 gap-6">
-      {techStacks.map(({ name, description, Icon, color }) => (
-        <TechStackCard
-          key={name}
-          tech={name}
-          description={description}
-          Icon={Icon}
-          color={color}
-        />
-      ))}
-    </section>
+    <div className="p-6 space-y-10">
+      {inProgressStack && (
+        <div>
+          <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center text-green-600">In Progress</h2>
+          <section className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
+            <TechStackCard
+              tech={inProgressStack.name}
+              description={inProgressStack.description}
+              Icon={inProgressStack.Icon}
+              color={inProgressStack.color}
+            />
+          </section>
+        </div>
+      )}
+
+      <div>
+        <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center text-blue-700">
+          {inProgressStack ? "Other Tech Stacks" : "Available Challenges"}
+        </h2>
+        <section className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
+          {otherStacks.map(({ name, description, Icon, color }) => (
+            <TechStackCard
+              key={name}
+              tech={name}
+              description={description}
+              Icon={Icon}
+              color={color}
+            />
+          ))}
+        </section>
+      </div>
+    </div>
   );
 };
 

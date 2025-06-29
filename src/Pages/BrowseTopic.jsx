@@ -44,8 +44,7 @@ export default function BrowseTopic() {
 
         {loading ? (
           <div className="flex flex-col items-center justify-center min-h-[40vh] text-blue-600 text-lg">
-            <FaSpinner className="animate-spin text-3xl mb-2" />
-            Loading ...
+            <FaSpinner className="animate-spin text-6xl mt-40" />
           </div>
         ) : questions.length === 0 ? (
           <p className="text-center text-gray-500">No questions found.</p>
@@ -65,15 +64,19 @@ export default function BrowseTopic() {
         )}
 
         {!loading && questions.length < totalQuestions && (
-          <div className="text-center mt-8">
-            <button
-              onClick={() => setPage((prev) => prev + 1)}
-              className="px-6 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition-colors"
-            >
-              Show More
-            </button>
-          </div>
-        )}
+  <div className="text-center mt-8">
+    <button
+      onClick={() => {
+        setPage((prev) => prev + 1);
+        triggerFetch(); // ✅ Force fetch on page change
+      }}
+      className="px-6 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition-colors"
+    >
+      Show More
+    </button>
+  </div>
+)}
+
       </main>
     </div>
   );

@@ -46,3 +46,12 @@ export const saveMCQProgress = async (
     { headers: { Authorization: `Bearer ${token}` } }
   );
 };
+
+export const fetchSolvedMCQQuestions = async (ids, token) => {
+  const { data } = await axios.post(
+    `${BASE_URL}/solved`,
+    { ids },
+    { headers: { Authorization: `Bearer ${token}` } }
+  );
+  return data;
+};

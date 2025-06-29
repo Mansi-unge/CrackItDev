@@ -29,6 +29,8 @@ export default function Quiz() {
     selectedAnswers,
     submittedAnswers,
     page,
+    showSolved,
+  setShowSolved,
     setPage,
     handleSelect,
     handleSubmitAnswer,
@@ -49,6 +51,8 @@ export default function Quiz() {
           onSelect={handleSelect}
           onSubmit={handleSubmitAnswer}
           toggleExplanation={toggleExplanation}
+          showSolved={showSolved}
+  setShowSolved={setShowSolved}
           onShowMore={() => setPage(page + 1)}
         />
       </main>

@@ -1,17 +1,31 @@
-// controllers/dsa/getDsaQuestions.js
 import DsaQuestion from "../../models/DsaQuestion.js";
 
 const getDsaQuestions = async (req, res) => {
   try {
     const { difficulty, topic } = req.query;
 
-    const filter = {};
-    if (difficulty) filter.difficulty = difficulty;
-    if (topic) filter.topic = topic;
+    const matchStage = {};
+    if (difficulty) matchStage.difficulty = difficulty;
+    if (topic) matchStage.topic = topic;
 
-    const questions = await DsaQuestion.find(filter).select(
-      "title difficulty topic functionName createdAt"  // added functionName to selection
-    );
+    // Count total matching docs
+    const total = await DsaQuestion.countDocuments(matchStage);
+
+    const pipeline = [
+      { $match: matchStage },
+      { $sample: { size: total } }, // fetch all matching docs in random order
+      {
+        $project: {
+          title: 1,
+          difficulty: 1,
+          topic: 1,
+          functionName: 1,
+          createdAt: 1,
+        },
+      },
+    ];
+
+    const questions = await DsaQuestion.aggregate(pipeline);
 
     res.status(200).json({
       success: true,

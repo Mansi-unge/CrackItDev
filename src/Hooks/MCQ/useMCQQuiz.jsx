@@ -5,6 +5,7 @@ import {
   fetchMCQQuestions,
   verifyMCQAnswer,
   saveMCQProgress,
+  fetchSolvedMCQQuestions, // 👈 new service method
 } from "../../services/MCQ/mcqService";
 
 export default function useMCQQuiz(token, filters, pageSize = 15) {
@@ -15,6 +16,7 @@ export default function useMCQQuiz(token, filters, pageSize = 15) {
   const [page, setPage] = useState(1);
   const [totalQuestions, setTotalQuestions] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [showSolved, setShowSolved] = useState(false);
 
   useEffect(() => {
     if (token) fetchProgress();
@@ -26,7 +28,7 @@ export default function useMCQQuiz(token, filters, pageSize = 15) {
 
   useEffect(() => {
     if (token) fetchQuestions();
-  }, [filters, page]);
+  }, [filters, page, showSolved]);
 
   const fetchProgress = async () => {
     try {
@@ -51,13 +53,20 @@ export default function useMCQQuiz(token, filters, pageSize = 15) {
   const fetchQuestions = async () => {
     setLoading(true);
     try {
-      const { questions: fetched, total } = await fetchMCQQuestions(
-        filters,
-        page,
-        pageSize
-      );
-      setTotalQuestions(total);
-      setQuestions((prev) => (page === 1 ? fetched : [...prev, ...fetched]));
+      if (showSolved) {
+        const solvedIds = Object.keys(submittedAnswers);
+        const { questions } = await fetchSolvedMCQQuestions(solvedIds, token);
+        setQuestions(questions || []);
+        setTotalQuestions(questions?.length || 0);
+      } else {
+        const { questions: fetched, total } = await fetchMCQQuestions(
+          filters,
+          page,
+          pageSize
+        );
+        setQuestions((prev) => (page === 1 ? fetched : [...prev, ...fetched]));
+        setTotalQuestions(total);
+      }
     } catch (err) {
       console.error("Question fetch failed:", err);
       toast.error("Failed to load MCQ questions.");
@@ -102,9 +111,9 @@ export default function useMCQQuiz(token, filters, pageSize = 15) {
       setSubmittedAnswers((prev) => ({ ...prev, [qid]: answerObj }));
       if (isCorrect) {
         setPoints((prev) => prev + 1);
-        toast.success(" Correct answer!");
+        toast.success("Correct answer!");
       } else {
-        toast.info(" Incorrect answer. See explanation.");
+        toast.info("Incorrect answer. See explanation.");
       }
     } catch (err) {
       console.error("Answer submit failed:", err);
@@ -122,8 +131,12 @@ export default function useMCQQuiz(token, filters, pageSize = 15) {
     }));
   };
 
+  const filteredQuestions = questions.filter((q) =>
+    showSolved ? submittedAnswers[q._id] : !submittedAnswers[q._id]
+  );
+
   return {
-    questions,
+    questions: filteredQuestions,
     totalQuestions,
     loading,
     points,
@@ -131,6 +144,8 @@ export default function useMCQQuiz(token, filters, pageSize = 15) {
     submittedAnswers,
     page,
     setPage,
+    showSolved,
+    setShowSolved,
     handleSelect,
     handleSubmitAnswer,
     toggleExplanation,

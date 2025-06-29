@@ -9,6 +9,7 @@ import saveMcqProgress from "../controller/mcq/saveMcqProgress.js";
 import getMcqProgress from "../controller/mcq/getMcqProgress.js";
 import bulkCreateMcqQuestions from "../controller/mcq/bulkCreateMcqQuestions.js";
 import authMiddleware from "../Middleware/authMiddleware.js";
+import getSolvedMcqQuestions from "../controller/mcq/getSolvedMcqQuestions.js";
 
 
 router.post("/create", createMcqQuestion);
@@ -18,5 +19,7 @@ router.get("/filter", getFilteredMcqQuestions);
 router.post("/verify", verifyMcqAnswer);
 router.post("/save-progress", authMiddleware, saveMcqProgress);
 router.get("/progress", authMiddleware, getMcqProgress);
+router.post("/solved", authMiddleware, getSolvedMcqQuestions);
+
 
 export default router;

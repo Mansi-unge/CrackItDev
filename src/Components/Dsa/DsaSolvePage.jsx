@@ -38,7 +38,7 @@ const DsaSolvePage = () => {
 
   if (!question) return <div className="flex-1 flex flex-col my-10 items-center justify-center text-blue-600 text-lg font-medium">
   
-               <FaSpinner className="animate-spin text-6xl mb-2" />
+               <FaSpinner className="animate-spin text-6xl mt-40" />
             </div>
 
   return (

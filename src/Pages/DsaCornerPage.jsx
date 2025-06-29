@@ -8,7 +8,7 @@ const DsaCornerPage = () => {
   const { questions, loading } = useDsaQuestions(filters);
   const [totalDsaPoints, setTotalDsaPoints] = useState(null);
 
-  const topics = ["Array", "String", "Graph", "DP", "Tree", "Stack"];
+  const topics = ["Arrays", "Strings", "Linked List" , "Hashing" , "Stack" , "Queue" ,"Graph", "Tree",  "DP",];
 
   useEffect(() => {
     const fetchUserPoints = async () => {
@@ -118,7 +118,7 @@ const DsaCornerPage = () => {
       {loading ? (
         <p className="text-lg text-gray-600 dark:text-gray-400"><div className="flex-1 my-10 flex flex-col items-center justify-center text-blue-600 text-lg font-medium">
           
-                       <FaSpinner className="animate-spin text-6xl mb-2" />
+                       <FaSpinner className="animate-spin text-6xl mt-40" />
                     </div></p>
       ) : questions.length === 0 ? (
         <p className="text-gray-500 dark:text-gray-400">No questions found.</p>

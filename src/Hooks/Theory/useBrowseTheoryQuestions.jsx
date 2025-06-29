@@ -56,11 +56,18 @@ export default function useBrowseTheoryQuestions({ manual = false } = {}) {
 
   // When filters change, reset to page 1 and trigger fresh fetch
   useEffect(() => {
-    setPage(1);
-    if (!manual) {
-      setShouldFetch(true);
-    }
-  }, [filters, manual]);
+  if (manual && page > 1) {
+    setShouldFetch(true);
+  }
+}, [page, manual]);
+
+useEffect(() => {
+  setPage(1);
+  setQuestions([]); // ✅ Clear old questions when filters change
+  if (!manual) {
+    setShouldFetch(true);
+  }
+}, [filters, manual]);
 
   return {
     filters,
