@@ -50,11 +50,11 @@ const Hero = () => {
 
         {/* Logo Text */}
         <div className="flex justify-center">
-          <h1 className="text-5xl md:text-6xl font-semibold flex flex-wrap items-center justify-center gap-2 tracking-wide pb-4 sm:pb-10">
+          <h1 className="text-4xl md:text-6xl font-semibold flex flex-wrap items-center justify-center gap-2 tracking-wide pb-4 sm:pb-10">
             <span className="text-pink-600">{"<"}</span>
             <span className="font-extrabold text-indigo-600">crackit</span>
             <span
-              className="text-yellow-400 text-3xl sm:text-4xl md:text-5xl"
+              className="text-yellow-400 text-3xl sm:text-3xl md:text-5xl"
               style={{ animation: "pulseGlow 1.5s ease-in-out infinite" }}
             >
               ⚡
