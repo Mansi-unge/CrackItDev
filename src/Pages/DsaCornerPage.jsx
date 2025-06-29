@@ -130,8 +130,8 @@ const DsaCornerPage = () => {
               to={`/dsa/${q._id}`}
               className={`p-4 transition-all ${
                 index % 2 === 0
-                  ? "bg-white dark:bg-[#161b22]"
-                  : "bg-blue-50 dark:bg-[#add9ef]"
+                  ? "bg-white "
+                  : "bg-blue-50"
               }`}
             >
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 px-4">
