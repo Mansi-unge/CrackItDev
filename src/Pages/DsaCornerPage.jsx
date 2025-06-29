@@ -42,43 +42,44 @@ const DsaCornerPage = () => {
       )}
 
       {/* Filters */}
-      <div className="flex flex-col max-w-xl px-4 md:flex-row gap-4 justify-center items-center mb-6">
-        <div className="relative">
-          <select
-            onChange={(e) =>
-              setFilters((prev) => ({ ...prev, difficulty: e.target.value }))
-            }
-            defaultValue=""
-            className="w-sm pr-10 pl-4 py-2 rounded-xl bg-white border border-gray-300 shadow-md text-sm appearance-none focus:outline-none focus:ring-0 "
-          >
-            <option value="">All Difficulties</option>
-            <option value="Easy">Easy</option>
-            <option value="Medium">Medium</option>
-            <option value="Hard">Hard</option>
-          </select>
+<div className="flex flex-col md:flex-row gap-4 justify-center items-center px-4 mb-6 w-full max-w-2xl mx-auto">
+  <div className="relative w-full max-w-xs">
+    <select
+      onChange={(e) =>
+        setFilters((prev) => ({ ...prev, difficulty: e.target.value }))
+      }
+      defaultValue=""
+      className="w-full pr-10 pl-4 py-2 rounded-xl bg-white border border-gray-300 shadow-md text-sm appearance-none focus:outline-none focus:ring-0"
+    >
+      <option value="">All Difficulties</option>
+      <option value="Easy">Easy</option>
+      <option value="Medium">Medium</option>
+      <option value="Hard">Hard</option>
+    </select>
 
-          <span className="absolute inset-y-0 left-80 flex items-center pointer-events-none">
-            <svg
-              className="w-12 h-12 ms-4 mt-1 text-gray-500 "
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1"
-              viewBox="0 0 24 24"
-            >
-              <path d="M8 9l4 4 4-4" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </span>
-        </div>
+    <span className="absolute inset-y-0 right-2 flex items-center pointer-events-none">
+      <svg
+        className="w-5 h-5 text-gray-500"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        viewBox="0 0 24 24"
+      >
+        <path d="M8 9l4 4 4-4" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    </span>
+  </div>
 
-        <input
-          type="text"
-          placeholder="Search by topic..."
-          className="px-4 py-2 rounded-xl w-sm bg-white  border border-gray-300  shadow-md text-sm focus:ring-0"
-          onChange={(e) =>
-            setFilters((prev) => ({ ...prev, topic: e.target.value }))
-          }
-        />
-      </div>
+  <input
+    type="text"
+    placeholder="Search by topic..."
+    className="px-4 py-2 rounded-xl w-full max-w-xs bg-white border border-gray-300 shadow-md text-sm focus:ring-0"
+    onChange={(e) =>
+      setFilters((prev) => ({ ...prev, topic: e.target.value }))
+    }
+  />
+</div>
+
 
       {/* Topic Filter Chips */}
       <div className="flex flex-wrap gap-2 justify-center mb-4">
