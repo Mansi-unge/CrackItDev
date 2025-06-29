@@ -75,12 +75,12 @@ const ActivitySummary = ({ recentActivity }) => {
 
       {/* Horizontal scroll on small screens */}
       <div className="overflow-x-auto ">
-        <div style={{ width: isMobile ? "310px" : "100%", height: "16rem" }}>
+        <div style={{ width: isMobile ? "320px" : "100%", height: "8rem" }}>
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
               data={activityData}
-              margin={{ top: 10, right: 30, left: 0, bottom: 10 }}
-              barCategoryGap={isMobile ? "8%" : "20%"}
+              margin={{ top: 10, right: 20, left: 0, bottom: 10 }}
+              barCategoryGap={isMobile ? "6%" : "20%"}
             >
               <XAxis
                 dataKey="date"
