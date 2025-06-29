@@ -142,6 +142,23 @@ const ActivitySummary = ({ recentActivity }) => {
               </defs>
             </BarChart>
           </ResponsiveContainer>
+          {isMobile && (
+  <div className="flex justify-center gap-4 mt-2 text-sm font-medium">
+    <div className="flex items-center gap-1">
+      <span className="w-3 h-3 rounded-sm" style={{ background: 'linear-gradient(to bottom, #3b82f6, #60a5fa)' }}></span>
+      <span className="text-gray-700">MCQ</span>
+    </div>
+    <div className="flex items-center gap-1">
+      <span className="w-3 h-3 rounded-sm" style={{ background: 'linear-gradient(to bottom, #8b5cf6, #c084fc)' }}></span>
+      <span className="text-gray-700">Coding</span>
+    </div>
+    <div className="flex items-center gap-1">
+      <span className="w-3 h-3 rounded-sm" style={{ background: 'linear-gradient(to bottom, #10b981, #6ee7b7)' }}></span>
+      <span className="text-gray-700">DSA</span>
+    </div>
+  </div>
+)}
+
         </div>
       </div>
     </section>
