@@ -69,8 +69,8 @@ const ChallengeQuestions = () => {
                     to={`/compiler/${q._id}`}
                     className={`px-4 sm:px-6 py-4 transition-all ${
                       index % 2 === 0
-                        ? "bg-white dark:bg-[#161b22]"
-                        : "bg-blue-50 dark:bg-[#add9ef]"
+                        ? "bg-white"
+                        : "bg-blue-50"
                     }`}
                   >
                     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
