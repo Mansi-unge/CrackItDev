@@ -10,7 +10,7 @@ const Login = () => {
   const auth = useAuth();
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row transition-all duration-700 ease-in-out bg-gray-50">
+    <div className="min-h-screen flex flex-col md:flex-row transition-all lg:overflow-hidden duration-700 ease-in-out bg-gray-50">
       <SideContent isLogin={auth.activeTab === 'login'} />
 
       <div
