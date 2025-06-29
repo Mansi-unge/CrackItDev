@@ -10,7 +10,7 @@ import dayjs from "dayjs";
 
 const RecentActivitySection = ({ recentActivity }) => {
   return (
-    <section className=" bg-white backdrop-blur h-68  border-2 rounded-3xl hover:shadow-xl border-blue-300 p-4 flex flex-col">
+    <section className=" bg-white backdrop-blur  max-h-[300px] sm:max-h-[400px] md:max-h-[274px] overflow-y-auto  border-2 rounded-3xl hover:shadow-xl border-blue-300 p-4 flex flex-col">
       <h2 className="text-xl font-bold mb-2 flex items-center gap-2 text-blue-700">
         Recent Activity
       </h2>

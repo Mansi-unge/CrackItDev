@@ -12,7 +12,7 @@ const UserActivityHeatmap = ({ activityData }) => {
     <div className="p-4 w-full border-2 bg-white rounded-3xl hover:shadow-xl border-blue-300">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-xl font-bold text-blue-700 flex items-center gap-2">
-          Yearly Activity Heatmap
+          StreakMap
         </h2>
       </div>
 

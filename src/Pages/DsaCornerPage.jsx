@@ -29,7 +29,7 @@ const DsaCornerPage = () => {
   }, []);
 
   return (
-    <div className="px-6 py-10 min-h-screen mx-30 dark:from-[#0d1117] dark:to-[#1f2937]">
+    <div className="px-6 py-10 min-h-screen lg:mx-30 dark:from-[#0d1117] dark:to-[#1f2937]">
       <h1 className="text-3xl font-bold mb-2 text-center text-gray-800 dark:text-white">
         DSA Corner
       </h1>
@@ -116,10 +116,10 @@ const DsaCornerPage = () => {
 
       {/* Questions Grid */}
       {loading ? (
-        <p className="text-lg text-gray-600 dark:text-gray-400"><div className="flex-1 my-10 flex flex-col items-center justify-center text-blue-600 text-lg font-medium">
+        <div className="text-lg text-gray-600 dark:text-gray-400"><p className="flex-1 my-10 flex flex-col items-center justify-center text-blue-600 text-lg font-medium">
           
                        <FaSpinner className="animate-spin text-6xl mt-40" />
-                    </div></p>
+                    </p></div>
       ) : questions.length === 0 ? (
         <p className="text-gray-500 dark:text-gray-400">No questions found.</p>
       ) : (

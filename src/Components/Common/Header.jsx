@@ -17,7 +17,7 @@ const Header = () => {
     const token = localStorage.getItem("token");
     if (token) {
       axios
-        .get("http://localhost:5000/api/users/me", {
+        .get("https://crackitdev-1.onrender.com/api/users/me", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -177,47 +177,6 @@ const Header = () => {
               ))}
             </ul>
           </nav>
-
-          {/* Auth/Profile Mobile */}
-          <div className=" border-t border-gray-200 pt-4">
-            {user ? (
-              <>
-                <p className="text-gray-700 font-medium mb-2">Hello, {user.username}</p>
-                <Link
-                  to="/profile"
-                  onClick={() => setMenuOpen(false)}
-                  className="block mb-2 text-indigo-600 hover:underline"
-                >
-                  My Profile
-                </Link>
-                <button
-                  onClick={() => {
-                    handleLogout();
-                    setMenuOpen(false);
-                  }}
-                  className="text-red-600 font-medium hover:underline"
-                >
-                  Logout
-                </button>
-              </>
-            ) : (
-              <>
-                <Link
-                  to="/login"
-                  state={{ tab: "login" }}
-                  onClick={() => setMenuOpen(false)}
-                  className="block text-gray-800 font-medium hover:text-indigo-600 mb-2"
-                >
-                  Login
-                </Link>
-                <Link to="/login" state={{ tab: "signup" }} onClick={() => setMenuOpen(false)}>
-                  <button className="w-full bg-blue-600 text-white px-4 py-2 rounded-xl text-sm font-semibold hover:bg-blue-700 transition">
-                    Sign up
-                  </button>
-                </Link>
-              </>
-            )}
-          </div>
         </div>
       )}
     </header>

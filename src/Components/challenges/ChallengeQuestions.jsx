@@ -16,38 +16,43 @@ const ChallengeQuestions = () => {
   } = useChallengeQuestions(tech);
 
   return (
-    <div className="flex">
-      <ChallengeFilterSection filters={filters} setFilters={setFilters} />
+    <div className="flex flex-col lg:flex-row">
+      {/* Sidebar / Filter */}
+      <div className="w-full lg:w-1/4">
+        <ChallengeFilterSection filters={filters} setFilters={setFilters} />
+      </div>
 
-      <main className="flex-1 p-6 max-w-7xl mx-auto">
-        <h2 className="text-4xl font-extrabold text-center mb-6 text-blue-700">
+      {/* Main Content */}
+      <main className="flex-1 px-6 py-6 sm:px-6 ">
+        {/* Title */}
+        <h2 className="text-3xl sm:text-4xl font-extrabold text-center mb-6 text-blue-700">
           {tech} Challenges
         </h2>
 
-        {/* Badges */}
-        <div className="flex justify-center gap-6 mb-6 text-blue-700 font-semibold text-sm">
+        {/* Badge Stats */}
+        <div className="flex flex-wrap justify-center gap-4 sm:gap-6 mb-6 text-blue-700 font-semibold text-sm sm:text-base">
           <span className="flex items-center gap-1">
             <FaMedal className="text-yellow-500" /> Bronze: {badges?.bronze || 0}
           </span>
-          ||
+          <span className="hidden sm:inline">||</span>
           <span className="flex items-center gap-1">
             <FaMedal className="text-gray-400" /> Silver: {badges?.silver || 0}
           </span>
-          ||
+          <span className="hidden sm:inline">||</span>
           <span className="flex items-center gap-1">
             <FaMedal className="text-yellow-700" /> Golden: {badges?.golden || 0}
           </span>
         </div>
 
-        {/* Loading and Questions */}
+        {/* Loader / Empty State / Questions */}
         {loading ? (
           <div className="flex-1 my-10 flex flex-col items-center justify-center text-blue-600 text-lg font-medium">
-            <FaSpinner className="animate-spin text-6xl mt-40" />
+            <FaSpinner className="animate-spin text-6xl mt-20" />
           </div>
         ) : questions.length === 0 ? (
           <p className="text-center text-gray-500 text-lg">No challenges found.</p>
         ) : (
-          <div className="grid grid-cols-1 overflow-hidden">
+          <div className="grid grid-cols-1 lg:me-30 max-w-7xl">
             {questions
               .slice()
               .sort((a, b) => {
@@ -62,24 +67,26 @@ const ChallengeQuestions = () => {
                   <Link
                     key={q._id}
                     to={`/compiler/${q._id}`}
-                    className={`px-6 py-4 transition-all ${
+                    className={`px-4 sm:px-6 py-4 transition-all ${
                       index % 2 === 0
                         ? "bg-white dark:bg-[#161b22]"
                         : "bg-blue-50 dark:bg-[#add9ef]"
                     }`}
                   >
                     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
-                      <div className="flex items-center gap-2 text-lg font-semibold text-gray-800 dark:text-white">
+                      {/* Title */}
+                      <div className="flex items-center gap-2 text-base sm:text-lg font-semibold text-gray-800 dark:text-white">
                         {q.title}
                         {isSolved && (
                           <FaMedal
                             title="Challenge Solved"
-                            className="text-yellow-500 opacity-70 text-xl"
+                            className="text-yellow-500 opacity-70 text-lg sm:text-xl"
                           />
                         )}
                       </div>
 
-                      <div className="text-sm text-gray-600 dark:text-gray-300 flex flex-wrap gap-2 items-center">
+                      {/* Tags / Level / Company */}
+                      <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 flex flex-wrap gap-2 items-center">
                         <span>{q.topic}</span>
                         <span className="font-semibold text-xs">
                           |&nbsp;

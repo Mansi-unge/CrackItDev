@@ -77,7 +77,7 @@ const EarnedBadges = ({ badges }) => {
         </span>
       </div>
 
-      <div className="flex flex-col gap-3 items-center">
+      <div className="flex lg:flex-col gap-3 items-center">
         {allBadges.map(({ type, Icon }) =>
           renderBadge(type, Icon, badges?.[type] > 0, badges?.[type] || 0)
         )}
