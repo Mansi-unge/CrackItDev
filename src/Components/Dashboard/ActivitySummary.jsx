@@ -88,12 +88,15 @@ const ActivitySummary = ({ recentActivity }) => {
                 axisLine={false}
                 tickLine={false}
               />
-              <YAxis
-                allowDecimals={false}
-                tick={{ fontSize: 12, fill: "#4b5563" }}
-                axisLine={false}
-                tickLine={false}
-              />
+              {!isMobile && (
+  <YAxis
+    allowDecimals={false}
+    tick={{ fontSize: 12, fill: "#4b5563" }}
+    axisLine={false}
+    tickLine={false}
+  />
+)}
+
               <RechartsTooltip content={<CustomTooltip />} cursor={{ fill: "transparent" }} />
               {!isMobile && <Legend verticalAlign="top" height={36} />}
 
