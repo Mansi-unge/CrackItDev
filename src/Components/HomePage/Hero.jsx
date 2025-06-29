@@ -69,7 +69,7 @@ const Hero = () => {
           Tech Interviews, Cracked the Right Way.
         </p>
         <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-3xl mx-auto mb-8 sm:mb-6">
-          Practice topic-wise questions, ace rapid-fire rounds, and tailor your prep for FAANG, startups, and everything in between.
+          Practice topic-wise questions, ace rapid-fire rounds, and tailor your prep for MAANG, startups, and everything in between.
         </p>
 
         {/* Buttons */}
