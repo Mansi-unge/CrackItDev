@@ -42,7 +42,7 @@ const DsaCornerPage = () => {
       )}
 
       {/* Filters */}
-      <div className="flex flex-col md:flex-row gap-4 justify-center items-center mb-6">
+      <div className="flex flex-col px-4 md:flex-row gap-4 justify-center items-center mb-6">
         <div className="relative">
           <select
             onChange={(e) =>
