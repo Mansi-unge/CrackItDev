@@ -60,7 +60,7 @@ const ActivitySummary = ({ recentActivity }) => {
   }));
 
   return (
-    <section className="w-full max-w-4xl  mx-auto bg-white border-2 border-blue-300 rounded-3xl p-4 transition hover:shadow-xl overflow-hidden">
+    <section className="w-full max-w-4xl  mx-auto bg-white border-2 border-blue-300 rounded-3xl py-4 transition hover:shadow-xl overflow-hidden">
       <style>
         {`
           .recharts-active-bar-background {
@@ -69,7 +69,7 @@ const ActivitySummary = ({ recentActivity }) => {
         `}
       </style>
 
-      <h2 className="text-lg font-bold mb-2 text-blue-700">
+      <h2 className="text-lg font-bold mb-2 text-blue-700 px-4">
         Weekly Activity Overview
       </h2>
 
