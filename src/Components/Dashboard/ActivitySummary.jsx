@@ -75,7 +75,7 @@ const ActivitySummary = ({ recentActivity }) => {
 
       {/* Horizontal scroll on small screens */}
       <div className="overflow-x-auto ">
-        <div style={{ width: isMobile ? "320px" : "100%", height: "10rem" }}>
+        <div style={{ width: isMobile ? "320px" : "100%", height: "8rem" }}>
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
               data={activityData}
@@ -143,7 +143,7 @@ const ActivitySummary = ({ recentActivity }) => {
             </BarChart>
           </ResponsiveContainer>
           {isMobile && (
-  <div className="flex justify-center gap-4 mt-2 text-sm font-medium">
+  <div className="flex justify-center gap-4 text-sm font-medium">
     <div className="flex items-center gap-1">
       <span className="w-3 h-3 rounded-sm" style={{ background: 'linear-gradient(to bottom, #3b82f6, #60a5fa)' }}></span>
       <span className="text-gray-700">MCQ</span>
