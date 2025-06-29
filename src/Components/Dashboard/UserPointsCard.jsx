@@ -52,7 +52,7 @@ const UserPointsCard = ({ points, rankData }) => {
       {cardData.map(({ label, value, bg, border, tooltip, id }, i) => (
         <div
           key={i}
-          className={`lg:min-w-[140px] ${bg} ${border} flex flex-col items-center justify-center border rounded-2xl text-center hover:shadow-lg hover:scale-[1.03] transition-all cursor-default py-2 px-4 lg:px-11 lg:py-5`}
+          className={`lg:min-w-[140px] ${bg} ${border} flex flex-col items-center justify-center border rounded-2xl text-center hover:shadow-lg hover:scale-[1.03] transition-all cursor-default py-2 px-4 lg:px-12 lg:py-5`}
           data-tooltip-id={id}
           data-tooltip-content={tooltip}
         >

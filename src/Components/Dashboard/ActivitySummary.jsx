@@ -131,7 +131,7 @@ const ActivitySummary = ({ recentActivity }) => {
           </>
         ) : (
           // ✅ Desktop Chart Layout
-          <div style={{ width: "100%", height: "18rem" }}>
+          <div style={{ width: "100%", height: "16rem" }}>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart
                 data={activityData}
