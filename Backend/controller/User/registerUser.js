@@ -1,8 +1,9 @@
 import User from "../../models/Users.js";
 import bcrypt from "bcrypt";
 
+// Allow any special character
 const passwordPattern =
-  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])[A-Za-z\d\W_]{8,}$/;
 
 export const register = async (req, res) => {
   const { username, email, password } = req.body;
@@ -16,7 +17,7 @@ export const register = async (req, res) => {
     if (!passwordPattern.test(password)) {
       return res.status(400).json({
         message:
-          "Password must be at least 8 characters long and include uppercase, lowercase, number, and special character.",
+          "Password must be at least 8 characters long and include uppercase, lowercase, number, and a special character.",
       });
     }
 
