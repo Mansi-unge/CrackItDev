@@ -29,8 +29,8 @@ const DsaCornerPage = () => {
   }, []);
 
   return (
-    <div className="px-6 py-10 min-h-screen lg:mx-30 dark:from-[#0d1117] dark:to-[#1f2937]">
-      <h1 className="text-3xl font-bold mb-2 text-center text-gray-800 dark:text-white">
+    <div className="px-6 py-10 min-h-screen lg:mx-30 ">
+      <h1 className="text-3xl font-bold mb-2 text-center ">
         DSA Corner
       </h1>
 
@@ -49,7 +49,7 @@ const DsaCornerPage = () => {
               setFilters((prev) => ({ ...prev, difficulty: e.target.value }))
             }
             defaultValue=""
-            className="w-sm pr-10 pl-4 py-2 rounded-xl bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 shadow-md text-sm appearance-none focus:outline-none focus:ring-0 dark:text-white"
+            className="w-sm pr-10 pl-4 py-2 rounded-xl bg-white border border-gray-300 shadow-md text-sm appearance-none focus:outline-none focus:ring-0 "
           >
             <option value="">All Difficulties</option>
             <option value="Easy">Easy</option>
@@ -59,7 +59,7 @@ const DsaCornerPage = () => {
 
           <span className="absolute inset-y-0 left-80 flex items-center pointer-events-none">
             <svg
-              className="w-12 h-12 ms-4 mt-1 text-gray-500 dark:text-gray-400"
+              className="w-12 h-12 ms-4 mt-1 text-gray-500 "
               fill="none"
               stroke="currentColor"
               strokeWidth="1"
@@ -73,7 +73,7 @@ const DsaCornerPage = () => {
         <input
           type="text"
           placeholder="Search by topic..."
-          className="px-4 py-2 rounded-xl w-sm bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 shadow-md text-sm focus:ring-0"
+          className="px-4 py-2 rounded-xl w-sm bg-white  border border-gray-300  shadow-md text-sm focus:ring-0"
           onChange={(e) =>
             setFilters((prev) => ({ ...prev, topic: e.target.value }))
           }
@@ -86,7 +86,7 @@ const DsaCornerPage = () => {
           <button
             key={topic}
             onClick={() => setFilters((prev) => ({ ...prev, topic }))}
-            className="px-4 py-1 text-md font-medium rounded-full text-gray-800 bg-gray-200 dark:bg-gray-700 shadow-md hover:bg-indigo-600 hover:text-white dark:text-white transition"
+            className="px-4 py-1 text-md font-medium rounded-full text-gray-800 bg-gray-200  shadow-md hover:bg-indigo-600 hover:text-white  transition"
           >
             {topic}
           </button>
@@ -116,12 +116,12 @@ const DsaCornerPage = () => {
 
       {/* Questions Grid */}
       {loading ? (
-        <div className="text-lg text-gray-600 dark:text-gray-400"><p className="flex-1 my-10 flex flex-col items-center justify-center text-blue-600 text-lg font-medium">
+        <div className="text-lg text-gray-600 "><p className="flex-1 my-10 flex flex-col items-center justify-center text-blue-600 text-lg font-medium">
           
                        <FaSpinner className="animate-spin text-6xl mt-40" />
                     </p></div>
       ) : questions.length === 0 ? (
-        <p className="text-gray-500 dark:text-gray-400">No questions found.</p>
+        <p className="text-gray-500 ">No questions found.</p>
       ) : (
         <div className="grid grid-cols-1 shadow">
           {questions.map((q, index) => (
@@ -135,10 +135,10 @@ const DsaCornerPage = () => {
               }`}
             >
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 px-4">
-                <h2 className="text-base sm:text-lg font-semibold text-gray-800 dark:text-white">
+                <h2 className="text-base sm:text-lg font-semibold text-gray-800 ">
                   {q.title}
                 </h2>
-                <p className="text-md text-gray-600 dark:text-gray-400 whitespace-nowrap">
+                <p className="text-md text-gray-600  whitespace-nowrap">
                   {q.topic} &nbsp; | &nbsp;
                   <span
                     className={`font-semibold ${

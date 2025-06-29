@@ -75,7 +75,7 @@ const ChallengeQuestions = () => {
                   >
                     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
                       {/* Title */}
-                      <div className="flex items-center gap-2 text-base sm:text-lg font-semibold text-gray-800 dark:text-white">
+                      <div className="flex items-center gap-2 text-base sm:text-lg font-semibold text-gray-800 ">
                         {q.title}
                         {isSolved && (
                           <FaMedal
@@ -86,7 +86,7 @@ const ChallengeQuestions = () => {
                       </div>
 
                       {/* Tags / Level / Company */}
-                      <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 flex flex-wrap gap-2 items-center">
+                      <div className="text-xs sm:text-sm text-gray-600  flex flex-wrap gap-2 items-center">
                         <span>{q.topic}</span>
                         <span className="font-semibold text-xs">
                           |&nbsp;
