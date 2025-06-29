@@ -15,7 +15,7 @@ const Logo = () => (
       }
     `}</style>
 
-    <h1 className="text-2xl sm:text-3xl md:text-4xl font-semibold flex items-center space-x-1 tracking-wide">
+    <h1 className="text-2xl sm:text-2xl md:text-4xl font-semibold flex items-center space-x-1 tracking-wide">
       <span className="text-pink-600">{'<'}</span>
 
       <span className="font-bold text-indigo-600 ">
@@ -23,7 +23,7 @@ const Logo = () => (
       </span>
 
       <span
-        className="text-yellow-400 text-4xl inline-block"
+        className="text-yellow-400 text-3xl lg:text-4xl inline-block"
         style={{ animation: "pulseGlow 1.5s ease-in-out infinite" }}
       >
       ⚡
