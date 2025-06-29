@@ -74,7 +74,7 @@ const ActivitySummary = ({ recentActivity }) => {
       </h2>
 
       {/* Horizontal scroll on small screens */}
-      <div className="overflow-x-auto ">
+      <div className="overflow-x-auto ps-2">
         <div style={{ width: isMobile ? "320px" : "100%", height: "8rem" }}>
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
