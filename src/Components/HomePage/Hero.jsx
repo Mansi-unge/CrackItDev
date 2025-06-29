@@ -81,7 +81,7 @@ const Hero = () => {
         </div>
 
         {/* Feature Cards */}
-        <div className="flex justify-center gap-18 md:gap-10 max-w-4xl mx-auto">
+        <div className="flex justify-center flex-col lg:flex-row gap-18 md:gap-10 max-w-4xl mx-auto">
           {featureCards.map((card, i) => (
             <motion.div
               key={i}

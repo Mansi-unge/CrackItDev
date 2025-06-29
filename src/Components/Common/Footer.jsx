@@ -4,7 +4,6 @@ import Logo from './Logo';
 import { FaFacebook, FaTwitter, FaLinkedin, FaInstagram } from 'react-icons/fa';
 
 const Footer = () => {
-
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState('');
 
@@ -14,20 +13,20 @@ const Footer = () => {
       const res = await axios.post('http://localhost:5000/api/newsletter/subscribe', { email });
       setStatus(res.data.message);
       setEmail('');
-    }catch (err) {
-  console.error("❌ API Error:", err); // 👈 log the error
-  setStatus('Something went wrong. Try again later.');
-}
-
+    } catch (err) {
+      console.error("❌ API Error:", err);
+      setStatus('Something went wrong. Try again later.');
+    }
   };
-  return (
-    <footer className="bg-gray-900 text-white px-6 py-12 md:px-10">
-      <div className="flex flex-col lg:flex-row flex-wrap gap-10 justify-between">
 
-        {/* Section 1: Logo and Motivational Text */}
-        <div className="flex-1 min-w-[360px]">
+  return (
+    <footer className="bg-gray-900 text-white px-4 py-10 sm:px-6 md:px-10 lg:px-16">
+      <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+
+        {/* Section 1: Logo + Tagline */}
+        <div>
           <Logo />
-          <p className="text-sm italic text-gray-300 my-6">
+          <p className="text-sm italic text-gray-300 my-4">
             "Tech Interviews, Cracked the Right Way."
           </p>
           <p className="text-sm text-gray-400">
@@ -36,8 +35,8 @@ const Footer = () => {
         </div>
 
         {/* Section 2: Quick Links */}
-        <div className="flex-1 min-w-[100px]">
-          <h2 className="text-xl font-semibold mb-4">Quick Links</h2>
+        <div>
+          <h2 className="text-lg font-semibold mb-3">Quick Links</h2>
           <ul className="space-y-2 text-gray-300 text-sm">
             <li><a href="/">Home</a></li>
             <li><a href="/topics">TheoryHub</a></li>
@@ -47,8 +46,8 @@ const Footer = () => {
         </div>
 
         {/* Section 3: Skills */}
-        <div className="flex-1 min-w-[340px]">
-          <h2 className="text-xl font-semibold mb-4">Skills</h2>
+        <div>
+          <h2 className="text-lg font-semibold mb-3">Skills</h2>
           <div className="flex flex-wrap gap-2 text-sm text-gray-300">
             {[
               'Java', 'Python', 'HTML', 'CSS', 'JS',
@@ -63,8 +62,8 @@ const Footer = () => {
         </div>
 
         {/* Section 4: Top Companies */}
-        <div className="flex-1 min-w-[120px]">
-          <h2 className="text-xl font-semibold mb-4">Top Companies</h2>
+        <div>
+          <h2 className="text-lg font-semibold mb-3">Top Companies</h2>
           <ul className="space-y-2 text-gray-300 text-sm">
             <li>Google</li>
             <li>Amazon</li>
@@ -75,10 +74,10 @@ const Footer = () => {
           </ul>
         </div>
 
-        {/* Section 5: Newsletter and Social Links */}
-        <div className="flex-1 min-w-[300px]">
-          <h2 className="text-xl font-semibold mb-4">Get Interview Tips</h2>
-          <p className="text-sm text-gray-400 mb-2">Get tips, updates, and more in your inbox.</p>
+        {/* Section 5: Newsletter + Social */}
+        <div>
+          <h2 className="text-lg font-semibold mb-3">Get Interview Tips</h2>
+          <p className="text-sm text-gray-400 mb-3">Get tips, updates, and more in your inbox.</p>
           <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2 mb-2">
             <input
               type="email"
@@ -94,8 +93,9 @@ const Footer = () => {
             >
               Send
             </button>
-            {status && <p className="text-xs text-gray-300 mt-2">{status}</p>}
           </form>
+          {status && <p className="text-xs text-gray-300 mt-2">{status}</p>}
+
           <div className="flex gap-4 text-xl text-gray-400 mt-4">
             <a href="#"><FaFacebook className="hover:text-white" /></a>
             <a href="#"><FaTwitter className="hover:text-white" /></a>
@@ -103,6 +103,7 @@ const Footer = () => {
             <a href="#"><FaInstagram className="hover:text-white" /></a>
           </div>
         </div>
+
       </div>
     </footer>
   );
