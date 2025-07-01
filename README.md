@@ -1,12 +1,103 @@
-# React + Vite
+# 🚀 CrackIt.dev — Your All-in-One Tech Interview Prep Platform 🎯
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+> Built by a developer, for developers. From Day 0 to MAANG, let's Crack It — together. 💪
 
-Currently, two official plugins are available:
+Welcome to **CrackIt.dev**, the ultimate platform designed to supercharge your tech interview prep. Whether you're a student, job-seeker, or working dev, we've built everything you need to crack coding interviews — in one place.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+🔗 **Live Preview:** https://crack-it-dev.vercel.app/
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 🔥 Why CrackIt.dev?
+
+### ✅ DSA Corner
+- 200+ curated coding questions  
+- MAANG-level problem sets with examples, constraints, and test cases  
+- Easy → Advanced filtering  
+
+### ✅ Company-Wise Prep
+- Filter questions by **Meta**, **Google**, **Amazon**, **Microsoft**, **Uber**, and more  
+- Focused prep based on real interview patterns  
+
+### ✅ Topic Explorer
+- Deep dive into topics like:
+  - Frontend: **React**, **HTML**, **CSS**
+  - Backend: **Node.js**, **Express**
+  - Programming: **Java**, **Python**, **C**, **C++**
+  - CS Fundamentals: **DBMS**, **OS**, **OOPs**, **Networking**
+  - DevOps: **AWS**, **Docker**, **Kubernetes**, **CI/CD**
+
+### ✅ Built-in Compiler
+- Real-time code execution via **Judge0 API**  
+- Supports multiple languages with input/output  
+
+### ✅ Progress Tracker
+- Visual analytics of your:
+  - Daily XP 📈  
+  - Topic-wise growth  
+  - Completed questions and coding streaks  
+
+### ✅ Clean, Modern UI
+- Minimal, distraction-free interface built with Tailwind CSS  
+- Responsive, fast, and optimized for mobile  
+
+---
+
+## 🛠 Tech Stack
+
+- **Frontend:** React, Tailwind CSS, Framer Motion  
+- **Backend:** Node.js, Express.js  
+- **Database:** MongoDB (Mongoose)  
+- **Code Execution:** Judge0 API (custom compiler coming soon)  
+- **Auth:** JWT & Bcrypt  
+- **Others:** Parallax Tilt, Chart.js, GSAP
+
+---
+
+## 🌟 What’s Coming Next?
+
+- 📅 **Daily Revision Shot** – Start your day with a fresh challenge  
+- 🧠 **Challenge Mode** – 30-day streak-based prep with hints, badges & XP  
+- 🔔 **Smart Notifications** – Stay on track with gentle nudges  
+- 🏆 **Streak Booster** – Never lose your momentum  
+- 🎯 **Custom Goals** – Set daily/weekly coding targets  
+- 📨 **Weekly Progress Reports** – Track your wins via email  
+- 🤝 **Team Challenges** – Squad up and compete together  
+- 🛠️ **In-House Compiler** – Breaking free from Judge0 for faster, richer execution  
+
+---
+
+## 🙌 Support
+
+- Star the repo ⭐
+- Share with friends 🔁
+- Report bugs or suggest features via Issues tab 💬
+- DM on [LinkedIn](https://linkedin.com/in/mansiunge) for collab, ideas, or just to say hi!
+
+---
+
+## 📌 Try It Now
+
+**👉 [CrackIt.dev](https://crack-it-dev.vercel.app/)** — Crack tech interviews the right way.
+
+---
+
+## 💬 Let's Connect
+
+Follow for updates, dev logs, and future open-source launches:
+
+- 🐦 Twitter: [@mansiunge](https://twitter.com/mansiunge)
+- 💼 LinkedIn: [Mansi Unge](https://linkedin.com/in/mansiunge)
+- 🌐 Website: [mansiunge.dev](https://mansiunge.dev) *(if available)*
+
+---
+
+## 🏷 Hashtags
+
+`#CrackItDev` `#TechInterviews` `#MERNstack` `#DSA` `#DevTools`  
+`#ReactJS` `#NodeJS` `#DevOps` `#WomenWhoCode` `#100DaysOfCode`  
+`#WebDevelopment` `#CareerGrowth` `#NextBigThing`
+
+---
+
+> “Preparation meets opportunity — that’s success.” Let’s crack it together 🚀
