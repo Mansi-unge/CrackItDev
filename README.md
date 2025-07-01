@@ -86,7 +86,7 @@ Welcome to **CrackIt.dev**, the ultimate platform designed to supercharge your t
 
 Follow for updates, dev logs, and future open-source launches:
 
-- 🐦 Twitter: [@mansiunge60256](https://twitter.com/mansiunge)
+- 🐦 Twitter: [@mansiunge60256](https://twitter.com/mansiunge60256)
 - 💼 LinkedIn: [Mansi Unge](https://linkedin.com/in/mansiunge)
 
 ---
