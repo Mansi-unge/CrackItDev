@@ -7,6 +7,24 @@ Welcome to **CrackIt.dev**, the ultimate platform designed to supercharge your t
 🔗 **Live Preview:** https://crack-it-dev.vercel.app/
 
 ---
+# Why I Built CrackIt.dev
+The goal behind CrackIt.dev is to eliminate the need for juggling between multiple tools and websites for different developer tasks—coding, compiling, practicing interview questions, and tracking progress.
+
+One platform. One purpose. Everything you need to crack tech interviews.
+
+This compiler API is part of a broader vision to make CrackIt.dev a unified ecosystem for:
+
+Practicing code challenges
+
+Running and testing code instantly
+
+Learning core concepts
+
+Preparing for interviews—all from a single dashboard
+
+By building a self-hosted compiler, we remove reliance on third-party APIs (like Judge0), giving full control, offline support, and extensibility tailored to our platform’s needs.
+
+---
 
 ## 🔥 Why CrackIt.dev?
 
