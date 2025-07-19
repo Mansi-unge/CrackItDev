@@ -76,7 +76,7 @@ const Header = () => {
                   to={item.href}
                   className={`font-medium transition ${location.pathname === item.href
                       ? "text-indigo-600 font-bold scale-105"
-                      : "text-black opacity-70 hover:opacity-100 hover:text-indigo-600 hover:font-bold"
+                      : "text-black opacity-70 hover:opacity-100 hover:text-indigo-600"
                     }`}
                 >
                   {item.name}
