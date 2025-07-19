@@ -146,7 +146,7 @@ const Header = () => {
             <Link
               to="/login"
               state={{ tab: "login" }}
-              className="text-sm text-gray-700 hover:text-indigo-600 font-medium"
+              className="bg-blue-600 text-white px-4 py-2 rounded-xl text-sm font-medium hover:bg-blue-700 transition"
             >
               Login
             </Link>
