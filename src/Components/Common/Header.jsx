@@ -150,8 +150,7 @@ const Header = () => {
             >
               Login
             </Link>
-            <Link to="/signup" state={{ tab: "Sign
-            up" }}>
+            <Link to="/signup" state={{ tab: "Sign up" }}>
               <button className="bg-blue-600 text-white px-4 py-2 rounded-xl text-sm font-medium hover:bg-blue-700 transition">
                 Sign up
               </button>
