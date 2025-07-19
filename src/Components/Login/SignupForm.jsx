@@ -16,7 +16,7 @@ const SignupForm = ({
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   return (
-    <form onSubmit={onSubmit} className="w-full max-w-md overflow-hidden space-y-3">
+    <form onSubmit={onSubmit} className="w-full max-w-lg overflow-hidden space-y-3">
 
       <div>
         <label className="block text-indigo-600 font-medium mb-1">Username</label>
