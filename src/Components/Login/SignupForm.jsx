@@ -90,7 +90,7 @@ const SignupForm = ({
 
       <button
         type="submit"
-        className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 rounded-lg hover:rounded-lg font-semibold hover:from-purple-600 hover:to-indigo-600 transition-transform transform hover:scale-105"
+        className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 rounded-lg font-semibold hover:from-purple-600 hover:to-indigo-600 transition-transform transform hover:scale-105"
       >
         Sign Up
       </button>
