@@ -10,7 +10,7 @@ const Footer = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:5000/api/newsletter/subscribe', { email });
+      const res = await axios.post('https://crackitdev-1.onrender.com/api/newsletter/subscribe', { email });
       setStatus(res.data.message);
       setEmail('');
     } catch (err) {
